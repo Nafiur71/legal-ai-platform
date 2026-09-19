@@ -112,3 +112,11 @@ def test_watermark_application():
     assert resp.status_code == 200
     assert "sla-watermark-overlay" in resp.json()["rendered_html"]
     print("[PASS] API /api/tools/apply-watermark passed")
+
+if __name__ == "__main__":
+    print("\n--- RUNNING PHASE 5 TEST SUITE ---")
+    test_notice_generator_service()
+    test_api_notice_generator()
+    test_api_hash_and_verification()
+    test_watermark_application()
+    print("[SUCCESS] ALL PHASE 5 TESTS PASSED!\n")

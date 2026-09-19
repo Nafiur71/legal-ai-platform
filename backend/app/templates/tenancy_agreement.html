@@ -1,4 +1,4 @@
-﻿{% extends 'base_document.html' %}
+{% extends 'base_document.html' %}
 
 {% block content %}
 <div class="doc-header">
@@ -10,91 +10,91 @@
 
 <div class="parties-section">
   <div class="party-block">
-    <div class="party-title">{{ '১ম পক্ষ (মালিক / Landlord):' if language == 'bn' else 'First Party (Landlord):' }}</div>
-    <div><strong>{{ 'নাম:' if language == 'bn' else 'Name:' }}</strong> {{ data.landlord_name or '................................................' }}</div>
-    <div><strong>{{ 'পিতা/স্বামীর নাম:' if language == 'bn' else 'Father/Spouse:' }}</strong> {{ data.landlord_father or '................................................' }}</div>
-    <div><strong>{{ 'ঠিকানা:' if language == 'bn' else 'Address:' }}</strong> {{ data.landlord_address or '................................................' }}</div>
-    <div><strong>{{ 'এনআইডি / পাসপোর্ট নং:' if language == 'bn' else 'NID/Passport:' }}</strong> {{ data.landlord_nid or '................................................' }} | <strong>{{ 'মোবাইল:' if language == 'bn' else 'Phone:' }}</strong> {{ data.landlord_phone or '..................' }}</div>
+    <div class="party-title">{{ '১ম পক্ষ (মালিক):' if language == 'bn' else 'First Party (Owner / Landlord):' }}</div>
+    <div><strong>{{ 'নাম:' if language == 'bn' else 'Name:' }}</strong> {{ data.landlord_name or ('................................................' if language == 'bn' else '________________________') }}</div>
+    <div><strong>{{ 'পিতা/স্বামীর নাম:' if language == 'bn' else "Father's / Spouse's Name:" }}</strong> {{ data.landlord_father or ('................................................' if language == 'bn' else '________________________') }}</div>
+    <div><strong>{{ 'ঠিকানা:' if language == 'bn' else 'Address:' }}</strong> {{ data.landlord_address or ('................................................' if language == 'bn' else '________________________') }}</div>
+    <div><strong>{{ 'জাতীয় পরিচয়পত্র নং:' if language == 'bn' else 'NID / Passport No:' }}</strong> {{ data.landlord_nid or ('................................................' if language == 'bn' else '________________________') }} | <strong>{{ 'মোবাইল:' if language == 'bn' else 'Mobile:' }}</strong> {{ data.landlord_phone or ('..................' if language == 'bn' else '__________') }}</div>
   </div>
 
   <div style="text-align: center; margin: 10px 0; font-weight: bold; color: #64748b;">
-    --- {{ 'এবং (And)' }} ---
+    --- {{ 'এবং' if language == 'bn' else 'AND' }} ---
   </div>
 
   <div class="party-block">
-    <div class="party-title">{{ '২য় পক্ষ (ভাড়াটিয়া / Tenant):' if language == 'bn' else 'Second Party (Tenant):' }}</div>
-    <div><strong>{{ 'নাম:' if language == 'bn' else 'Name:' }}</strong> {{ data.tenant_name or '................................................' }}</div>
-    <div><strong>{{ 'পিতা/স্বামীর নাম:' if language == 'bn' else 'Father/Spouse:' }}</strong> {{ data.tenant_father or '................................................' }}</div>
-    <div><strong>{{ 'স্থায়ী ঠিকানা:' if language == 'bn' else 'Permanent Address:' }}</strong> {{ data.tenant_address or '................................................' }}</div>
-    <div><strong>{{ 'এনআইডি / পাসপোর্ট নং:' if language == 'bn' else 'NID/Passport:' }}</strong> {{ data.tenant_nid or '................................................' }} | <strong>{{ 'মোবাইল:' if language == 'bn' else 'Phone:' }}</strong> {{ data.tenant_phone or '..................' }}</div>
+    <div class="party-title">{{ '২য় পক্ষ (ভাড়াটিয়া):' if language == 'bn' else 'Second Party (Tenant):' }}</div>
+    <div><strong>{{ 'নাম:' if language == 'bn' else 'Name:' }}</strong> {{ data.tenant_name or ('................................................' if language == 'bn' else '________________________') }}</div>
+    <div><strong>{{ 'পিতা/স্বামীর নাম:' if language == 'bn' else "Father's / Spouse's Name:" }}</strong> {{ data.tenant_father or ('................................................' if language == 'bn' else '________________________') }}</div>
+    <div><strong>{{ 'স্থায়ী ঠিকানা:' if language == 'bn' else 'Permanent Address:' }}</strong> {{ data.tenant_address or ('................................................' if language == 'bn' else '________________________') }}</div>
+    <div><strong>{{ 'জাতীয় পরিচয়পত্র নং:' if language == 'bn' else 'NID / Passport No:' }}</strong> {{ data.tenant_nid or ('................................................' if language == 'bn' else '________________________') }} | <strong>{{ 'মোবাইল:' if language == 'bn' else 'Mobile:' }}</strong> {{ data.tenant_phone or ('..................' if language == 'bn' else '__________') }}</div>
   </div>
 </div>
 
 <div class="highlight-box">
   <strong>{{ 'ভাড়াকৃত সম্পত্তির বিবরণ:' if language == 'bn' else 'Description of Demised Premises:' }}</strong><br>
-  {{ data.property_address or 'ফ্ল্যাট/দোকান নং ........., হোল্ডিং নং .............., রোড .............., এলাকা .......................।' }}
+  {{ data.property_address or ('ফ্ল্যাট/দোকান নং ........., হোল্ডিং নং .............., রোড .............., এলাকা .......................।' if language == 'bn' else 'Apartment/Unit No. _____, Holding No. _____, Road _____, Area ___________________, Bangladesh.') }}
   {% if data.property_type %}
-    ({{ 'ধরণ:' if language == 'bn' else 'Type:' }} {{ data.property_type }})
+    ({{ 'ধরণ:' if language == 'bn' else 'Premises Type:' }} {{ data.property_type }})
   {% endif %}
 </div>
 
 <p>
-  {{ 'যেহেতু ১ম পক্ষ উল্লেখিত সম্পত্তির আইনসম্মত মালিক এবং ২য় পক্ষ উক্ত সম্পত্তি ভাড়া গ্রহণ করিতে ইচ্ছুক, উভয় পক্ষ নিম্নলিখিত শর্তাবলীতে সম্মত হইয়া এই চুক্তিপত্র স্বাক্ষর করিলেন:' if language == 'bn' else 'WHEREAS the First Party is the lawful owner of the premises and the Second Party desires to lease the property, both Parties mutually agree to the following terms and covenants:' }}
+  {{ 'যেহেতু ১ম পক্ষ উল্লেখিত সম্পত্তির আইনসম্মত মালিক এবং ২য় পক্ষ উক্ত সম্পত্তি ভাড়া গ্রহণ করিতে ইচ্ছুক, উভয় পক্ষ নিম্নলিখিত শর্তাবলীতে সম্মত হইয়া এই চুক্তিপত্র স্বাক্ষর করিলেন:' if language == 'bn' else 'WHEREAS the First Party is the lawful owner and lessor of the demised premises, and the Second Party desires to lease the premises, both Parties hereby mutually agree and covenant as follows:' }}
 </p>
 
 <div class="clauses-container">
   <div class="clause-item">
-    <span class="clause-number">১.</span>
-    <span class="clause-title">{{ 'চুক্তির মেয়াদ (Duration):' if language == 'bn' else 'Term & Duration:' }}</span>
-    {{ 'এই চুক্তির মেয়াদ হইবে মোট' if language == 'bn' else 'This tenancy shall be effective for a period of' }} 
+    <span class="clause-number">{{ '১.' if language == 'bn' else '1.' }}</span>
+    <span class="clause-title">{{ 'চুক্তির মেয়াদ:' if language == 'bn' else 'Term & Duration:' }}</span>
+    {{ 'এই চুক্তির মেয়াদ হইবে মোট' if language == 'bn' else 'This tenancy shall remain valid for a total duration of' }} 
     <strong>{{ data.duration_months or '১২' }} {{ 'মাস' if language == 'bn' else 'months' }}</strong>, 
-    {{ 'যাহা' if language == 'bn' else 'commencing from' }} <strong>{{ data.start_date or '..................' }}</strong> 
+    {{ 'যাহা' if language == 'bn' else 'effective from' }} <strong>{{ data.start_date or ('..................' if language == 'bn' else '__________') }}</strong> 
     {{ 'তারিখ হইতে কার্যকর হইবে।' if language == 'bn' else 'onward.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">২.</span>
-    <span class="clause-title">{{ 'মাসিক ভাড়া ও পরিশোধ বিধি (Monthly Rent):' if language == 'bn' else 'Monthly Rent & Payment:' }}</span>
+    <span class="clause-number">{{ '২.' if language == 'bn' else '2.' }}</span>
+    <span class="clause-title">{{ 'মাসিক ভাড়া ও পরিশোধ পদ্ধতি:' if language == 'bn' else 'Monthly Rent & Payment Terms:' }}</span>
     {{ 'ভাড়াকৃত সম্পত্তির মাসিক ভাড়া ধার্য করা হইল' if language == 'bn' else 'The monthly rent is fixed at' }} 
-    <strong>৳ {{ data.rent_amount or '..................' }} ({{ data.rent_in_words or '' }}) {{ 'টাকা' if language == 'bn' else 'BDT' }}</strong>। 
-    {{ '২য় পক্ষ প্রতি ইংরেজি মাসের' if language == 'bn' else 'The Tenant shall pay the monthly rent within the' }} 
-    <strong>{{ data.payment_due_day or '৭' }}{{ ' তারিখের মধ্যে' if language == 'bn' else 'th day' }}</strong> 
-    {{ '১ম পক্ষকে নগদ অথবা ব্যাংক/মোবাইল ব্যাংকিংয়ের মাধ্যমে পরিশোধ করিবেন।' if language == 'bn' else 'of each calendar month.' }}
+    <strong>{{ '৳ ' ~ (data.rent_amount or '..................') ~ ' টাকা' if language == 'bn' else 'BDT ' ~ (data.rent_amount or '__________________') }}</strong>{% if data.rent_in_words %} ({{ data.rent_in_words }}){% endif %}। 
+    {{ '২য় পক্ষ প্রতি ইংরেজি মাসের' if language == 'bn' else 'The Tenant shall pay the monthly rent strictly within the' }} 
+    <strong>{{ data.payment_due_day or '৭' }}{{ ' তারিখের মধ্যে' if language == 'bn' else 'th calendar day' }}</strong> 
+    {{ '১ম পক্ষকে নগদ অথবা ব্যাংক/মোবাইল ব্যাংকিংয়ের মাধ্যমে পরিশোধ করিবেন।' if language == 'bn' else 'of each month via bank transfer or lawful payment method.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৩.</span>
-    <span class="clause-title">{{ 'অগ্রিম জামানত (Security Deposit):' if language == 'bn' else 'Security Deposit:' }}</span>
+    <span class="clause-number">{{ '৩.' if language == 'bn' else '3.' }}</span>
+    <span class="clause-title">{{ 'অগ্রিম জামানত:' if language == 'bn' else 'Refundable Security Deposit:' }}</span>
     {{ '২য় পক্ষ ১ম পক্ষকে ফেরতযোগ্য অগ্রিম জামানত বাবদ' if language == 'bn' else 'The Tenant has deposited an advance sum of' }} 
-    <strong>৳ {{ data.deposit_amount or '..................' }} {{ 'টাকা' if language == 'bn' else 'BDT' }}</strong> 
-    {{ 'পরিশোধ করিয়াছেন। চুক্তির মেয়াদান্তে বাসা ছাড়িবার সময় কোনো ক্ষতিসাধন বা বকেয়া না থাকিলে উক্ত টাকা ১ম পক্ষ ২য় পক্ষকে ফেরত দিতে বাধ্য থাকিবেন।' if language == 'bn' else 'as refundable security deposit, to be refunded upon vacating the premises subject to clearance of dues.' }}
+    <strong>{{ '৳ ' ~ (data.deposit_amount or '..................') ~ ' টাকা' if language == 'bn' else 'BDT ' ~ (data.deposit_amount or '__________________') }}</strong> 
+    {{ 'পরিশোধ করিয়াছেন। চুক্তির মেয়াদান্তে বাসা ছাড়িবার সময় কোনো ক্ষতিসাধন বা বকেয়া না থাকিলে উক্ত টাকা ১ম পক্ষ ২য় পক্ষকে ফেরত দিতে বাধ্য থাকিবেন।' if language == 'bn' else 'as a refundable security deposit, to be refunded upon vacating the premises subject to clearance of all outstanding dues and premises inspection.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৪.</span>
-    <span class="clause-title">{{ 'ইউটিলিটি ও সার্ভিস চার্জ (Utility Bills):' if language == 'bn' else 'Utility & Service Charges:' }}</span>
-    {{ data.utility_terms or ('বিদ্যুৎ বিল, গ্যাস বিল ও সার্ভিস চার্জ ২য় পক্ষ নিজ দায়িত্বে প্রতি মাসে সময়মতো পরিশোধ করিবেন এবং রসিদ ১ম পক্ষকে প্রদর্শন করিবেন।' if language == 'bn' else 'Electricity, gas, water, and building service charges shall be borne and paid punctually by the Tenant.') }}
+    <span class="clause-number">{{ '৪.' if language == 'bn' else '4.' }}</span>
+    <span class="clause-title">{{ 'ইউটিলিটি ও সার্ভিস চার্জ:' if language == 'bn' else 'Utility & Service Charges:' }}</span>
+    {{ data.utility_terms or ('বিদ্যুৎ বিল, গ্যাস বিল ও সার্ভিস চার্জ ২য় পক্ষ নিজ দায়িত্বে প্রতি মাসে সময়মতো পরিশোধ করিবেন এবং রসিদ ১ম পক্ষকে প্রদর্শন করিবেন।' if language == 'bn' else 'Electricity, gas, water, and designated service charges shall be borne and paid punctually by the Tenant, and payment receipts shall be presented to the Landlord upon request.') }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৫.</span>
-    <span class="clause-title">{{ 'ব্যবহার বিধি ও সাবলেট নিষেধাজ্ঞা (Usage & Subletting):' if language == 'bn' else 'Permitted Use & No Subletting:' }}</span>
-    {{ 'ভাড়াকৃত প্রাঙ্গণ শুধুমাত্র বসবাস/বৈধ ব্যবসার উদ্দেশ্যে ব্যবহৃত হইবে। ১ম পক্ষের লিখিত অনুমতি ব্যতিরেকে কোনো অবস্থাতেই অন্য কাহারো নিকট সাবলেট বা হস্তান্তর করা যাইবে না।' if language == 'bn' else 'The premises shall be used strictly for designated lawful purposes. Subletting in whole or in part without written consent is strictly prohibited.' }}
+    <span class="clause-number">{{ '৫.' if language == 'bn' else '5.' }}</span>
+    <span class="clause-title">{{ 'প্রাঙ্গণের ব্যবহার ও সাবলেট নিষেধাজ্ঞা:' if language == 'bn' else 'Permitted Use & Non-Assignment:' }}</span>
+    {{ 'ভাড়াকৃত প্রাঙ্গণ শুধুমাত্র বসবাস/বৈধ ব্যবসার উদ্দেশ্যে ব্যবহৃত হইবে। ১ম পক্ষের লিখিত অনুমতি ব্যতিরেকে কোনো অবস্থাতেই অন্য কাহারো নিকট সাবলেট বা হস্তান্তর করা যাইবে না।' if language == 'bn' else 'The premises shall be used exclusively for lawful residential or designated commercial purposes. Subletting or assigning the premises without the express written consent of the Landlord is strictly prohibited.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৬.</span>
-    <span class="clause-title">{{ 'চুক্তি বাতিল ও নোটিশ পিরিয়ড (Notice Period & Termination):' if language == 'bn' else 'Termination & Notice:' }}</span>
+    <span class="clause-number">{{ '৬.' if language == 'bn' else '6.' }}</span>
+    <span class="clause-title">{{ 'চুক্তি অবসান ও নোটিশ:' if language == 'bn' else 'Termination & Notice Period:' }}</span>
     {{ 'মেয়াদ শেষ হইবার পূর্বে কোনো পক্ষ চুক্তি বাতিল করিতে চাহিলে অন্য পক্ষকে কমপক্ষে' if language == 'bn' else 'Either party may terminate this agreement prior to expiry by serving at least' }} 
     <strong>{{ data.notice_period_months or '২' }} {{ 'মাসের' if language == 'bn' else 'month(s)' }}</strong> 
-    {{ 'লিখিত নোটিশ প্রদান করিবেন।' if language == 'bn' else 'prior written notice.' }}
+    {{ 'লিখিত নোটিশ প্রদান করিবেন।' if language == 'bn' else 'prior written notice to the other party.' }}
   </div>
 
   {% if data.custom_clauses and data.custom_clauses|length > 0 %}
     {% for clause in data.custom_clauses %}
     <div class="clause-item">
-      <span class="clause-number">{{ loop.index + 6 }}.</span>
-      <span class="clause-title">{{ clause.title or ('বিশেষ শর্ত:' if language == 'bn' else 'Special Clause:') }}</span>
+      <span class="clause-number">{{ (loop.index + 6) ~ '.' }}</span>
+      <span class="clause-title">{{ clause.title or ('বিশেষ শর্ত:' if language == 'bn' else 'Special Covenant:') }}</span>
       {{ clause.text }}
     </div>
     {% endfor %}
@@ -102,24 +102,38 @@
 </div>
 
 <p style="margin-top: 25px;">
-  {{ 'উভয় পক্ষ সুস্থ মস্তিষ্কে, সজ্ঞানে এবং অন্যের বিনা প্ররোচনায় এই চুক্তিপত্রের সমুদয় শর্ত বুঝিয়া মানিয়া নিজ নিজ নাম স্বাক্ষর করিলেন।' if language == 'bn' else 'IN WITNESS WHEREOF, the Parties hereto have signed and executed this Agreement of their own free will and volition.' }}
+  {{ 'উভয় পক্ষ সুস্থ মস্তিষ্কে, সজ্ঞানে এবং অন্যের বিনা প্ররোচনায় এই চুক্তিপত্রের সমুদয় শর্ত বুঝিয়া মানিয়া নিজ নিজ নাম স্বাক্ষর করিলেন।' if language == 'bn' else 'IN WITNESS WHEREOF, the Parties hereto have signed and executed this Agreement voluntarily, knowingly, and in sound mind on the date first written above.' }}
 </p>
 
 <div class="signatures-section">
   <div class="sig-row">
-    <div class="sig-box">
-      {% if data.party1_signature %}
-        <img src="{{ data.party1_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
-      {% endif %}
-      <strong>{{ '১ম পক্ষের স্বাক্ষর (মালিক)' if language == 'bn' else "First Party's Signature (Landlord)" }}</strong><br>
-      {{ data.landlord_name }}
+    <div class="sig-col" data-target-sign="p1" title="{{ '১ম পক্ষের স্বাক্ষর দিন / পরিবর্তন করুন' if language == 'bn' else 'Sign / Update First Party Signature' }}">
+      <div class="sig-image-wrap">
+        {% if data.party1_signature %}
+          <img src="{{ data.party1_signature }}" alt="{{ '১ম পক্ষের স্বাক্ষর' if language == 'bn' else 'First Party Signature' }}">
+        {% else %}
+          <div class="sig-image-placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="sig-line"></div>
+      <div class="sig-label">
+        <strong>{{ '১ম পক্ষের স্বাক্ষর (মালিক)' if language == 'bn' else "First Party's Signature (Landlord)" }}</strong><br>
+        <span>{{ data.landlord_name }}</span>
+      </div>
     </div>
-    <div class="sig-box">
-      {% if data.party2_signature %}
-        <img src="{{ data.party2_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
-      {% endif %}
-      <strong>{{ '২য় পক্ষের স্বাক্ষর (ভাড়াটিয়া)' if language == 'bn' else "Second Party's Signature (Tenant)" }}</strong><br>
-      {{ data.tenant_name }}
+    <div class="sig-col" data-target-sign="p2" title="{{ '২য় পক্ষের স্বাক্ষর দিন / পরিবর্তন করুন' if language == 'bn' else 'Sign / Update Second Party Signature' }}">
+      <div class="sig-image-wrap">
+        {% if data.party2_signature %}
+          <img src="{{ data.party2_signature }}" alt="{{ '২য় পক্ষের স্বাক্ষর' if language == 'bn' else 'Second Party Signature' }}">
+        {% else %}
+          <div class="sig-image-placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="sig-line"></div>
+      <div class="sig-label">
+        <strong>{{ '২য় পক্ষের স্বাক্ষর (ভাড়াটিয়া)' if language == 'bn' else "Second Party's Signature (Tenant)" }}</strong><br>
+        <span>{{ data.tenant_name }}</span>
+      </div>
     </div>
   </div>
 </div>
@@ -128,14 +142,14 @@
   <strong style="color: #475569;">{{ 'সাক্ষীগণের স্বাক্ষর:' if language == 'bn' else 'Witness Signatures:' }}</strong>
   <div class="witness-grid">
     <div class="witness-box">
-      ১. স্বাক্ষর: ...........................................<br>
-      নাম: {{ data.witness1_name or '...........................................' }}<br>
-      ঠিকানা: {{ data.witness1_address or '...........................................' }}
+      {{ '১. স্বাক্ষর:' if language == 'bn' else '1. Signature:' }} ...........................................<br>
+      {{ 'নাম:' if language == 'bn' else 'Name:' }} {{ data.witness1_name or ('...........................................' if language == 'bn' else '___________________________') }}<br>
+      {{ 'ঠিকানা:' if language == 'bn' else 'Address:' }} {{ data.witness1_address or ('...........................................' if language == 'bn' else '___________________________') }}
     </div>
     <div class="witness-box">
-      ২. স্বাক্ষর: ...........................................<br>
-      নাম: {{ data.witness2_name or '...........................................' }}<br>
-      ঠিকানা: {{ data.witness2_address or '...........................................' }}
+      {{ '২. স্বাক্ষর:' if language == 'bn' else '2. Signature:' }} ...........................................<br>
+      {{ 'নাম:' if language == 'bn' else 'Name:' }} {{ data.witness2_name or ('...........................................' if language == 'bn' else '___________________________') }}<br>
+      {{ 'ঠিকানা:' if language == 'bn' else 'Address:' }} {{ data.witness2_address or ('...........................................' if language == 'bn' else '___________________________') }}
     </div>
   </div>
 </div>

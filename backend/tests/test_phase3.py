@@ -1,4 +1,8 @@
-﻿from fastapi.testclient import TestClient
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from fastapi.testclient import TestClient
 from app.main import app
 
 client = TestClient(app)
@@ -77,8 +81,42 @@ def test_signature_in_pdf():
     assert len(resp.content) > 2000
     print(f"[PASS] E-Signature Embedded PDF Generated Successfully! (Bytes: {len(resp.content)})")
 
+def test_extract_file_text():
+    import io
+    import docx
+
+    # Test DOCX extraction
+    d = docx.Document()
+    d.add_paragraph("বাড়ি ভাড়ার চুক্তিপত্র টেস্ট")
+    d.add_paragraph("ভাড়াটিয়া: জনাব রফিক")
+    buf = io.BytesIO()
+    d.save(buf)
+    docx_bytes = buf.getvalue()
+
+    resp = client.post(
+        "/api/tools/extract-file-text",
+        files={"file": ("test_doc.docx", docx_bytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")}
+    )
+    assert resp.status_code == 200
+    res = resp.json()
+    assert res["detected_format"] == "docx"
+    assert "বাড়ি ভাড়ার চুক্তিপত্র টেস্ট" in res["extracted_text"]
+    print(f"[PASS] DOCX Text Extracted Successfully! (Length: {res['character_count']})")
+
+    # Test TXT extraction
+    resp_txt = client.post(
+        "/api/tools/extract-file-text",
+        files={"file": ("test.txt", "অংশীদারি কারবার চুক্তি".encode("utf-8"), "text/plain")}
+    )
+    assert resp_txt.status_code == 200
+    res_t = resp_txt.json()
+    assert res_t["detected_format"] == "txt"
+    assert "অংশীদারি কারবার চুক্তি" in res_t["extracted_text"]
+    print(f"[PASS] TXT Text Extracted Successfully! (Length: {res_t['character_count']})")
+
 if __name__ == "__main__":
     test_save_and_list_contracts()
     test_audit_uploaded_document()
+    test_extract_file_text()
     test_signature_in_pdf()
     print("\n[SUCCESS] ALL PHASE 3 TESTS PASSED!")

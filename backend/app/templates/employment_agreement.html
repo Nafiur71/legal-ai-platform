@@ -1,80 +1,80 @@
-﻿{% extends 'base_document.html' %}
+{% extends 'base_document.html' %}
 
 {% block content %}
 <div class="doc-header">
   <h1 class="doc-title">{{ 'কর্মসংস্থান ও চাকরির চুক্তিপত্র' if language == 'bn' else 'Employment Contract & Appointment Letter' }}</h1>
   <div class="doc-subtitle">
-    {{ 'সম্পাদনের তারিখ:' if language == 'bn' else 'Date of Execution:' }} <strong>{{ data.execution_date or '..................' }}</strong>
+    {{ 'সম্পদানের তারিখ:' if language == 'bn' else 'Date of Execution:' }} <strong>{{ data.execution_date or ('..................' if language == 'bn' else '..................') }}</strong>
   </div>
 </div>
 
 <div class="parties-section">
   <div class="party-block">
-    <div class="party-title">{{ 'নিয়োগকারী প্রতিষ্ঠান (Employer / Company):' if language == 'bn' else 'Employer / Company:' }}</div>
+    <div class="party-title">{{ 'নিয়োগকারী প্রতিষ্ঠান:' if language == 'bn' else 'Employer / Company:' }}</div>
     <div><strong>{{ 'প্রতিষ্ঠানের নাম:' if language == 'bn' else 'Company Name:' }}</strong> {{ data.company_name or '................................................' }}</div>
     <div><strong>{{ 'অফিস ঠিকানা:' if language == 'bn' else 'Office Address:' }}</strong> {{ data.company_address or '................................................' }}</div>
-    <div><strong>{{ 'প্রতিনিধি ও পদবি:' if language == 'bn' else 'Authorized Representative:' }}</strong> {{ data.company_rep or '................................................' }}</div>
+    <div><strong>{{ 'অনুমোদিত প্রতিনিধি ও পদবি:' if language == 'bn' else 'Authorized Representative:' }}</strong> {{ data.company_rep or '................................................' }}</div>
   </div>
 
   <div style="text-align: center; margin: 10px 0; font-weight: bold; color: #64748b;">
-    --- {{ 'এবং (And)' }} ---
+    --- {{ 'এবং' if language == 'bn' else 'AND' }} ---
   </div>
 
   <div class="party-block">
-    <div class="party-title">{{ 'কর্মচারী / কর্মকর্তা (Employee):' if language == 'bn' else 'Employee:' }}</div>
+    <div class="party-title">{{ 'নিযুক্ত কর্মকর্তা / কর্মচারী:' if language == 'bn' else 'Employee:' }}</div>
     <div><strong>{{ 'নাম:' if language == 'bn' else 'Name:' }}</strong> {{ data.employee_name or '................................................' }}</div>
-    <div><strong>{{ 'পিতা/স্বামীর নাম:' if language == 'bn' else 'Father/Spouse:' }}</strong> {{ data.employee_father or '................................................' }}</div>
+    <div><strong>{{ 'পিতা/স্বামীর নাম:' if language == 'bn' else 'Father / Spouse Name:' }}</strong> {{ data.employee_father or '................................................' }}</div>
     <div><strong>{{ 'ঠিকানা:' if language == 'bn' else 'Address:' }}</strong> {{ data.employee_address or '................................................' }}</div>
-    <div><strong>{{ 'এনআইডি:' if language == 'bn' else 'NID:' }}</strong> {{ data.employee_nid or '..................' }} | <strong>{{ 'মোবাইল:' if language == 'bn' else 'Phone:' }}</strong> {{ data.employee_phone or '..................' }}</div>
+    <div><strong>{{ 'জাতীয় পরিচয়পত্র নং:' if language == 'bn' else 'National ID (NID):' }}</strong> {{ data.employee_nid or '..................' }} | <strong>{{ 'মোবাইল:' if language == 'bn' else 'Phone:' }}</strong> {{ data.employee_phone or '..................' }}</div>
   </div>
 </div>
 
 <div class="highlight-box">
-  <strong>{{ 'পদবি ও কর্মক্ষেত্র (Designation & Department):' if language == 'bn' else 'Designation & Workplace:' }}</strong><br>
-  <strong>{{ data.designation or 'সফটওয়্যার ইঞ্জিনিয়ার / মার্কেটিং এক্সিকিউটিভ' }}</strong> | {{ 'বিভাগ:' if language == 'bn' else 'Department:' }} {{ data.department or 'তথ্যপ্রযুক্তি বিভাগ' }}
+  <strong>{{ 'পদবি ও বিভাগ:' if language == 'bn' else 'Designation & Workplace:' }}</strong><br>
+  <strong>{{ data.designation or ('সফটওয়্যার প্রকৌশলী' if language == 'bn' else 'Software Engineer') }}</strong> | {{ 'বিভাগ:' if language == 'bn' else 'Department:' }} {{ data.department or ('তথ্যপ্রযুক্তি বিভাগ' if language == 'bn' else 'Information Technology') }}
 </div>
 
 <div class="clauses-container">
   <div class="clause-item">
-    <span class="clause-number">১.</span>
-    <span class="clause-title">{{ 'বেতন ও সুবিধাদি (Remuneration & Benefits):' if language == 'bn' else 'Compensation & Benefits:' }}</span>
+    <span class="clause-number">{{ '১.' if language == 'bn' else '1.' }}</span>
+    <span class="clause-title">{{ 'বেতন ও অন্যান্য সুবিধাদি:' if language == 'bn' else 'Compensation & Benefits:' }}</span>
     {{ 'কর্মকর্তার সর্বসাকুল্যে মাসিক বেতন নির্ধারণ করা হইল মোট' if language == 'bn' else 'Total gross monthly remuneration is fixed at' }} 
-    <strong>৳ {{ data.salary_amount or '..................' }} {{ 'টাকা' if language == 'bn' else 'BDT' }}</strong>, 
+    <strong>{{ '৳ ' if language == 'bn' else 'BDT ' }}{{ data.salary_amount or '..................' }} {{ 'টাকা' if language == 'bn' else '' }}</strong>, 
     {{ 'যাহা প্রতি ইংরেজি মাসের প্রথম সপ্তাহের মধ্যে ব্যাংক একাউন্টের মাধ্যমে প্রদান করা হইবে।' if language == 'bn' else 'payable within the first week of each month.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">২.</span>
-    <span class="clause-title">{{ 'শিক্ষানবিসকাল (Probation Period):' if language == 'bn' else 'Probationary Period:' }}</span>
+    <span class="clause-number">{{ '২.' if language == 'bn' else '2.' }}</span>
+    <span class="clause-title">{{ 'শিক্ষানবিসকাল:' if language == 'bn' else 'Probationary Period:' }}</span>
     {{ 'যোগদানের তারিখ হইতে প্রাথমিক' if language == 'bn' else 'Commencing from joining date, the initial period of' }} 
-    <strong>{{ data.probation_months or '৩' }} {{ 'মাস' if language == 'bn' else 'months' }}</strong> 
+    <strong>{{ data.probation_months or ('৩' if language == 'bn' else '3') }} {{ 'মাস' if language == 'bn' else 'months' }}</strong> 
     {{ 'শিক্ষানবিসকাল হিসেবে গণ্য হইবে। সন্তোষজনক মূল্যায়নের ভিত্তিতে পরবর্তীতে চাকরি স্থায়ী করা হইবে।' if language == 'bn' else 'shall be treated as probation, subject to confirmation upon satisfactory evaluation.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৩.</span>
-    <span class="clause-title">{{ 'কাজের সময় ও ছুটি (Working Hours & Leave):' if language == 'bn' else 'Working Hours & Leave:' }}</span>
+    <span class="clause-number">{{ '৩.' if language == 'bn' else '3.' }}</span>
+    <span class="clause-title">{{ 'কর্মঘণ্টা ও ছুটি:' if language == 'bn' else 'Working Hours & Leave:' }}</span>
     {{ 'সাপ্তাহিক কর্মঘণ্টা হইবে দৈনিক ৮ ঘণ্টা (সপ্তাহে ৫ দিন)। প্রচলিত শ্রম আইন এবং কোম্পানির বার্ষিক ছুটির নীতিমালা মোতাবেক সবেতন ছুটি প্রাপ্য হইবেন।' if language == 'bn' else 'Standard working hours shall be 40 hours per week. Leave shall accrue per statutory labor guidelines.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৪.</span>
-    <span class="clause-title">{{ 'গোপনীয়তা ও নন-কম্পিট (Confidentiality & Non-Compete):' if language == 'bn' else 'Confidentiality & Non-Compete:' }}</span>
-    {{ 'চাকরিকালীন সময়ে এবং চাকরি অবসানের পরবর্তী ১ বছর কর্মচারী কোম্পানির কোনো ব্যবসায়িক তথ্য, গ্রাহক তালিকা বা ক্লাউড কোডবেস প্রতিদ্বন্দ্বী প্রতিষ্ঠানের নিকট প্রকাশ বা অপব্যবহার করিতে পারিবেন না।' if language == 'bn' else 'The employee covenants not to disclose trade secrets or work for immediate competitors for a period of 1 year post-termination.' }}
+    <span class="clause-number">{{ '৪.' if language == 'bn' else '4.' }}</span>
+    <span class="clause-title">{{ 'গোপনীয়তা রক্ষা ও প্রতিযোগিতা বর্জন:' if language == 'bn' else 'Confidentiality & Non-Compete:' }}</span>
+    {{ 'চাকরিকালীন সময়ে এবং চাকরি অবসানের পরবর্তী ১ বছর কর্মচারী কোম্পানির কোনো ব্যবসায়িক তথ্য, গ্রাহক তালিকা বা অভ্যন্তরীণ কোডবেস প্রতিদ্বন্দ্বী প্রতিষ্ঠানের নিকট প্রকাশ বা অপব্যবহার করিতে পারিবেন না।' if language == 'bn' else 'The employee covenants not to disclose trade secrets or work for immediate competitors for a period of 1 year post-termination.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৫.</span>
-    <span class="clause-title">{{ 'চাকরি অবসান ও নোটিশ (Termination Notice):' if language == 'bn' else 'Termination & Notice:' }}</span>
+    <span class="clause-number">{{ '৫.' if language == 'bn' else '5.' }}</span>
+    <span class="clause-title">{{ 'চাকরি অবসান ও নোটিশ:' if language == 'bn' else 'Termination & Notice:' }}</span>
     {{ 'উভয় পক্ষ' if language == 'bn' else 'Either party may terminate the employment by serving' }} 
-    <strong>{{ data.notice_period_days or '৩০' }} {{ 'দিনের' if language == 'bn' else 'days' }}</strong> 
+    <strong>{{ data.notice_period_days or ('৩০' if language == 'bn' else '30') }} {{ 'দিনের' if language == 'bn' else 'days' }}</strong> 
     {{ 'লিখিত নোটিশ অথবা সমপরিমাণ বেতন পরিশোধ করিয়া চুক্তি সমাপ্ত করিতে পারিবেন।' if language == 'bn' else 'written notice or gross pay in lieu thereof.' }}
   </div>
 
   {% if data.custom_clauses and data.custom_clauses|length > 0 %}
     {% for clause in data.custom_clauses %}
     <div class="clause-item">
-      <span class="clause-number">{{ loop.index + 5 }}.</span>
+      <span class="clause-number">{{ (loop.index + 5) ~ '.' }}</span>
       <span class="clause-title">{{ clause.title or ('বিশেষ শর্ত:' if language == 'bn' else 'Special Clause:') }}</span>
       {{ clause.text }}
     </div>
@@ -84,19 +84,33 @@
 
 <div class="signatures-section">
   <div class="sig-row">
-    <div class="sig-box">
-      {% if data.party1_signature %}
-        <img src="{{ data.party1_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
-      {% endif %}
-      <strong>{{ 'কোম্পানির পক্ষে স্বাক্ষর ও সিল' if language == 'bn' else 'For Company / Employer' }}</strong><br>
-      {{ data.company_name }}
+    <div class="sig-col" data-target-sign="p1" title="{{ 'কোম্পানির স্বাক্ষর দিন' if language == 'bn' else 'Click to add signature for Employer' }}">
+      <div class="sig-image-wrap">
+        {% if data.party1_signature %}
+          <img src="{{ data.party1_signature }}" alt="{{ 'কোম্পানির স্বাক্ষর' if language == 'bn' else 'Employer Signature' }}">
+        {% else %}
+          <div class="sig-image-placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="sig-line"></div>
+      <div class="sig-label">
+        <strong>{{ 'কোম্পানির পক্ষে স্বাক্ষর ও সিল' if language == 'bn' else 'For Company / Employer' }}</strong><br>
+        <span>{{ data.company_name }}</span>
+      </div>
     </div>
-    <div class="sig-box">
-      {% if data.party2_signature %}
-        <img src="{{ data.party2_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
-      {% endif %}
-      <strong>{{ 'কর্মচারীর স্বাক্ষর' if language == 'bn' else 'Employee Signature' }}</strong><br>
-      {{ data.employee_name }}
+    <div class="sig-col" data-target-sign="p2" title="{{ 'কর্মচারীর স্বাক্ষর দিন' if language == 'bn' else 'Click to add signature for Employee' }}">
+      <div class="sig-image-wrap">
+        {% if data.party2_signature %}
+          <img src="{{ data.party2_signature }}" alt="{{ 'কর্মচারীর স্বাক্ষর' if language == 'bn' else 'Employee Signature' }}">
+        {% else %}
+          <div class="sig-image-placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="sig-line"></div>
+      <div class="sig-label">
+        <strong>{{ 'কর্মকর্তা / কর্মচারীর স্বাক্ষর' if language == 'bn' else 'Employee Signature' }}</strong><br>
+        <span>{{ data.employee_name }}</span>
+      </div>
     </div>
   </div>
 </div>

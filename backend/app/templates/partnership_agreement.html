@@ -1,86 +1,86 @@
-﻿{% extends 'base_document.html' %}
+{% extends 'base_document.html' %}
 
 {% block content %}
 <div class="doc-header">
   <h1 class="doc-title">{{ 'অংশীদারি কারবার চুক্তিপত্র' if language == 'bn' else 'Partnership Business Deed' }}</h1>
   <div class="doc-subtitle">
-    {{ 'সম্পাদনের তারিখ:' if language == 'bn' else 'Date of Execution:' }} <strong>{{ data.execution_date or '..................' }}</strong>
+    {{ 'সম্পদানের তারিখ:' if language == 'bn' else 'Date of Execution:' }} <strong>{{ data.execution_date or ('..................' if language == 'bn' else '..................') }}</strong>
   </div>
 </div>
 
 <div class="parties-section">
   <div class="party-block">
-    <div class="party-title">{{ '১ম অংশীদার (First Partner):' if language == 'bn' else 'First Partner:' }}</div>
+    <div class="party-title">{{ 'প্রথম অংশীদার:' if language == 'bn' else 'First Partner:' }}</div>
     <div><strong>{{ 'নাম:' if language == 'bn' else 'Name:' }}</strong> {{ data.partner1_name or '................................................' }}</div>
-    <div><strong>{{ 'পিতা/স্বামীর নাম:' if language == 'bn' else 'Father/Spouse:' }}</strong> {{ data.partner1_father or '................................................' }}</div>
+    <div><strong>{{ 'পিতা/স্বামীর নাম:' if language == 'bn' else 'Father / Spouse Name:' }}</strong> {{ data.partner1_father or '................................................' }}</div>
     <div><strong>{{ 'ঠিকানা:' if language == 'bn' else 'Address:' }}</strong> {{ data.partner1_address or '................................................' }}</div>
-    <div><strong>{{ 'এনআইডি:' if language == 'bn' else 'NID:' }}</strong> {{ data.partner1_nid or '..................' }} | <strong>{{ 'মোবাইল:' if language == 'bn' else 'Phone:' }}</strong> {{ data.partner1_phone or '..................' }}</div>
+    <div><strong>{{ 'জাতীয় পরিচয়পত্র নং:' if language == 'bn' else 'National ID (NID):' }}</strong> {{ data.partner1_nid or '..................' }} | <strong>{{ 'মোবাইল:' if language == 'bn' else 'Phone:' }}</strong> {{ data.partner1_phone or '..................' }}</div>
   </div>
 
   <div style="text-align: center; margin: 10px 0; font-weight: bold; color: #64748b;">
-    --- {{ 'এবং (And)' }} ---
+    --- {{ 'এবং' if language == 'bn' else 'AND' }} ---
   </div>
 
   <div class="party-block">
-    <div class="party-title">{{ '২য় অংশীদার (Second Partner):' if language == 'bn' else 'Second Partner:' }}</div>
+    <div class="party-title">{{ 'দ্বিতীয় অংশীদার:' if language == 'bn' else 'Second Partner:' }}</div>
     <div><strong>{{ 'নাম:' if language == 'bn' else 'Name:' }}</strong> {{ data.partner2_name or '................................................' }}</div>
-    <div><strong>{{ 'পিতা/স্বামীর নাম:' if language == 'bn' else 'Father/Spouse:' }}</strong> {{ data.partner2_father or '................................................' }}</div>
+    <div><strong>{{ 'পিতা/স্বামীর নাম:' if language == 'bn' else 'Father / Spouse Name:' }}</strong> {{ data.partner2_father or '................................................' }}</div>
     <div><strong>{{ 'ঠিকানা:' if language == 'bn' else 'Address:' }}</strong> {{ data.partner2_address or '................................................' }}</div>
-    <div><strong>{{ 'এনআইডি:' if language == 'bn' else 'NID:' }}</strong> {{ data.partner2_nid or '..................' }} | <strong>{{ 'মোবাইল:' if language == 'bn' else 'Phone:' }}</strong> {{ data.partner2_phone or '..................' }}</div>
+    <div><strong>{{ 'জাতীয় পরিচয়পত্র নং:' if language == 'bn' else 'National ID (NID):' }}</strong> {{ data.partner2_nid or '..................' }} | <strong>{{ 'মোবাইল:' if language == 'bn' else 'Phone:' }}</strong> {{ data.partner2_phone or '..................' }}</div>
   </div>
 </div>
 
 <div class="highlight-box">
   <strong>{{ 'কারবারের নাম ও প্রধান কার্যালয়:' if language == 'bn' else 'Business Name & Principal Place:' }}</strong><br>
-  <strong>{{ data.firm_name or 'মেসার্স ......................................' }}</strong><br>
-  {{ data.firm_address or 'কার্যালয়ের ঠিকানা: ................................................................' }}
+  <strong>{{ data.firm_name or ('মেসার্স ......................................' if language == 'bn' else 'M/S ......................................') }}</strong><br>
+  {{ data.firm_address or ('কার্যালয়ের ঠিকানা: ................................................................' if language == 'bn' else 'Principal Office: ................................................................') }}
 </div>
 
 <div class="clauses-container">
   <div class="clause-item">
-    <span class="clause-number">১.</span>
-    <span class="clause-title">{{ 'মূলধন বিনিয়োগ ও অনুপাত (Capital Contribution):' if language == 'bn' else 'Capital Contribution:' }}</span>
+    <span class="clause-number">{{ '১.' if language == 'bn' else '1.' }}</span>
+    <span class="clause-title">{{ 'মূলধন বিনিয়োগ ও অংশীদারি অনুপাত:' if language == 'bn' else 'Capital Contribution:' }}</span>
     {{ 'উক্ত অংশীদারি কারবারের প্রাথমিক মূলধন নির্ধারণ করা হইল মোট' if language == 'bn' else 'Total initial capital is agreed at' }} 
-    <strong>৳ {{ data.total_capital or '..................' }} {{ 'টাকা' if language == 'bn' else 'BDT' }}</strong>। 
-    {{ 'যাহাতে ১ম পক্ষ' if language == 'bn' else 'wherein First Partner contributes' }} <strong>{{ data.partner1_share or '৫০' }}%</strong> 
-    {{ 'এবং ২য় পক্ষ' if language == 'bn' else 'and Second Partner contributes' }} <strong>{{ data.partner2_share or '৫০' }}%</strong> 
+    <strong>{{ '৳ ' if language == 'bn' else 'BDT ' }}{{ data.total_capital or '..................' }} {{ 'টাকা' if language == 'bn' else '' }}</strong>। 
+    {{ 'যাহাতে প্রথম পক্ষ' if language == 'bn' else 'wherein First Partner contributes' }} <strong>{{ data.partner1_share or ('৫০' if language == 'bn' else '50') }}%</strong> 
+    {{ 'এবং দ্বিতীয় পক্ষ' if language == 'bn' else 'and Second Partner contributes' }} <strong>{{ data.partner2_share or ('৫০' if language == 'bn' else '50') }}%</strong> 
     {{ 'মূলধন সরবরাহ করিবেন।' if language == 'bn' else 'capital respectively.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">২.</span>
-    <span class="clause-title">{{ 'লাভ-লোকসান বণ্টন (Profit & Loss Sharing):' if language == 'bn' else 'Profit & Loss Allocation:' }}</span>
+    <span class="clause-number">{{ '২.' if language == 'bn' else '2.' }}</span>
+    <span class="clause-title">{{ 'লাভ-লোকসান বণ্টন:' if language == 'bn' else 'Profit & Loss Allocation:' }}</span>
     {{ 'কারবারের সকল প্রকার অর্জিত নীট মুনাফা ও সম্ভাব্য লোকসান অংশীদারগণ তাহাদের নিজ নিজ মূলধনের অনুপাত অনুযায়ী (' if language == 'bn' else 'All net operating profits and losses shall be divided in proportion to their capital ratio (' }}
-    <strong>{{ data.partner1_share or '৫০' }}% : {{ data.partner2_share or '৫০' }}%</strong>
+    <strong>{{ data.partner1_share or ('৫০' if language == 'bn' else '50') }}% : {{ data.partner2_share or ('৫০' if language == 'bn' else '50') }}%</strong>
     {{ ') পরস্পরের মধ্যে বণ্টন ও বহন করিবেন।' if language == 'bn' else ').' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৩.</span>
-    <span class="clause-title">{{ 'ব্যাংক হিসাব পরিচালনা (Bank Operations):' if language == 'bn' else 'Bank Account Operations:' }}</span>
+    <span class="clause-number">{{ '৩.' if language == 'bn' else '3.' }}</span>
+    <span class="clause-title">{{ 'ব্যাংক হিসাব পরিচালনা:' if language == 'bn' else 'Bank Account Operations:' }}</span>
     {{ 'কারবারের নামে যেকোনো তফশিলি ব্যাংকে একটি চলতি হিসাব খোলা হইবে এবং উক্ত হিসাব' if language == 'bn' else 'A commercial bank account shall be maintained in the firm name and operated under' }} 
-    <strong>{{ data.bank_operation or 'উভয় অংশীদারের যৌথ স্বাক্ষরে (Joint Signatures)' if language == 'bn' else 'Joint Signatures of both partners' }}</strong> 
+    <strong>{{ data.bank_operation or ('উভয় অংশীদারের যৌথ স্বাক্ষরে' if language == 'bn' else 'Joint Signatures of both partners') }}</strong> 
     {{ 'পরিচালিত হইবে।' if language == 'bn' else '.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৪.</span>
-    <span class="clause-title">{{ 'ব্যবস্থাপনা ও দায়িত্ব (Management Duties):' if language == 'bn' else 'Management & Conduct:' }}</span>
+    <span class="clause-number">{{ '৪.' if language == 'bn' else '4.' }}</span>
+    <span class="clause-title">{{ 'ব্যবস্থাপনা ও দায়িত্ব পালন:' if language == 'bn' else 'Management & Conduct:' }}</span>
     {{ 'উভয় অংশীদার কারবারের দৈনন্দিন পরিচালনা, ক্রয়-বিক্রয় ও নথিপত্র সংরক্ষণে সমান দায়িত্ব পালন করিবেন এবং একে অপরের অজ্ঞাতসারে কোনো গোপন দায় তৈরি করিতে পারিবেন না।' if language == 'bn' else 'Both partners shall devote diligent attention to business operations and act with utmost good faith.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৫.</span>
-    <span class="clause-title">{{ 'অংশীদারি অবসান ও নোটিশ (Dissolution):' if language == 'bn' else 'Dissolution & Notice:' }}</span>
+    <span class="clause-number">{{ '৫.' if language == 'bn' else '5.' }}</span>
+    <span class="clause-title">{{ 'কারবারের অবসান ও নোটিশ:' if language == 'bn' else 'Dissolution & Notice:' }}</span>
     {{ 'কোনো অংশীদার এই কারবার হইতে অব্যাহতি লইতে চাহিলে অন্য পক্ষকে কমপক্ষে' if language == 'bn' else 'Either partner desiring to withdraw or dissolve the firm shall serve at least' }} 
-    <strong>{{ data.notice_period_months or '৩' }} {{ 'মাসের' if language == 'bn' else 'months' }}</strong> 
+    <strong>{{ data.notice_period_months or ('৩' if language == 'bn' else '3') }} {{ 'মাসের' if language == 'bn' else 'months' }}</strong> 
     {{ 'লিখিত নোটিশ প্রদান করিবেন এবং অডিট সম্পন্ন করিয়া হিসাব নিষ্পত্তি করিবেন।' if language == 'bn' else 'prior written notice followed by statutory accounting.' }}
   </div>
 
   {% if data.custom_clauses and data.custom_clauses|length > 0 %}
     {% for clause in data.custom_clauses %}
     <div class="clause-item">
-      <span class="clause-number">{{ loop.index + 5 }}.</span>
+      <span class="clause-number">{{ (loop.index + 5) ~ '.' }}</span>
       <span class="clause-title">{{ clause.title or ('বিশেষ শর্ত:' if language == 'bn' else 'Special Clause:') }}</span>
       {{ clause.text }}
     </div>
@@ -90,19 +90,33 @@
 
 <div class="signatures-section">
   <div class="sig-row">
-    <div class="sig-box">
-      {% if data.party1_signature %}
-        <img src="{{ data.party1_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
-      {% endif %}
-      <strong>{{ '১ম অংশীদারের স্বাক্ষর' if language == 'bn' else 'First Partner Signature' }}</strong><br>
-      {{ data.partner1_name }}
+    <div class="sig-col" data-target-sign="p1" title="{{ 'প্রথম অংশীদারের স্বাক্ষর দিন' if language == 'bn' else 'Click to add signature for First Partner' }}">
+      <div class="sig-image-wrap">
+        {% if data.party1_signature %}
+          <img src="{{ data.party1_signature }}" alt="{{ 'প্রথম অংশীদারের স্বাক্ষর' if language == 'bn' else 'First Partner Signature' }}">
+        {% else %}
+          <div class="sig-image-placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="sig-line"></div>
+      <div class="sig-label">
+        <strong>{{ 'প্রথম অংশীদারের স্বাক্ষর' if language == 'bn' else 'First Partner Signature' }}</strong><br>
+        <span>{{ data.partner1_name }}</span>
+      </div>
     </div>
-    <div class="sig-box">
-      {% if data.party2_signature %}
-        <img src="{{ data.party2_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
-      {% endif %}
-      <strong>{{ '২য় অংশীদারের স্বাক্ষর' if language == 'bn' else 'Second Partner Signature' }}</strong><br>
-      {{ data.partner2_name }}
+    <div class="sig-col" data-target-sign="p2" title="{{ 'দ্বিতীয় অংশীদারের স্বাক্ষর দিন' if language == 'bn' else 'Click to add signature for Second Partner' }}">
+      <div class="sig-image-wrap">
+        {% if data.party2_signature %}
+          <img src="{{ data.party2_signature }}" alt="{{ 'দ্বিতীয় অংশীদারের স্বাক্ষর' if language == 'bn' else 'Second Partner Signature' }}">
+        {% else %}
+          <div class="sig-image-placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="sig-line"></div>
+      <div class="sig-label">
+        <strong>{{ 'দ্বিতীয় অংশীদারের স্বাক্ষর' if language == 'bn' else 'Second Partner Signature' }}</strong><br>
+        <span>{{ data.partner2_name }}</span>
+      </div>
     </div>
   </div>
 </div>

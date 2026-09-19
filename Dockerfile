@@ -5,14 +5,23 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PORT=8000 \
-    HOST=0.0.0.0
+    HOST=0.0.0.0 \
+    CHROME_BIN=/usr/bin/chromium
 
 # Install system dependencies for headless Chromium/PDF and font rendering
 RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium \
+    fonts-beng \
+    fonts-lohit-beng-bengali \
+    fonts-freefont-ttf \
     fonts-noto-cjk \
     fonts-sil-padauk \
     curl \
+    fontconfig \
+    && mkdir -p /usr/share/fonts/truetype/hind-siliguri \
+    && curl -sL "https://github.com/google/fonts/raw/main/ofl/hindsiliguri/HindSiliguri-Regular.ttf" -o /usr/share/fonts/truetype/hind-siliguri/HindSiliguri-Regular.ttf || true \
+    && curl -sL "https://github.com/google/fonts/raw/main/ofl/hindsiliguri/HindSiliguri-Bold.ttf" -o /usr/share/fonts/truetype/hind-siliguri/HindSiliguri-Bold.ttf || true \
+    && fc-cache -f \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

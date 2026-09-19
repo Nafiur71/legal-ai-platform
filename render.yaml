@@ -1,0 +1,22 @@
+# Render.com Infrastructure Blueprint ($0 Free Tier Web Service)
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: legal-ai-platform
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: HOST
+        value: 0.0.0.0
+      - key: GEMINI_MODEL
+        value: gemini-2.0-flash
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false

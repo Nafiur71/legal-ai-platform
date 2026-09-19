@@ -1,13 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ 'bn' if language == 'bn' else 'en' }}">
 <head>
   <meta charset="UTF-8">
   <title>{{ title or 'আইনি চুক্তিপত্র' }}</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
-    
     @page {
-      size: A4;
+      size: A4 portrait;
       margin: 20mm 18mm 20mm 18mm;
       @bottom-right {
         content: "Page " counter(page) " of " counter(pages);
@@ -21,20 +20,21 @@
       box-sizing: border-box;
     }
 
-    body {
+    body, .document-container {
       font-family: 'Hind Siliguri', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.75;
-      color: #1e293b;
+      line-height: 1.65;
+      color: #0f172a;
       background-color: #ffffff;
       margin: 0;
       padding: 0;
-      font-size: 13.5pt;
+      font-size: 11pt;
     }
 
     .document-container {
-      max-width: 800px;
+      width: 100%;
+      max-width: 100%;
       margin: 0 auto;
-      padding: 10px;
+      padding: 0;
     }
 
     /* Realistic 300 Taka Stamp Simulation */
@@ -66,16 +66,16 @@
     }
 
     .doc-title {
-      font-size: 20pt;
+      font-size: 17pt;
       font-weight: 700;
       color: #0f172a;
       margin: 0 0 6px 0;
       text-decoration: underline;
-      text-underline-offset: 6px;
+      text-underline-offset: 5px;
     }
 
     .doc-subtitle {
-      font-size: 12pt;
+      font-size: 10.5pt;
       color: #475569;
       font-weight: 500;
     }
@@ -83,13 +83,15 @@
     .parties-section {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 16px 20px;
-      margin-bottom: 22px;
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      font-size: 10.5pt;
+      line-height: 1.6;
     }
 
     .party-block {
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .party-block:last-child {
       margin-bottom: 0;
@@ -98,19 +100,21 @@
     .party-title {
       font-weight: 700;
       color: #1e3a8a;
-      font-size: 13.5pt;
+      font-size: 11.5pt;
     }
 
     .clauses-container {
-      margin-top: 18px;
+      margin-top: 16px;
     }
 
     .clause-item {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       text-align: justify;
       position: relative;
-      padding: 4px 6px;
+      padding: 3px 5px;
       border-radius: 4px;
+      font-size: 11pt;
+      line-height: 1.65;
       transition: background 0.15s;
     }
 
@@ -157,22 +161,69 @@
     }
 
     .signatures-section {
-      margin-top: 45px;
+      margin-top: 50px;
       page-break-inside: avoid;
+      break-inside: avoid;
     }
 
     .sig-row {
       display: flex;
       justify-content: space-between;
-      margin-top: 35px;
+      align-items: flex-end;
+      margin-top: 30px;
+      gap: 30px;
     }
 
-    .sig-box {
+    .sig-col, .sig-box {
+      flex: 1;
       width: 45%;
-      border-top: 1.5px solid #0f172a;
-      padding-top: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
-      font-size: 11.5pt;
+      min-width: 160px;
+      cursor: pointer;
+    }
+
+    .sig-image-wrap {
+      height: 55px;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      margin-bottom: 5px;
+    }
+
+    .sig-image-wrap img {
+      max-height: 52px;
+      max-width: 180px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .sig-image-placeholder {
+      height: 45px;
+      width: 100%;
+      border: 1px dashed transparent;
+      transition: border-color 0.2s;
+    }
+
+    .sig-col:hover .sig-image-placeholder {
+      border-color: #94a3b8;
+      border-radius: 4px;
+    }
+
+    .sig-line {
+      width: 100%;
+      border-top: 1.5px solid #0f172a;
+      margin-bottom: 6px;
+    }
+
+    .sig-label {
+      font-size: 11pt;
+      line-height: 1.4;
+      color: #0f172a;
     }
 
     .witness-section {
@@ -209,7 +260,7 @@
 
     @media print {
       body {
-        font-size: 12pt;
+        font-size: 11pt;
       }
       .parties-section {
         background: transparent;
@@ -225,11 +276,15 @@
   <div class="document-container" id="legal-document-root">
     <div class="stamp-header-space" id="stamp-header">
       <div>
-        <div style="font-size: 10pt; color: #991b1b; text-transform: uppercase;">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</div>
-        <div style="font-size: 13pt; font-weight: 800;">নন-জুডিশিয়াল স্ট্যাম্প (NON-JUDICIAL)</div>
+        <div style="font-size: 10pt; color: #991b1b; text-transform: uppercase;">
+          {{ 'গণপ্রজাতন্ত্রী বাংলাদেশ সরকার' if language == 'bn' else "Government of the People's Republic of Bangladesh" }}
+        </div>
+        <div style="font-size: 13pt; font-weight: 800;">
+          {{ 'নন-জুডিশিয়াল স্ট্যাম্প' if language == 'bn' else 'NON-JUDICIAL STAMP' }}
+        </div>
       </div>
       <div class="stamp-badge">
-        ৳ ৩০০ / 300 TK
+        {{ '৩০০ টাকা' if language == 'bn' else '300 BDT' }}
       </div>
     </div>
 
@@ -239,16 +294,16 @@
     <div class="verification-footer">
       <div style="display: flex; align-items: center; gap: 10px;">
         <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; font-weight: bold; font-family: monospace; font-size: 9pt;">
-          [QR VERIFY]
+          {{ '[যাচাই কিউআর]' if language == 'bn' else '[QR VERIFY]' }}
         </div>
         <div>
-          <strong style="color: #0f172a;">SmartLegal AI • ভেরিফাইড আইনি দলিল</strong><br>
-          রেফারেন্স আইডি: SLA-BD-{{ range(10000, 99999) | random }} | প্ল্যাটফর্ম ভেরিফিকেশন কোড সক্রিয়
+          <strong style="color: #0f172a;">{{ 'স্মার্টলিগ্যাল প্ল্যাটফর্ম • প্রত্যায়িত আইনি দলিল' if language == 'bn' else 'SmartLegal AI • Certified Legal Document' }}</strong><br>
+          {{ 'রেফারেন্স কোড:' if language == 'bn' else 'Reference ID:' }} SLA-BD-{{ range(10000, 99999) | random }} | {{ 'ডিজিটাল প্রমাণিকতা সংরক্ষিত' if language == 'bn' else 'Cryptographic Authenticity Secured' }}
         </div>
       </div>
       <div>
         <span style="border: 1px solid #10b981; color: #047857; background: #ecfdf5; padding: 3px 8px; border-radius: 4px; font-weight: bold;">
-          ✓ ডিজিটালি সার্টিফাইড
+          {{ '✓ ডিজিটালি প্রত্যায়িত' if language == 'bn' else '✓ Digitally Certified' }}
         </span>
       </div>
     </div>

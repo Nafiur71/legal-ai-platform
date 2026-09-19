@@ -1,80 +1,80 @@
-﻿{% extends 'base_document.html' %}
+{% extends 'base_document.html' %}
 
 {% block content %}
 <div class="doc-header">
   <h1 class="doc-title">{{ 'ফ্রিল্যান্স সার্ভিস ও পরামর্শক চুক্তিপত্র' if language == 'bn' else 'Independent Contractor & Service Agreement' }}</h1>
   <div class="doc-subtitle">
-    {{ 'সম্পাদনের তারিখ:' if language == 'bn' else 'Date of Execution:' }} <strong>{{ data.execution_date or '..................' }}</strong>
+    {{ 'সম্পদানের তারিখ:' if language == 'bn' else 'Date of Execution:' }} <strong>{{ data.execution_date or ('..................' if language == 'bn' else '..................') }}</strong>
   </div>
 </div>
 
 <div class="parties-section">
   <div class="party-block">
-    <div class="party-title">{{ 'গ্রাহক / প্রতিষ্ঠান (Client):' if language == 'bn' else 'The Client:' }}</div>
-    <div><strong>{{ 'নাম / কোম্পানি:' if language == 'bn' else 'Name/Company:' }}</strong> {{ data.client_name or '................................................' }}</div>
+    <div class="party-title">{{ 'গ্রাহক / নিয়োগকারী পক্ষ:' if language == 'bn' else 'The Client:' }}</div>
+    <div><strong>{{ 'নাম / প্রতিষ্ঠান:' if language == 'bn' else 'Name / Company:' }}</strong> {{ data.client_name or '................................................' }}</div>
     <div><strong>{{ 'ঠিকানা:' if language == 'bn' else 'Address:' }}</strong> {{ data.client_address or '................................................' }}</div>
-    <div><strong>{{ 'যোগাযোগ / ইমেইল:' if language == 'bn' else 'Contact/Email:' }}</strong> {{ data.client_email or '................................................' }}</div>
+    <div><strong>{{ 'যোগাযোগ / ইমেইল:' if language == 'bn' else 'Contact / Email:' }}</strong> {{ data.client_email or '................................................' }}</div>
   </div>
 
   <div style="text-align: center; margin: 10px 0; font-weight: bold; color: #64748b;">
-    --- {{ 'এবং (And)' }} ---
+    --- {{ 'এবং' if language == 'bn' else 'AND' }} ---
   </div>
 
   <div class="party-block">
-    <div class="party-title">{{ 'সেবা প্রদানকারী / ফ্রিল্যান্সার (Contractor):' if language == 'bn' else 'The Contractor:' }}</div>
+    <div class="party-title">{{ 'সেবা প্রদানকারী পক্ষ:' if language == 'bn' else 'The Contractor:' }}</div>
     <div><strong>{{ 'নাম:' if language == 'bn' else 'Name:' }}</strong> {{ data.freelancer_name or '................................................' }}</div>
-    <div><strong>{{ 'পেশাগত পদবি:' if language == 'bn' else 'Title/Role:' }}</strong> {{ data.freelancer_title or 'Software Developer / Designer / Consultant' }}</div>
+    <div><strong>{{ 'পেশাগত পদবি:' if language == 'bn' else 'Title / Role:' }}</strong> {{ data.freelancer_title or ('সফটওয়্যার ডেভেলপার / পরামর্শক' if language == 'bn' else 'Software Developer / Consultant') }}</div>
     <div><strong>{{ 'ঠিকানা:' if language == 'bn' else 'Address:' }}</strong> {{ data.freelancer_address or '................................................' }}</div>
-    <div><strong>{{ 'যোগাযোগ / ইমেইল:' if language == 'bn' else 'Contact/Email:' }}</strong> {{ data.freelancer_email or '................................................' }}</div>
+    <div><strong>{{ 'যোগাযোগ / ইমেইল:' if language == 'bn' else 'Contact / Email:' }}</strong> {{ data.freelancer_email or '................................................' }}</div>
   </div>
 </div>
 
 <div class="highlight-box">
-  <strong>{{ 'কাজের পরিধি (Scope of Work / Deliverables):' if language == 'bn' else 'Scope of Work & Deliverables:' }}</strong><br>
-  {{ data.scope_of_work or 'নির্দিষ্ট সফটওয়্যার ডেভেলপমেন্ট, UI/UX ডিজাইন, কনসালটেন্সি অথবা নির্ধারিত ডেলিভারেবলস সরবরাহ করণ।' if language == 'bn' else 'Provision of specified software development, digital design, or strategic advisory services as detailed herein.' }}
+  <strong>{{ 'কাজের পরিধি ও ফলাফল:' if language == 'bn' else 'Scope of Work & Deliverables:' }}</strong><br>
+  {{ data.scope_of_work or ('নির্দিষ্ট সফটওয়্যার ডেভেলপমেন্ট, ডিজাইন, পরামর্শ বা নির্ধারিত সেবা সমর্পণ।' if language == 'bn' else 'Provision of specified software development, digital design, or strategic advisory services as detailed herein.') }}
 </div>
 
 <div class="clauses-container">
   <div class="clause-item">
-    <span class="clause-number">১.</span>
-    <span class="clause-title">{{ 'পারিশ্রমিক ও পেমেন্ট শর্ত (Compensation & Milestones):' if language == 'bn' else 'Compensation & Payment Terms:' }}</span>
+    <span class="clause-number">{{ '১.' if language == 'bn' else '1.' }}</span>
+    <span class="clause-title">{{ 'পারিশ্রমিক ও পরিশোধের শর্তাবলি:' if language == 'bn' else 'Compensation & Payment Terms:' }}</span>
     {{ 'মোট পারিশ্রমিক নির্ধারণ করা হইল' if language == 'bn' else 'The total contract fee is agreed at' }} 
-    <strong>{{ data.currency or '৳' }} {{ data.total_amount or '..................' }}</strong>। 
-    {{ data.payment_milestones or ('কাজের প্রজেক্ট শুরুর পূর্বে ৩০% অগ্রিম, মধ্যবর্তী মাইলস্টোনে ৪০% এবং চূড়ান্ত ডেলিভারির পর বাকি ৩০% পরিশোধযোগ্য হইবে।' if language == 'bn' else '30% upfront deposit, 40% upon interim milestone approval, and 30% balance upon final deployment.') }}
+    <strong>{{ data.currency or ('৳' if language == 'bn' else 'USD') }} {{ data.total_amount or '..................' }}</strong>। 
+    {{ data.payment_milestones or ('কাজের শুরুতে ৩০% অগ্রিম, মধ্যবর্তী মাইলস্টোনে ৪০% এবং চূড়ান্ত ডেলিভারির পর বাকি ৩০% পরিশোধযোগ্য হইবে।' if language == 'bn' else '30% upfront deposit, 40% upon interim milestone approval, and 30% balance upon final deployment.') }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">২.</span>
-    <span class="clause-title">{{ 'ডেলিভারি সময়সীমা (Timeline & Delivery):' if language == 'bn' else 'Timeline & Milestones:' }}</span>
+    <span class="clause-number">{{ '২.' if language == 'bn' else '2.' }}</span>
+    <span class="clause-title">{{ 'কাজের সময়সীমা ও সমর্পণ:' if language == 'bn' else 'Timeline & Milestones:' }}</span>
     {{ 'সেবা প্রদানকারী নির্ধারিত কাজ আগামী' if language == 'bn' else 'The contractor shall deliver the project on or before' }} 
-    <strong>{{ data.deadline or 'নির্ধারিত তারিখের' }}</strong> 
+    <strong>{{ data.deadline or ('নির্ধারিত তারিখের' if language == 'bn' else 'the agreed deadline') }}</strong> 
     {{ 'মধ্যে সমাপ্ত করিয়া হস্তান্তর করিতে প্রতিশ্রুতিবদ্ধ।' if language == 'bn' else 'unless extended by mutual written agreement.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৩.</span>
-    <span class="clause-title">{{ 'বৌদ্ধিক সম্পত্তি ও স্বত্বাধিকার (Intellectual Property Rights):' if language == 'bn' else 'Intellectual Property Rights:' }}</span>
-    {{ 'সম্পূর্ণ চুক্তিভিত্তিক পারিশ্রমিক পরিশোধ সাপেক্ষে তৈরি করা সফটওয়্যার, ডিজাইন বা আর্টওয়ার্কের সর্বস্বত্ব গ্রাহক (Client)-এর নিকট হস্তান্তরিত হইবে। অর্থ সম্পূর্ণ পরিশোধের পূর্বে সকল স্বত্ব ফ্রিল্যান্সারের সংরক্ষিত থাকিবে।' if language == 'bn' else 'Subject to full and final receipt of payment, all intellectual property rights and copyrights in the deliverables shall transfer solely to the Client.' }}
+    <span class="clause-number">{{ '৩.' if language == 'bn' else '3.' }}</span>
+    <span class="clause-title">{{ 'বৌদ্ধিক সম্পত্তি ও স্বত্বাধিকার:' if language == 'bn' else 'Intellectual Property Rights:' }}</span>
+    {{ 'সম্পূর্ণ চুক্তিভিত্তিক পারিশ্রমিক পরিশোধ সাপেক্ষে তৈরি করা সফটওয়্যার, ডিজাইন বা আর্টওয়ার্কের সর্বস্বত্ব গ্রাহক পক্ষের নিকট হস্তান্তরিত হইবে। অর্থ সম্পূর্ণ পরিশোধের পূর্বে সকল স্বত্ব সেবা প্রদানকারীর সংরক্ষিত থাকিবে।' if language == 'bn' else 'Subject to full and final receipt of payment, all intellectual property rights and copyrights in the deliverables shall transfer solely to the Client.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৪.</span>
-    <span class="clause-title">{{ 'সংশোধন ও রিভিশন নীতি (Revisions & Changes):' if language == 'bn' else 'Revisions & Modifications:' }}</span>
+    <span class="clause-number">{{ '৪.' if language == 'bn' else '4.' }}</span>
+    <span class="clause-title">{{ 'সংশোধন ও পরিমার্জন নীতি:' if language == 'bn' else 'Revisions & Modifications:' }}</span>
     {{ 'গ্রাহক ডেলিভারির পর সর্বোচ্চ' if language == 'bn' else 'The Client is entitled to up to' }} 
-    <strong>{{ data.free_revisions or '২' }} {{ 'বার বিনামূল্যে যৌক্তিক সংশোধনের' if language == 'bn' else 'rounds of minor revisions' }}</strong> 
+    <strong>{{ data.free_revisions or ('২' if language == 'bn' else '2') }} {{ 'বার বিনামূল্যে যৌক্তিক সংশোধনের' if language == 'bn' else 'rounds of minor revisions' }}</strong> 
     {{ 'সুযোগ পাইবেন। পরিধির বাইরের কোনো অতিরিক্ত ফিচারের জন্য পৃথক পারিশ্রমিক প্রযোজ্য হইবে।' if language == 'bn' else 'at no additional cost. Extra scope shall incur additional fees.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৫.</span>
-    <span class="clause-title">{{ 'স্বাধীন ঠিকাদারি মর্যাদা (Independent Contractor Status):' if language == 'bn' else 'Independent Contractor Status:' }}</span>
+    <span class="clause-number">{{ '৫.' if language == 'bn' else '5.' }}</span>
+    <span class="clause-title">{{ 'স্বাধীন চুক্তিবদ্ধের মর্যাদা:' if language == 'bn' else 'Independent Contractor Status:' }}</span>
     {{ 'সেবা প্রদানকারী একজন স্বাধীন পরামর্শক হিসেবে দায়িত্ব পালন করিবেন এবং গ্রাহক প্রতিষ্ঠানের কর্মচারী বলিয়া গণ্য হইবেন না।' if language == 'bn' else 'The contractor acts as an independent contractor, not an employee, agent, or partner of the Client.' }}
   </div>
 
   {% if data.custom_clauses and data.custom_clauses|length > 0 %}
     {% for clause in data.custom_clauses %}
     <div class="clause-item">
-      <span class="clause-number">{{ loop.index + 5 }}.</span>
+      <span class="clause-number">{{ (loop.index + 5) ~ '.' }}</span>
       <span class="clause-title">{{ clause.title or ('বিশেষ শর্ত:' if language == 'bn' else 'Special Clause:') }}</span>
       {{ clause.text }}
     </div>
@@ -84,19 +84,33 @@
 
 <div class="signatures-section">
   <div class="sig-row">
-    <div class="sig-box">
-      {% if data.party1_signature %}
-        <img src="{{ data.party1_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
-      {% endif %}
-      <strong>{{ 'গ্রাহকের স্বাক্ষর (Client)' if language == 'bn' else 'For Client' }}</strong><br>
-      {{ data.client_name }}
+    <div class="sig-col" data-target-sign="p1" title="{{ 'গ্রাহকের স্বাক্ষর দিন' if language == 'bn' else 'Click to add signature for Client' }}">
+      <div class="sig-image-wrap">
+        {% if data.party1_signature %}
+          <img src="{{ data.party1_signature }}" alt="{{ 'গ্রাহকের স্বাক্ষর' if language == 'bn' else 'Client Signature' }}">
+        {% else %}
+          <div class="sig-image-placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="sig-line"></div>
+      <div class="sig-label">
+        <strong>{{ 'গ্রাহকের পক্ষে স্বাক্ষর' if language == 'bn' else 'For Client' }}</strong><br>
+        <span>{{ data.client_name }}</span>
+      </div>
     </div>
-    <div class="sig-box">
-      {% if data.party2_signature %}
-        <img src="{{ data.party2_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
-      {% endif %}
-      <strong>{{ 'ফ্রিল্যান্সারের স্বাক্ষর (Contractor)' if language == 'bn' else 'For Contractor' }}</strong><br>
-      {{ data.freelancer_name }}
+    <div class="sig-col" data-target-sign="p2" title="{{ 'সেবা প্রদানকারীর স্বাক্ষর দিন' if language == 'bn' else 'Click to add signature for Contractor' }}">
+      <div class="sig-image-wrap">
+        {% if data.party2_signature %}
+          <img src="{{ data.party2_signature }}" alt="{{ 'সেবা প্রদানকারীর স্বাক্ষর' if language == 'bn' else 'Contractor Signature' }}">
+        {% else %}
+          <div class="sig-image-placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="sig-line"></div>
+      <div class="sig-label">
+        <strong>{{ 'সেবা প্রদানকারীর স্বাক্ষর' if language == 'bn' else 'For Contractor' }}</strong><br>
+        <span>{{ data.freelancer_name }}</span>
+      </div>
     </div>
   </div>
 </div>

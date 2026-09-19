@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local Databases
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+backend/legal_contracts.db
+
+# Environments & Secrets
+.env
+.env.local
+venv/
+.venv/
+env/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

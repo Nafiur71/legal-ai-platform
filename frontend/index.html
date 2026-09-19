@@ -1,91 +1,13 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartLegal AI - আইনি অটোমেশন ও ডকুমেন্ট জেনারেটর</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    /* Floating Chatbot Widget */
-    .chatbot-fab {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
-      cursor: pointer;
-      z-index: 90;
-      transition: all 0.25s ease;
-    }
-    .chatbot-fab:hover {
-      transform: scale(1.08);
-    }
-    .chatbot-window {
-      position: fixed;
-      bottom: 90px;
-      right: 24px;
-      width: 360px;
-      height: 480px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      border: 1px solid #e2e8f0;
-      display: flex;
-      flex-direction: column;
-      z-index: 95;
-      overflow: hidden;
-    }
-    .chat-header {
-      background: linear-gradient(135deg, #1e3a8a, #4f46e5);
-      color: white;
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .chat-body {
-      flex: 1;
-      padding: 12px;
-      overflow-y: auto;
-      background: #f8fafc;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      font-size: 0.88rem;
-    }
-    .chat-bubble-ai {
-      background: white;
-      border: 1px solid #e2e8f0;
-      padding: 10px 12px;
-      border-radius: 10px 10px 10px 2px;
-      color: #1e293b;
-      line-height: 1.5;
-    }
-    .chat-bubble-user {
-      background: #4f46e5;
-      color: white;
-      padding: 10px 12px;
-      border-radius: 10px 10px 2px 10px;
-      align-self: flex-end;
-      line-height: 1.5;
-    }
-    .chat-footer {
-      padding: 10px;
-      background: white;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      gap: 8px;
-    }
-  </style>
+  <title id="page-title">SmartLegal AI - আইনি অটোমেশন ও দলিল জেনারেটর</title>
+  <link rel="stylesheet" href="/static/css/style.css?v=3.6.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
 
@@ -96,41 +18,44 @@
         <i class="fa-solid fa-scale-balanced"></i>
       </div>
       <div class="brand-text">
-        <h1>SmartLegal AI</h1>
-        <p>বুদ্ধিমান আইনি অটোমেশন ও ডকুমেন্ট জেনারেটর</p>
+        <h1 id="lbl-brand-title">SmartLegal AI</h1>
+        <p id="lbl-brand-desc">বুদ্ধিমান আইনি অটোমেশন ও দলিল জেনারেটর</p>
       </div>
     </div>
 
     <div class="nav-actions">
-      <button class="btn btn-secondary" id="btn-open-notice" title="আইনি নোটিশ তৈরি করুন (উচ্ছেদ/নবায়ন/তাগিদ)">
-        <i class="fa-solid fa-bullhorn" style="color: #dc2626;"></i> নোটিশ ইঞ্জিন
+      <button class="btn btn-secondary" id="btn-open-notice" title="আইনি নোটিশ ইঞ্জিন">
+        <i class="fa-solid fa-bullhorn"></i> <span id="lbl-nav-notice">নোটিশ ইঞ্জিন</span>
       </button>
       <button class="btn btn-secondary" id="btn-verify-tamper" title="দলিল অবিকৃত কিনা ক্রিপ্টোগ্রাফিক যাচাই">
-        <i class="fa-solid fa-fingerprint" style="color: #0d9488;"></i> হ্যাশ যাচাই
+        <i class="fa-solid fa-fingerprint"></i> <span id="lbl-nav-verify">হ্যাশ যাচাই</span>
       </button>
-      <button class="btn btn-secondary" id="btn-open-stamp-calc" title="স্ট্যাম্প ফি হিসাব করুন">
-        <i class="fa-solid fa-calculator" style="color: #ea580c;"></i> স্ট্যাম্প ক্যালকুলেটর
+      <button class="btn btn-secondary" id="btn-open-stamp-calc" title="স্ট্যাম্প ডিউটি হিসাব করুন">
+        <i class="fa-solid fa-calculator"></i> <span id="lbl-nav-stamp-calc">স্ট্যাম্প ক্যালকুলেটর</span>
       </button>
       <button class="btn btn-secondary" id="btn-share-contract" title="অন্য পক্ষের কাছে সই করার লিংক পাঠান">
-        <i class="fa-solid fa-share-nodes" style="color: #0284c7;"></i> শেয়ার ও সাইন
+        <i class="fa-solid fa-share-nodes"></i> <span id="lbl-nav-share">শেয়ার ও সাইন</span>
       </button>
       <button class="btn btn-secondary" id="btn-history" title="সংরক্ষিত চুক্তিসমূহ দেখুন">
-        <i class="fa-solid fa-clock-rotate-left"></i> হিস্ট্রি
+        <i class="fa-solid fa-clock-rotate-left"></i> <span id="lbl-nav-history">হিস্ট্রি</span>
       </button>
       <button class="btn btn-secondary" id="btn-upload-audit" title="ফাইল আপলোড করে অডিট করুন">
-        <i class="fa-solid fa-file-arrow-up" style="color: #7c3aed;"></i> ফাইল অডিট
+        <i class="fa-solid fa-file-shield"></i> <span id="lbl-nav-audit">ফাইল অডিট</span>
       </button>
       <button class="btn btn-secondary" id="btn-open-sign" title="ডিজিটাল স্বাক্ষর দিন">
-        <i class="fa-solid fa-signature" style="color: #059669;"></i> ই-স্বাক্ষর
+        <i class="fa-solid fa-signature"></i> <span id="lbl-nav-sign">ই-স্বাক্ষর</span>
       </button>
       <button class="btn btn-secondary" id="btn-save-draft" title="ডাটাবেসে সেভ করুন">
-        <i class="fa-solid fa-floppy-disk"></i> সেভ
+        <i class="fa-solid fa-floppy-disk"></i> <span id="lbl-nav-save">সেভ</span>
       </button>
-      <button class="btn btn-secondary" id="btn-docx">
-        <i class="fa-solid fa-file-word" style="color: #2563eb;"></i> Word
+      <button class="btn btn-secondary" id="btn-docx" title="Word (.docx) ডাউনলোড">
+        <i class="fa-regular fa-file-word"></i> <span id="lbl-nav-docx">Word</span>
       </button>
-      <button class="btn btn-primary" id="btn-pdf">
-        <i class="fa-solid fa-file-pdf"></i> PDF ডাউনলোড
+      <button class="btn btn-primary" id="btn-print-instant" style="background: #1e40af; color: #ffffff; font-weight: 700; border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.12);" title="ব্রাউজার থেকে সরাসরি প্রিন্ট বা PDF সেভ">
+        <i class="fa-solid fa-bolt" style="color: #fde047;"></i> <span id="lbl-nav-instant-print">তাত্ক্ষণিক PDF / প্রিন্ট (০ সেকেন্ড)</span>
+      </button>
+      <button class="btn btn-secondary" id="btn-pdf" title="ক্লাউড সার্ভার হেডলেস ক্রোম PDF ডাউনলোড">
+        <i class="fa-solid fa-cloud-arrow-down"></i> <span id="lbl-nav-cloud-pdf">ক্লাউড PDF</span>
       </button>
     </div>
   </header>
@@ -141,13 +66,13 @@
     <section class="wizard-panel">
       <!-- Template Selector Bar -->
       <div class="template-selector-bar">
-        <span style="font-size: 0.85rem; font-weight: 700; color: #475569;">চুক্তিপত্র:</span>
+        <span id="template-select-label" style="font-size: 0.85rem; font-weight: 700; color: #475569;">চুক্তিপত্র:</span>
         <select class="custom-select" id="template-select">
-          <option value="tenancy_agreement">🏠 বাড়ি / ফ্ল্যাট / দোকান ভাড়ার চুক্তি</option>
-          <option value="nda_agreement">🔒 নন-ডিসক্লোজার চুক্তি (NDA)</option>
-          <option value="freelance_contract">💼 ফ্রিল্যান্স ও সার্ভিস চুক্তি</option>
-          <option value="partnership_agreement">🤝 অংশীদারি কারবার চুক্তিপত্র (Partnership Deed)</option>
-          <option value="employment_agreement">👔 কর্মসংস্থান ও চাকরির চুক্তি (Employment Contract)</option>
+          <option value="tenancy_agreement">🏠 বাড়ি / ফ্ল্যাট / দোকান ভাড়ার চুক্তিপত্র</option>
+          <option value="nda_agreement">🔒 গোপনীয় তথ্য সুরক্ষা ও প্রকাশ না করার চুক্তিপত্র</option>
+          <option value="freelance_contract">💼 ফ্রিল্যান্স সার্ভিস ও পরামর্শক চুক্তিপত্র</option>
+          <option value="partnership_agreement">🤝 অংশীদারি কারবার চুক্তিপত্র</option>
+          <option value="employment_agreement">👔 কর্মসংস্থান ও চাকরির চুক্তিপত্র</option>
         </select>
         <select class="custom-select" id="lang-select" style="max-width: 110px;">
           <option value="bn">বাংলা</option>
@@ -157,17 +82,17 @@
 
       <!-- Step Navigation Tabs -->
       <div class="wizard-steps">
-        <div class="step-tab active" data-step="1">
-          <i class="fa-solid fa-users"></i> ১. পক্ষের তথ্য
+        <div class="step-tab active" data-step="1" id="tab-step-1">
+          <i class="fa-solid fa-users"></i> <span id="lbl-tab-1">১. পক্ষের তথ্য</span>
         </div>
-        <div class="step-tab" data-step="2">
-          <i class="fa-solid fa-file-contract"></i> ২. মূল শর্তাবলি
+        <div class="step-tab" data-step="2" id="tab-step-2">
+          <i class="fa-solid fa-file-contract"></i> <span id="lbl-tab-2">২. মূল শর্তাবলি</span>
         </div>
-        <div class="step-tab" data-step="3">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> ৩. AI কাস্টম ধারা
+        <div class="step-tab" data-step="3" id="tab-step-3">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> <span id="lbl-tab-3">৩. AI কাস্টম ধারা</span>
         </div>
-        <div class="step-tab" data-step="4">
-          <i class="fa-solid fa-signature"></i> ৪. স্বাক্ষর ও সমাপ্তি
+        <div class="step-tab" data-step="4" id="tab-step-4">
+          <i class="fa-solid fa-signature"></i> <span id="lbl-tab-4">৪. স্বাক্ষর ও সমাপ্তি</span>
         </div>
       </div>
 
@@ -175,6 +100,10 @@
       <div class="form-scroll-container">
         <!-- Step 1: Parties -->
         <div class="step-content" id="step-1">
+          <div style="background: #eff6ff; border-left: 3.5px solid #2563eb; border-radius: 0 6px 6px 0; padding: 10px 14px; margin-bottom: 14px; font-size: 0.82rem; color: #1e40af;">
+            <strong id="step1-banner-title"><i class="fa-solid fa-users"></i> চুক্তির মূল পক্ষদ্বয়:</strong><br>
+            <span id="step1-banner-sub" style="color: #3b82f6;">১ম ও ২য় পক্ষের নাম ও বিবরণ এখানে পরিবর্তন করুন। এই নামসমূহ দলিলের শীর্ষে ও স্বাক্ষরের স্থানে স্বয়ংক্রিয়ভাবে আপডেট হবে।</span>
+          </div>
           <div id="parties-form-fields"></div>
         </div>
 
@@ -187,16 +116,16 @@
         <div class="step-content" id="step-3" style="display: none;">
           <div class="ai-card">
             <div class="ai-card-title">
-              <i class="fa-solid fa-brain"></i> AI Legal Clause Refiner
+              <i class="fa-solid fa-brain"></i> <span id="step3-card-title">AI লিগ্যাল ক্লজ রিফাইনার</span>
             </div>
-            <p style="font-size: 0.85rem; color: #5b21b6; margin-bottom: 10px;">
+            <p id="step3-card-desc" style="font-size: 0.85rem; color: #5b21b6; margin-bottom: 10px;">
               আপনার কাস্টম কোনো শর্ত সাধারণ ভাষায় লিখুন। আমাদের AI তা আদালত ও চুক্তি আইনসম্মত ভাষায় রূপান্তর করবে।
             </p>
             <div class="form-group">
               <textarea id="ai-clause-input" class="form-textarea" rows="3" placeholder="যেমন: 'ভাড়াটিয়া রাত ১১টার পর কোনো বহিরাগত আনতে পারবে না এবং ফ্ল্যাটে কোনো পোষা বিড়াল বা কুকুর রাখা যাবে না...'"></textarea>
             </div>
             <button class="btn btn-ai" id="btn-refine-clause" style="width: 100%;">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> AI দিয়ে আইনি ভাষায় পলিশ করুন
+              <i class="fa-solid fa-wand-magic-sparkles"></i> <span id="lbl-refine-clause">AI দিয়ে আইনি ভাষায় পলিশ করুন</span>
             </button>
           </div>
 
@@ -208,33 +137,47 @@
             <p id="ai-res-text" style="font-size: 0.9rem; color: #1e293b; line-height: 1.6; margin-bottom: 12px; background: #f8fafc; padding: 10px; border-radius: 6px;"></p>
             <div style="display: flex; gap: 8px;">
               <button class="btn btn-success" id="btn-add-clause" style="flex: 1;">
-                <i class="fa-solid fa-plus"></i> চুক্তিতে ধারাটি যুক্ত করুন
+                <i class="fa-solid fa-plus"></i> <span id="lbl-add-clause">চুক্তিতে ধারাটি যুক্ত করুন</span>
               </button>
               <button class="btn btn-secondary" id="btn-explain-clause-action" style="flex: 1;">
-                <i class="fa-solid fa-lightbulb"></i> সহজ ব্যাখ্যা দেখুন
+                <i class="fa-solid fa-lightbulb"></i> <span id="lbl-explain-clause-action">সহজ ব্যাখ্যা দেখুন</span>
               </button>
             </div>
           </div>
 
           <div style="margin-top: 15px;">
-            <label class="form-label" style="font-weight: 700;">সংযুক্ত কাস্টম শর্তাবলি:</label>
+            <label id="step3-clauses-header" class="form-label" style="font-weight: 700;">সংযুক্ত কাস্টম শর্তাবলি:</label>
             <div id="custom-clauses-list"></div>
           </div>
         </div>
 
         <!-- Step 4: Witnesses & Signatures -->
         <div class="step-content" id="step-4" style="display: none;">
+          <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.82rem; color: #1e40af; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <div>
+              <strong id="step4-banner-text">১ম ও ২য় পক্ষের নাম পরিবর্তন করতে চান?</strong><br>
+              <span id="step4-banner-sub" style="color: #3b82f6;">মূল চুক্তিকারীদের নাম <strong>১. পক্ষের তথ্য</strong> ট্যাবে রয়েছে।</span>
+            </div>
+            <button type="button" class="btn btn-secondary" id="btn-step4-go-step1" style="font-size: 0.78rem; padding: 5px 10px; white-space: nowrap; background: #ffffff; color: #1d4ed8; border: 1px solid #93c5fd; cursor: pointer;" onclick="goToStep(1)">
+              <span id="lbl-step4-go-step1">১ম ট্যাবে যান</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+
           <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
             <h4 style="color: #166534; font-size: 0.95rem; margin-bottom: 4px;">
-              <i class="fa-solid fa-signature"></i> ডিজিটাল ই-স্বাক্ষর (E-Signature)
+              <i class="fa-solid fa-signature"></i> <span id="step4-esign-title">ডিজিটাল ই-স্বাক্ষর</span>
             </h4>
-            <p style="font-size: 0.85rem; color: #15803d; margin-bottom: 10px;">
+            <p id="step4-esign-desc" style="font-size: 0.85rem; color: #15803d; margin-bottom: 10px;">
               স্ক্রিনে সরাসরি স্বাক্ষর করুন অথবা লিংক পাঠিয়ে অপর পক্ষের স্বাক্ষর সংগ্রহ করুন।
             </p>
             <button class="btn btn-success" id="btn-step4-sign" style="width: 100%;">
-              <i class="fa-solid fa-pen-nib"></i> স্বাক্ষর ক্যানভাস খুলুন
+              <i class="fa-solid fa-pen-nib"></i> <span id="lbl-step4-sign-btn">স্বাক্ষর ক্যানভাস খুলুন</span>
             </button>
           </div>
+
+          <h4 style="font-size: 0.88rem; color: #334155; margin: 16px 0 8px 0; font-weight: 700;">
+            <i class="fa-solid fa-user-check"></i> <span id="step4-witness-title">সাক্ষীগণের নাম ও ঠিকানা (দলিলের শেষ অংশে):</span>
+          </h4>
           <div id="witness-form-fields"></div>
         </div>
       </div>
@@ -242,24 +185,30 @@
 
     <!-- Right: Live Legal Paper Preview -->
     <section class="preview-panel">
-      <div style="width: 100%; max-width: 820px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;" class="preview-bar">
+      <div class="preview-bar">
         <div style="display: flex; align-items: center; gap: 8px;">
           <button class="btn btn-secondary" id="btn-toggle-edit" style="font-size: 0.82rem; padding: 5px 10px;">
             <i class="fa-solid fa-pen-to-square"></i> <span id="edit-mode-label">সরাসরি পেপারে এডিট</span>
           </button>
           <button class="btn btn-secondary" id="btn-toggle-stamp" style="font-size: 0.82rem; padding: 5px 10px;">
-            <i class="fa-solid fa-stamp"></i> ৩০০ টাকার স্ট্যাম্প
+            <i class="fa-solid fa-stamp"></i> <span id="stamp-mode-label">৩০০ টাকার স্ট্যাম্প</span>
           </button>
-          <button class="btn btn-secondary" id="btn-toggle-watermark" style="font-size: 0.82rem; padding: 5px 10px;" title="খসড়া বা গোপনীয় ওয়াটারমার্ক টগল">
+          <button class="btn btn-secondary" id="btn-toggle-watermark" style="font-size: 0.82rem; padding: 5px 10px;" title="ওয়াটারমার্ক টগল">
             <i class="fa-solid fa-droplet" style="color: #6366f1;"></i> <span id="watermark-label">ওয়াটারমার্ক: বন্ধ</span>
           </button>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge" id="a4-format-badge" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-size: 0.74rem; padding: 3px 8px; border-radius: 4px; font-weight: 600;" title="স্ট্যান্ডার্ড A4 প্রিন্ট লেআউট">
+            <i class="fa-solid fa-file-lines"></i> <span id="lbl-a4-badge">A4 (২১০×২৯৭মিমি)</span>
+          </span>
+          <span class="badge" id="preview-page-count-badge" style="background: #f8fafc; color: #475569; border: 1px solid #cbd5e1; font-size: 0.74rem; padding: 3px 8px; border-radius: 4px; font-weight: 600;">
+            <i class="fa-solid fa-file"></i> <span id="lbl-page-count">১ পৃষ্ঠা</span>
+          </span>
           <span id="crypto-fingerprint-badge" style="font-size: 0.74rem; background: #f8fafc; color: #334155; padding: 3px 8px; border-radius: 4px; font-family: monospace; border: 1px solid #cbd5e1; cursor: pointer;" title="ক্লিক করে সম্পূর্ণ SHA-256 কপি করুন">
             <i class="fa-solid fa-shield-halved" style="color:#059669"></i> SHA: <span id="sha-badge-text">গণনা হচ্ছে...</span>
           </span>
           <span style="font-size: 0.8rem; color: #16a34a; font-weight: 600;">
-            <i class="fa-solid fa-circle-check"></i> সিকিউরড
+            <i class="fa-solid fa-circle-check"></i> <span id="crypto-secured-label">সিকিউরড</span>
           </span>
         </div>
       </div>
@@ -267,14 +216,14 @@
       <div class="paper-sheet" id="preview-container">
         <div style="text-align: center; padding: 60px; color: #94a3b8;">
           <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
-          <p style="margin-top: 10px;">ডকুমেন্ট রেন্ডার হচ্ছে...</p>
+          <p id="preview-loading-text" style="margin-top: 10px;">ডকুমেন্ট রেন্ডার হচ্ছে...</p>
         </div>
       </div>
     </section>
   </main>
 
   <!-- Floating Legal Chatbot FAB & Window -->
-  <div class="chatbot-fab" id="fab-chatbot" title="আইনAI সহকারী সাথে চ্যাট করুন">
+  <div class="chatbot-fab" id="fab-chatbot" title="আইনAI সহকারীর সাথে চ্যাট করুন">
     <i class="fa-solid fa-comment-dots"></i>
   </div>
 
@@ -282,14 +231,14 @@
     <div class="chat-header">
       <div style="display: flex; align-items: center; gap: 8px;">
         <i class="fa-solid fa-scale-balanced"></i>
-        <strong>আইনAI সহকারী (Advisor)</strong>
+        <strong id="chatbot-header-title">আইনAI সহকারী</strong>
       </div>
       <button id="close-chatbot" style="background:none; border:none; color:white; font-size:1.1rem; cursor:pointer;">✕</button>
     </div>
     <div class="chat-body" id="chat-body">
-      <div class="chat-bubble-ai">
+      <div class="chat-bubble-ai" id="chatbot-welcome-bubble">
         👋 নমস্কার! আমি আপনার <strong>আইনAI সহকারী</strong>।<br>
-        চুক্তিপত্র, স্ট্যাম্পের নিয়ম, ভাড়া নিয়ন্ত্রণ আইন বা নোটিশ বিষয়ে যেকোনো আইনি প্রশ্ন আমাকে বাংলায় জিজ্ঞেস করতে পারেন।
+        চুক্তিপত্র, স্ট্যাম্পের নিয়ম, ভাড়া নিয়ন্ত্রণ আইন বা নোটিশ বিষয়ে যেকোনো আইনি প্রশ্ন আমাকে জিজ্ঞেস করতে পারেন।
       </div>
     </div>
     <div class="chat-footer">
@@ -305,41 +254,40 @@
     <div class="modal-card" style="max-width: 550px;">
       <div class="modal-header">
         <h3 style="font-size: 1.1rem; color: #ea580c; display: flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-calculator"></i> বাংলাদেশ স্ট্যাম্প ডিউটি ক্যালকুলেটর
+          <i class="fa-solid fa-calculator"></i> <span id="stamp-calc-title">বাংলাদেশ স্ট্যাম্প ডিউটি ক্যালকুলেটর</span>
         </h3>
         <button id="close-stamp-calc" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #64748b; padding: 4px;">✕</button>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label class="form-label">চুক্তির ধরণ:</label>
+          <label class="form-label" id="calc-doc-type-label">চুক্তির ধরণ:</label>
           <select class="custom-select" id="calc-doc-type" style="width: 100%;">
-            <option value="tenancy_agreement">বাড়ি / দোকান ভাড়ার চুক্তি</option>
-            <option value="partnership_agreement">অংশীদারি কারবার চুক্তি (Partnership)</option>
-            <option value="nda_agreement">নন-ডিসক্লোজার চুক্তি (NDA)</option>
-            <option value="freelance_contract">ফ্রিল্যান্স সার্ভিস চুক্তি</option>
-            <option value="employment_agreement">কর্মসংস্থান ও চাকরির চুক্তি</option>
+            <option value="tenancy_agreement">বাড়ি / দোকান ভাড়ার চুক্তিপত্র</option>
+            <option value="partnership_agreement">অংশীদারি কারবার চুক্তিপত্র</option>
+            <option value="nda_agreement">গোপনীয় তথ্য সুরক্ষা চুক্তিপত্র</option>
+            <option value="freelance_contract">ফ্রিল্যান্স সার্ভিস ও পরামর্শক চুক্তিপত্র</option>
+            <option value="employment_agreement">কর্মসংস্থান ও চাকরির চুক্তিপত্র</option>
           </select>
         </div>
         <div class="form-row">
           <div class="form-col">
             <div class="form-group">
-              <label class="form-label">টাকার পরিমাণ (ভাড়া / মূলধন):</label>
+              <label class="form-label" id="calc-amount-label">টাকার পরিমাণ (ভাড়া / মূলধন):</label>
               <input type="number" id="calc-amount" class="form-input" value="25000">
             </div>
           </div>
           <div class="form-col">
             <div class="form-group">
-              <label class="form-label">মেয়াদ (মাসে):</label>
+              <label class="form-label" id="calc-duration-label">মেয়াদ (মাসে):</label>
               <input type="number" id="calc-duration" class="form-input" value="12">
             </div>
           </div>
         </div>
         <button class="btn btn-primary" id="btn-run-stamp-calc" style="width: 100%;">
-          <i class="fa-solid fa-calculator"></i> হিসাব করুন
+          <i class="fa-solid fa-calculator"></i> <span id="lbl-calc-btn">হিসাব করুন</span>
         </button>
 
         <div id="stamp-calc-result" style="display: none; margin-top: 14px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px;">
-          <!-- Dynamically calculated result -->
         </div>
       </div>
       <div class="modal-footer">
@@ -353,23 +301,23 @@
     <div class="modal-card" style="max-width: 520px;">
       <div class="modal-header">
         <h3 style="font-size: 1.1rem; color: #0284c7; display: flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-share-nodes"></i> দূরবর্তী স্বাক্ষর ও শেয়ারিং লিংক
+          <i class="fa-solid fa-share-nodes"></i> <span id="share-modal-title">দূরবর্তী স্বাক্ষর ও শেয়ারিং লিংক</span>
         </h3>
         <button id="close-share" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #64748b; padding: 4px;">✕</button>
       </div>
       <div class="modal-body">
-        <p style="font-size: 0.85rem; color: #475569; margin-bottom: 12px;">
-          নিচের লিংকটি ভাড়াটিয়া, ক্লায়েন্ট বা অংশীদারের কাছে পাঠান। তারা তাদের মোবাইল বা কম্পিউটার থেকেই চুক্তি পড়ে সরাসরি ডিজিটাল সই করতে পারবেন:
+        <p id="share-modal-desc" style="font-size: 0.85rem; color: #475569; margin-bottom: 12px;">
+          নিচের লিংকটি অন্য পক্ষের কাছে পাঠান। তারা তাদের ডিভাইস থেকেই চুক্তি পড়ে সরাসরি ডিজিটাল সই করতে পারবেন:
         </p>
         <div class="form-group" style="display: flex; gap: 8px;">
           <input type="text" id="share-url-input" class="form-input" readonly style="background: #f8fafc; font-size: 0.85rem;">
           <button class="btn btn-primary" id="btn-copy-share-url" style="padding: 6px 12px; white-space: nowrap;">
-            <i class="fa-solid fa-copy"></i> কপি
+            <i class="fa-solid fa-copy"></i> <span id="lbl-copy-share">কপি</span>
           </button>
         </div>
         <div style="margin-top: 14px; display: flex; gap: 10px;">
           <a id="btn-whatsapp-share" target="_blank" class="btn btn-success" style="flex: 1; text-decoration: none;">
-            <i class="fa-brands fa-whatsapp"></i> হোয়াটসঅ্যাপে পাঠান
+            <i class="fa-brands fa-whatsapp"></i> <span id="lbl-whatsapp-share">হোয়াটসঅ্যাপে পাঠান</span>
           </a>
         </div>
       </div>
@@ -384,26 +332,51 @@
     <div class="modal-card" style="max-width: 540px;">
       <div class="modal-header">
         <h3 style="font-size: 1.1rem; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-pen-nib" style="color: #059669;"></i> ডিজিটাল স্বাক্ষর প্যাড
+          <i class="fa-solid fa-pen-nib" style="color: #059669;"></i> <span id="sign-modal-title">ডিজিটাল স্বাক্ষর প্যাড</span>
         </h3>
         <button id="close-sign" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #64748b; padding: 4px;">✕</button>
       </div>
       <div class="modal-body">
         <div style="margin-bottom: 12px; display: flex; gap: 10px;">
-          <button class="btn btn-primary" id="sign-target-p1" style="flex: 1; font-size: 0.85rem;">১ম পক্ষ (মালিক/ক্লায়েন্ট)</button>
-          <button class="btn btn-secondary" id="sign-target-p2" style="flex: 1; font-size: 0.85rem;">২য় পক্ষ (ভাড়াটিয়া/কর্মী)</button>
+          <button class="btn btn-primary" id="sign-target-p1" style="flex: 1; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; padding: 8px 12px;">
+            <span id="label-p1-btn">১ম পক্ষ</span>
+            <span id="p1-status-badge" style="font-size: 0.72rem; background: rgba(255,255,255,0.25); padding: 2px 6px; border-radius: 10px;">স্বাক্ষর বাকি</span>
+          </button>
+          <button class="btn btn-secondary" id="sign-target-p2" style="flex: 1; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; padding: 8px 12px;">
+            <span id="label-p2-btn">২য় পক্ষ</span>
+            <span id="p2-status-badge" style="font-size: 0.72rem; background: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 10px;">স্বাক্ষর বাকি</span>
+          </button>
         </div>
-        <div style="position: relative; border: 2px dashed #94a3b8; border-radius: 8px; background: #fafafa; overflow: hidden;">
+
+        <div id="active-signer-info" style="font-size: 0.83rem; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 6px 12px; border-radius: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <span><span id="lbl-signing-party">বর্তমানে স্বাক্ষর করছেন:</span> <strong id="current-signer-name">১ম পক্ষ</strong></span>
+          <span id="lbl-pad-guide" style="font-size: 0.75rem; color: #3b82f6;">মাউস বা আঙুল দিয়ে নিচের প্যাডে সই করুন</span>
+        </div>
+
+        <div id="existing-sig-box" style="display: none; margin-bottom: 8px; padding: 6px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span id="lbl-existing-sig" style="color: #64748b;">বর্তমান স্বাক্ষর:</span>
+            <img id="existing-sig-img" src="" style="max-height: 36px; max-width: 140px; background: white; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px;">
+          </div>
+          <button id="btn-remove-sig" class="btn btn-secondary" style="padding: 3px 8px; font-size: 0.75rem; color: #ef4444; border-color: #fca5a5;">
+            <i class="fa-solid fa-trash"></i> <span id="lbl-re-sign">মুছে নতুন সই দিন</span>
+          </button>
+        </div>
+
+        <div style="position: relative; border: 2px dashed #94a3b8; border-radius: 8px; background: #ffffff; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);">
           <canvas id="sig-canvas" width="480" height="160" style="display: block; width: 100%; height: 160px; cursor: crosshair; touch-action: none;"></canvas>
-          <button id="btn-clear-canvas" style="position: absolute; top: 8px; right: 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 8px; font-size: 0.75rem; cursor: pointer;">
-            <i class="fa-solid fa-eraser"></i> মুছুন
+          <div style="position: absolute; bottom: 8px; left: 12px; font-size: 0.74rem; color: #94a3b8; pointer-events: none;">
+            <i class="fa-solid fa-signature"></i> <span id="lbl-sig-line">স্বাক্ষর লাইন</span>
+          </div>
+          <button id="btn-clear-canvas" style="position: absolute; top: 8px; right: 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 8px; font-size: 0.75rem; cursor: pointer; color: #475569;">
+            <i class="fa-solid fa-eraser"></i> <span id="lbl-clear-pad">পরিষ্কার</span>
           </button>
         </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" id="btn-close-sign-footer">বাতিল</button>
         <button class="btn btn-success" id="btn-apply-signature">
-          <i class="fa-solid fa-check"></i> স্বাক্ষর সংযুক্ত করুন
+          <i class="fa-solid fa-check"></i> <span id="lbl-apply-signature">স্বাক্ষর সংযুক্ত করুন</span>
         </button>
       </div>
     </div>
@@ -414,7 +387,7 @@
     <div class="modal-card" style="max-width: 650px;">
       <div class="modal-header">
         <h3 style="font-size: 1.1rem; color: #0284c7; display: flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-clock-rotate-left"></i> সংরক্ষিত চুক্তিসমূহ (Database History)
+          <i class="fa-solid fa-clock-rotate-left"></i> <span id="history-modal-title">সংরক্ষিত চুক্তিসমূহ</span>
         </h3>
         <button id="close-history" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #64748b; padding: 4px;">✕</button>
       </div>
@@ -432,17 +405,31 @@
     <div class="modal-card" style="max-width: 650px;">
       <div class="modal-header">
         <h3 style="font-size: 1.1rem; color: #7c3aed; display: flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-file-shield"></i> বাইরের ডকুমেন্ট আপলোড ও AI অডিট
+          <i class="fa-solid fa-file-shield"></i> <span id="upload-modal-title">বাইরের ডকুমেন্ট আপলোড ও AI অডিট</span>
         </h3>
         <button id="close-upload" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #64748b; padding: 4px;">✕</button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <input type="file" id="upload-file-input" accept=".txt,.pdf,.doc,.docx" style="margin-bottom: 8px; font-size: 0.85rem;">
-          <textarea id="upload-text-input" class="form-textarea" rows="6" placeholder="চুক্তিপত্রের সম্পূর্ণ টেক্সট এখানে পেস্ট করুন..."></textarea>
+        <div style="background: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label id="upload-file-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
+              <i class="fa-solid fa-cloud-arrow-up" style="color: #7c3aed;"></i> চুক্তিপত্র ফাইল আপলোড করুন (PDF, DOCX, TXT):
+            </label>
+            <span id="lbl-upload-size-max" style="font-size: 0.75rem; color: #64748b;">সর্বোচ্চ ১৫ মেগাবাইট</span>
+          </div>
+          <input type="file" id="upload-file-input" accept=".txt,.pdf,.doc,.docx" style="width: 100%; font-size: 0.82rem; color: #334155;">
+          <div id="upload-file-status" style="display: none; margin-top: 8px; font-size: 0.82rem; padding: 6px 10px; border-radius: 6px;"></div>
         </div>
-        <button class="btn btn-ai" id="btn-run-upload-audit" style="width: 100%;">
-          <i class="fa-solid fa-magnifying-glass-chart"></i> AI দিয়ে সম্পূর্ণ চুক্তি অডিট করুন
+
+        <div class="form-group">
+          <label id="upload-text-label" style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 4px; display: block;">
+            অথবা চুক্তিপত্রের সম্পূর্ণ টেক্সট নিচে পেস্ট/সম্পাদনা করুন:
+          </label>
+          <textarea id="upload-text-input" class="form-textarea" rows="6" placeholder="ফাইলের টেক্সট স্বয়ংক্রিয়ভাবে এখানে চলে আসবে অথবা যেকোনো চুক্তিপত্র সরাসরি এখানে পেস্ট করুন..."></textarea>
+        </div>
+
+        <button class="btn btn-ai" id="btn-run-upload-audit" style="width: 100%; justify-content: center; padding: 10px 16px;">
+          <i class="fa-solid fa-magnifying-glass-chart"></i> <span id="lbl-run-audit-btn">AI দিয়ে সম্পূর্ণ চুক্তি অডিট করুন</span>
         </button>
         <div id="upload-audit-result" style="display: none; margin-top: 16px;"></div>
       </div>
@@ -457,7 +444,7 @@
     <div class="modal-card">
       <div class="modal-header">
         <h3 style="font-size: 1.1rem; color: #1e3a8a; display: flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-lightbulb" style="color: #eab308;"></i> সহজ ভাষায় আইনি ধারার অর্থ
+          <i class="fa-solid fa-lightbulb" style="color: #eab308;"></i> <span id="explainer-modal-title">সহজ ভাষায় আইনি ধারার অর্থ</span>
         </h3>
         <button id="close-explainer" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #64748b; padding: 4px;">✕</button>
       </div>
@@ -468,47 +455,47 @@
     </div>
   </div>
 
-  <!-- Modal 7: Legal Notice Generator (Phase 5) -->
+  <!-- Modal 7: Legal Notice Generator -->
   <div class="modal-overlay" id="notice-modal" style="display: none;">
     <div class="modal-card" style="max-width: 680px;">
       <div class="modal-header">
         <h3 style="font-size: 1.1rem; color: #dc2626; display: flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-bullhorn"></i> আইনি নোটিশ জেনারেটর (Legal Notice Engine)
+          <i class="fa-solid fa-bullhorn"></i> <span id="notice-modal-title">আইনি নোটিশ জেনারেটর</span>
         </h3>
         <button id="close-notice" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #64748b; padding: 4px;">✕</button>
       </div>
       <div class="modal-body">
-        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">
+        <p id="notice-modal-desc" style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">
           ভাড়াটিয়া বা সংশ্লিষ্ট পক্ষের অনুকূলে এক ক্লিকে আইনি নোটিশ, উচ্ছেদ পত্র অথবা বকেয়া তাগিদপত্র প্রস্তুত করুন।
         </p>
         <div class="form-group" style="margin-bottom: 12px;">
-          <label style="font-weight: 600; font-size: 0.85rem;">নোটিশের ধরণ নির্বাচন করুন:</label>
+          <label id="notice-type-label" style="font-weight: 600; font-size: 0.85rem;">নোটিশের ধরণ নির্বাচন করুন:</label>
           <select class="custom-select" id="notice-type-select" style="width: 100%;">
-            <option value="vacate_notice">🏠 বাসা / দোকান ছাড়ার আইনি নোটিশ (Vacate Notice)</option>
-            <option value="renewal_notice">📄 চুক্তি নবায়ন ও শর্ত প্রস্তাবনা পত্র (Contract Renewal)</option>
-            <option value="demand_notice">⚠️ বকেয়া ভাড়া ও পাওনা নিষ্পত্তির তাগিদপত্র (Demand Notice)</option>
+            <option value="vacate_notice">🏠 বাসা / দোকান ছাড়ার আইনি নোটিশ</option>
+            <option value="renewal_notice">📄 চুক্তি নবায়ন ও শর্ত প্রস্তাবনা পত্র</option>
+            <option value="demand_notice">⚠️ বকেয়া ভাড়া ও পাওনা নিষ্পত্তির তাগিদপত্র</option>
           </select>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
           <div class="form-group">
-            <label style="font-size: 0.82rem; font-weight: 600;">নোটিশ প্রেরক (মালিক/১ম পক্ষ):</label>
-            <input type="text" id="notice-landlord" class="form-input" placeholder="মালিকের নাম">
+            <label id="notice-landlord-label" style="font-size: 0.82rem; font-weight: 600;">নোটিশ প্রেরক (১ম পক্ষ):</label>
+            <input type="text" id="notice-landlord" class="form-input" placeholder="প্রেরকের নাম">
           </div>
           <div class="form-group">
-            <label style="font-size: 0.82rem; font-weight: 600;">নোটিশ প্রাপক (ভাড়াটিয়া/২য় পক্ষ):</label>
-            <input type="text" id="notice-tenant" class="form-input" placeholder="ভাড়াটিয়ার নাম">
+            <label id="notice-tenant-label" style="font-size: 0.82rem; font-weight: 600;">নোটিশ প্রাপক (২য় পক্ষ):</label>
+            <input type="text" id="notice-tenant" class="form-input" placeholder="প্রাপকের নাম">
           </div>
         </div>
         <div class="form-group" style="margin-bottom: 12px;">
-          <label style="font-size: 0.82rem; font-weight: 600;">সম্পত্তি / প্রাঙ্গণের ঠিকানা:</label>
+          <label id="notice-address-label" style="font-size: 0.82rem; font-weight: 600;">সম্পত্তি / প্রাঙ্গণের পূর্ণ ঠিকানা:</label>
           <input type="text" id="notice-address" class="form-input" placeholder="ঠিকানা">
         </div>
         <div class="form-group" style="margin-bottom: 12px;">
-          <label style="font-size: 0.82rem; font-weight: 600;">বিশেষ কারণ বা অতিরিক্ত বিবরণ (ঐচ্ছিক):</label>
+          <label id="notice-reason-label" style="font-size: 0.82rem; font-weight: 600;">বিশেষ কারণ বা অতিরিক্ত বিবরণ (ঐচ্ছিক):</label>
           <textarea id="notice-reason" class="form-textarea" rows="2" placeholder="যেমন: ব্যক্তিগত প্রয়োজনে প্রাঙ্গণ প্রয়োজন অথবা বিগত ৩ মাসের ভাড়া বকেয়া..."></textarea>
         </div>
         <button class="btn btn-primary" id="btn-generate-notice-submit" style="width: 100%; background: #dc2626;">
-          <i class="fa-solid fa-file-pen"></i> প্রফেশনাল আইনি নোটিশ তৈরি করুন
+          <i class="fa-solid fa-file-pen"></i> <span id="lbl-generate-notice-btn">প্রফেশনাল আইনি নোটিশ তৈরি করুন</span>
         </button>
 
         <div id="notice-output-container" style="display: none; margin-top: 16px;">
@@ -516,10 +503,10 @@
             <strong id="notice-output-title" style="color: #0f172a; font-size: 0.95rem;"></strong>
             <div style="display: flex; gap: 6px;">
               <button class="btn btn-secondary" id="btn-copy-notice" style="font-size: 0.78rem; padding: 4px 8px;">
-                <i class="fa-solid fa-copy"></i> কপি
+                <i class="fa-solid fa-copy"></i> <span id="lbl-copy-notice">কপি</span>
               </button>
               <button class="btn btn-secondary" id="btn-inject-notice" style="font-size: 0.78rem; padding: 4px 8px; color: #16a34a;">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> প্রিভিউতে দেখুন
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> <span id="lbl-inject-notice">প্রিভিউতে দেখুন</span>
               </button>
             </div>
           </div>
@@ -532,32 +519,32 @@
     </div>
   </div>
 
-  <!-- Modal 8: SHA-256 Tamper-Proof Hash Verification (Phase 5) -->
+  <!-- Modal 8: SHA-256 Tamper-Proof Hash Verification -->
   <div class="modal-overlay" id="verify-modal" style="display: none;">
     <div class="modal-card" style="max-width: 650px;">
       <div class="modal-header">
         <h3 style="font-size: 1.1rem; color: #0d9488; display: flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-fingerprint"></i> SHA-256 ক্রিপ্টোগ্রাফিক হ্যাশ ও প্রমাণিকতা যাচাই
+          <i class="fa-solid fa-fingerprint"></i> <span id="verify-modal-title">SHA-256 ক্রিপ্টোগ্রাফিক হ্যাশ ও প্রমাণিকতা যাচাই</span>
         </h3>
         <button id="close-verify" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #64748b; padding: 4px;">✕</button>
       </div>
       <div class="modal-body">
-        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">
+        <p id="verify-modal-desc" style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">
           প্রতিটি দলিলের জন্য একটি অনন্য গাণিতিক হ্যাশ তৈরি হয়। চুক্তি স্বাক্ষরের পর কোনো একটি অক্ষরও পরিবর্তন হলে এই হ্যাশ পরিবর্তিত হয়ে যায়।
         </p>
 
         <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
-          <div style="font-size: 0.8rem; font-weight: 700; color: #0f766e; margin-bottom: 4px;">বর্তমান দলিলের সক্রিয় হ্যাশ (Current Document Hash):</div>
+          <div id="verify-active-hash-label" style="font-size: 0.8rem; font-weight: 700; color: #0f766e; margin-bottom: 4px;">বর্তমান দলিলের সক্রিয় হ্যাশ:</div>
           <div id="current-doc-full-hash" style="font-family: monospace; font-size: 0.82rem; word-break: break-all; color: #134e4a; background: white; padding: 8px; border-radius: 4px; border: 1px solid #ccfbf1;">গণনা হচ্ছে...</div>
         </div>
 
         <div class="form-group" style="margin-bottom: 12px;">
-          <label style="font-size: 0.85rem; font-weight: 600;">যাচাই করার জন্য রেফারেন্স হ্যাশ বা কোড পেস্ট করুন:</label>
+          <label id="verify-input-label" style="font-size: 0.85rem; font-weight: 600;">যাচাই করার জন্য রেফারেন্স হ্যাশ বা কোড পেস্ট করুন:</label>
           <input type="text" id="verify-hash-input" class="form-input" placeholder="যেমন: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855">
         </div>
 
         <button class="btn btn-primary" id="btn-run-verify-submit" style="width: 100%; background: #0d9488;">
-          <i class="fa-solid fa-shield-halved"></i> দলিলের প্রমাণিকতা যাচাই করুন
+          <i class="fa-solid fa-shield-halved"></i> <span id="lbl-run-verify-btn">দলিলের প্রমাণিকতা যাচাই করুন</span>
         </button>
 
         <div id="verify-result-box" style="display: none; margin-top: 16px;"></div>
@@ -568,6 +555,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js"></script>
+  <script src="/static/js/app.js?v=3.6.0"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from typing import Dict, Any, List
 from app.config import TEMPLATES_DIR
@@ -14,8 +14,8 @@ class TemplateEngine:
         self.templates_meta = {
             "tenancy_agreement": {
                 "id": "tenancy_agreement",
-                "title_bn": "বাড়ি / ফ্ল্যাট / দোকান ভাড়ার চুক্তি",
-                "title_en": "Tenancy / Lease Agreement",
+                "title_bn": "বাড়ি / ফ্ল্যাট / দোকান ভাড়ার চুক্তিপত্র",
+                "title_en": "Residential & Commercial Tenancy Agreement",
                 "template_file": "tenancy_agreement.html",
                 "category": "Property & Real Estate",
                 "defaults_bn": {
@@ -50,12 +50,45 @@ class TemplateEngine:
                             "text": "ভাড়াকৃত ফ্ল্যাটে কোনো প্রকার অসামাজিক, অবৈধ বা আইন পরিপন্থী কর্মকাণ্ড পরিচালনা করা যাইবে না এবং রাত ১১টার পর প্রধান গেটের নিরাপত্তা বজায় রাখিতে হইবে।"
                         }
                     ]
+                },
+                "defaults_en": {
+                    "execution_date": "12 September 2026",
+                    "landlord_name": "Md. Rafiqul Islam",
+                    "landlord_father": "Late Alhaj Abdul Karim",
+                    "landlord_address": "House 12, Road 05, Sector 3, Uttara, Dhaka",
+                    "landlord_nid": "19852692415123456",
+                    "landlord_phone": "+880 1711-223344",
+                    "tenant_name": "Tanvir Ahmed",
+                    "tenant_father": "Md. Nurul Huda",
+                    "tenant_address": "Charbhadrasan, Kotwali, Faridpur",
+                    "tenant_nid": "19922692415987654",
+                    "tenant_phone": "+880 1811-556677",
+                    "property_address": "Flat 4B (4th Floor), House 12, Road 05, Sector 3, Uttara, Dhaka-1230",
+                    "property_type": "Residential Apartment (3 Bed, 3 Bath, Living-Dining)",
+                    "duration_months": "24",
+                    "start_date": "01 October 2026",
+                    "rent_amount": "25,000",
+                    "rent_in_words": "Twenty-Five Thousand Taka Only",
+                    "payment_due_day": "7",
+                    "deposit_amount": "75,000",
+                    "notice_period_months": "2",
+                    "utility_terms": "Electricity, gas, water charges, and common service maintenance fees (BDT 3,000) shall be borne directly by the Tenant.",
+                    "witness1_name": "Kamrul Hassan",
+                    "witness1_address": "Uttara, Dhaka",
+                    "witness2_name": "Sajid Mahmud",
+                    "witness2_address": "Mirpur, Dhaka",
+                    "custom_clauses": [
+                        {
+                            "title": "Quiet Enjoyment & Peaceable Possession",
+                            "text": "The leased premises shall be utilized exclusively for lawful residential purposes without disturbance, public nuisance, or breach of peace."
+                        }
+                    ]
                 }
             },
             "nda_agreement": {
                 "id": "nda_agreement",
-                "title_bn": "নন-ডিসক্লোজার ও বাণিজ্যিক গোপনীয়তা চুক্তি (NDA)",
-                "title_en": "Non-Disclosure Agreement (NDA)",
+                "title_bn": "গোপনীয় তথ্য সুরক্ষা ও প্রকাশ না করার চুক্তিপত্র",
+                "title_en": "Non-Disclosure & Confidentiality Agreement",
                 "template_file": "nda_agreement.html",
                 "category": "Corporate & Tech",
                 "defaults_bn": {
@@ -70,8 +103,25 @@ class TemplateEngine:
                     "duration_years": "৩",
                     "custom_clauses": [
                         {
-                            "title": "কর্মচারী নিয়োগ নিষেধাজ্ঞা (Non-Solicitation)",
+                            "title": "কর্মচারী নিয়োগ নিষেধাজ্ঞা",
                             "text": "চুক্তির মেয়াদকালীন সময়ে এবং চুক্তি অবসানের পরবর্তী ১ বছরের মধ্যে কোনো পক্ষ অন্য পক্ষের কোনো প্রকৌশলী বা কর্মীকে নিজ প্রতিষ্ঠানে প্রলুব্ধ বা নিয়োগ প্রদান করিতে পারিবে না।"
+                        }
+                    ]
+                },
+                "defaults_en": {
+                    "execution_date": "12 September 2026",
+                    "disclosing_party_name": "Technovation Software Ltd.",
+                    "disclosing_party_address": "Level 5, Banani Commercial Area, Dhaka",
+                    "disclosing_party_rep": "Asif Iqbal (Managing Director)",
+                    "receiving_party_name": "DataFlow Analytics Inc.",
+                    "receiving_party_address": "Road 11, Gulshan 2, Dhaka",
+                    "receiving_party_rep": "Fahim Zaman (Chief Technology Officer)",
+                    "purpose": "Joint technical evaluation and architectural review of proprietary enterprise cloud software.",
+                    "duration_years": "3",
+                    "custom_clauses": [
+                        {
+                            "title": "Non-Solicitation Covenant",
+                            "text": "Neither party shall directly or indirectly solicit, induce, or hire any key personnel of the other party during the term hereof and for one year thereafter."
                         }
                     ]
                 }
@@ -79,7 +129,7 @@ class TemplateEngine:
             "freelance_contract": {
                 "id": "freelance_contract",
                 "title_bn": "ফ্রিল্যান্স সার্ভিস ও পরামর্শক চুক্তিপত্র",
-                "title_en": "Freelance & Independent Contractor Agreement",
+                "title_en": "Independent Contractor & Service Agreement",
                 "template_file": "freelance_contract.html",
                 "category": "Freelancing & Services",
                 "defaults_bn": {
@@ -88,26 +138,48 @@ class TemplateEngine:
                     "client_address": "ধানমন্ডি ২৭, ঢাকা",
                     "client_email": "client@nexusdigital.com",
                     "freelancer_name": "সাব্বির হোসেন",
-                    "freelancer_title": "সিনিয়র ফুল-স্ট্যাক সফটওয়্যার ইঞ্জিনিয়ার",
+                    "freelancer_title": "সফটওয়্যার প্রকৌশলী ও পরামর্শক",
                     "freelancer_address": "মিরপুর ডিওএইচএস, ঢাকা",
                     "freelancer_email": "sabbir.dev@gmail.com",
-                    "scope_of_work": "Next.js, FastAPI এবং Stripe পেমেন্ট গেটওয়ে সম্বলিত আধুনিক SaaS ই-কমার্স ওয়েব অ্যাপ্লিকেশন তৈরি ও ক্লাউড ডেপ্লয়মেন্ট সম্পন্ন করা।",
+                    "scope_of_work": "আধুনিক ক্লাউড প্ল্যাটফর্ম, ওয়েব অ্যাপ্লিকেশন তৈরি ও রক্ষণাবেক্ষণ সম্পন্ন করা।",
                     "currency": "৳",
                     "total_amount": "১,৫০,০০০",
-                    "payment_milestones": "প্রজেক্ট শুরুর পূর্বে ৩০% অগ্রিম (৳ ৪৫,০০০), আলফা রিলিজ ও UI অ্যাপ্রুভালে ৪০% (৳ ৬০,০০০), এবং সোর্স কোড ও ক্লাউড ডেপ্লয়মেন্টে বাকি ৩০% (৳ ৪৫,০০০) পরিশোধযোগ্য হইবে।",
+                    "payment_milestones": "প্রজেক্ট শুরুর পূর্বে ৩০% অগ্রিম (৳ ৪৫,০০০), আলফা রিলিজ ও অনুমোদনে ৪০% (৳ ৬০,০০০), এবং সোর্স কোড হস্তান্তরে বাকি ৩০% (৳ ৪৫,০০০) পরিশোধযোগ্য হইবে।",
                     "deadline": "১৫ নভেম্বর, ২০২৬",
                     "free_revisions": "৩",
                     "custom_clauses": [
                         {
-                            "title": "ওয়ারেন্টি ও বাগ ফিক্সিং সহায়তা",
-                            "text": "চূড়ান্ত ডেলিভারির পর পরবর্তী ৩০ দিন পর্যন্ত যেকোনো টেকনিক্যাল বাগ বা এরর ফ্রিল্যান্সার কোনো অতিরিক্ত পারিশ্রমিক ছাড়াই সংশোধন করিয়া দিবেন।"
+                            "title": "ত্রুটি সংশোধন সহায়তা",
+                            "text": "চূড়ান্ত ডেলিভারির পর পরবর্তী ৩০ দিন পর্যন্ত যেকোনো কারিগরি ত্রুটি সেবা প্রদানকারী কোনো অতিরিক্ত পারিশ্রমিক ছাড়াই সংশোধন করিয়া দিবেন।"
+                        }
+                    ]
+                },
+                "defaults_en": {
+                    "execution_date": "12 September 2026",
+                    "client_name": "Nexus Digital Marketing Agency",
+                    "client_address": "Dhanmondi 27, Dhaka",
+                    "client_email": "client@nexusdigital.com",
+                    "freelancer_name": "Sabbir Hossain",
+                    "freelancer_title": "Senior Full-Stack Software Engineer",
+                    "freelancer_address": "Mirpur DOHS, Dhaka",
+                    "freelancer_email": "sabbir.dev@gmail.com",
+                    "scope_of_work": "Design, develop, test, and deploy a secure SaaS e-commerce web application with cloud deployment.",
+                    "currency": "USD",
+                    "total_amount": "1,500",
+                    "payment_milestones": "30% upfront deposit ($450), 40% upon alpha milestone approval ($600), and 30% upon deployment and code transfer ($450).",
+                    "deadline": "15 November 2026",
+                    "free_revisions": "3",
+                    "custom_clauses": [
+                        {
+                            "title": "Warranty & Defect Rectification",
+                            "text": "The Contractor covenants to rectify any technical defect or bug without additional cost within 30 days of final delivery."
                         }
                     ]
                 }
             },
             "partnership_agreement": {
                 "id": "partnership_agreement",
-                "title_bn": "অংশীদারি কারবার চুক্তিপত্র (Partnership Deed)",
+                "title_bn": "অংশীদারি কারবার চুক্তিপত্র",
                 "title_en": "Partnership Deed & Agreement",
                 "template_file": "partnership_agreement.html",
                 "category": "Business & Trade",
@@ -128,7 +200,7 @@ class TemplateEngine:
                     "total_capital": "২০,০০,০০০",
                     "partner1_share": "৫০",
                     "partner2_share": "৫০",
-                    "bank_operation": "উভয় অংশীদারের যৌথ স্বাক্ষরে (Joint Signatures)",
+                    "bank_operation": "উভয় অংশীদারের যৌথ স্বাক্ষরে",
                     "notice_period_months": "৩",
                     "custom_clauses": [
                         {
@@ -136,19 +208,45 @@ class TemplateEngine:
                             "text": "উভয় অংশীদারের সর্বসম্মত লিখিত সম্মতি ব্যতীত কোনো তৃতীয় ব্যক্তিকে এই ফার্মের অংশীদার হিসেবে অন্তর্ভুক্ত করা যাইবে না।"
                         }
                     ]
+                },
+                "defaults_en": {
+                    "execution_date": "12 September 2026",
+                    "partner1_name": "Abdullah Al Mamun",
+                    "partner1_father": "Late Samsul Haque",
+                    "partner1_address": "Banasree, Rampura, Dhaka",
+                    "partner1_nid": "19882692415567890",
+                    "partner1_phone": "+880 1700-112233",
+                    "partner2_name": "Mahmudur Rahman",
+                    "partner2_father": "Md. Rezaul Karim",
+                    "partner2_address": "Khilgaon, Dhaka",
+                    "partner2_nid": "19902692415098765",
+                    "partner2_phone": "+880 1800-445566",
+                    "firm_name": "Blooming Agro & Tech Solutions",
+                    "firm_address": "House 4, Block C, Banasree, Dhaka",
+                    "total_capital": "2,000,000",
+                    "partner1_share": "50",
+                    "partner2_share": "50",
+                    "bank_operation": "Joint Signatures of both partners",
+                    "notice_period_months": "3",
+                    "custom_clauses": [
+                        {
+                            "title": "Admission of New Partners",
+                            "text": "No third party shall be admitted as a partner in the firm without the unanimous written consent of both founding partners."
+                        }
+                    ]
                 }
             },
             "employment_agreement": {
                 "id": "employment_agreement",
-                "title_bn": "কর্মসংস্থান ও চাকরির চুক্তিপত্র (Employment Contract)",
-                "title_en": "Employment Agreement & Appointment",
+                "title_bn": "কর্মসংস্থান ও চাকরির চুক্তিপত্র",
+                "title_en": "Employment Agreement & Appointment Letter",
                 "template_file": "employment_agreement.html",
                 "category": "HR & Corporate",
                 "defaults_bn": {
                     "execution_date": "১২ সেপ্টেম্বর, ২০২৬",
                     "company_name": "ইনোভেক্স ক্লাউড ল্যাবস লিমিটেড",
                     "company_address": "সফটওয়্যার টেকনোলজি পার্ক, কাওরান বাজার, ঢাকা",
-                    "company_rep": "সাকিব আল হাসান (হেড অব এইচআর)",
+                    "company_rep": "সাকিব আল হাসান (প্রধান মানবসম্পদ কর্মকর্তা)",
                     "employee_name": "ফারহান কবির",
                     "employee_father": "মো: রফিকুল আলম",
                     "employee_address": "মোহাম্মদপুর, ঢাকা",
@@ -161,8 +259,30 @@ class TemplateEngine:
                     "notice_period_days": "৩০",
                     "custom_clauses": [
                         {
-                            "title": "রিমোট ওয়ার্ক ও আইপি সুরক্ষা",
+                            "title": "তথ্যপ্রযুক্তি ও নিরাপত্তা সুরক্ষা",
                             "text": "কর্মকর্তাকে প্রদত্ত প্রাতিষ্ঠানিক ল্যাপটপ ও ডিজিটাল ক্রেডেনশিয়াল শুধুমাত্র অফিশিয়াল কাজে ব্যবহৃত হইবে এবং কোনো সিকিউরিটি কোড তৃতীয় পক্ষের নিকট শেয়ার করা যাইবে না।"
+                        }
+                    ]
+                },
+                "defaults_en": {
+                    "execution_date": "12 September 2026",
+                    "company_name": "Innovex Cloud Labs Ltd.",
+                    "company_address": "Software Technology Park, Karwan Bazar, Dhaka",
+                    "company_rep": "Sakib Al Hasan (Head of Human Resources)",
+                    "employee_name": "Farhan Kabir",
+                    "employee_father": "Md. Rafiqul Alam",
+                    "employee_address": "Mohammadpur, Dhaka",
+                    "employee_nid": "19952692415789456",
+                    "employee_phone": "+880 1911-223344",
+                    "designation": "Software Quality Assurance Engineer",
+                    "department": "Engineering & Product Development",
+                    "salary_amount": "60,000",
+                    "probation_months": "3",
+                    "notice_period_days": "30",
+                    "custom_clauses": [
+                        {
+                            "title": "Information Security & Hardware Care",
+                            "text": "All laptops, security credentials, and company intellectual property must be utilized exclusively for authorized corporate duties."
                         }
                     ]
                 }
@@ -177,7 +297,9 @@ class TemplateEngine:
                 "title_bn": meta["title_bn"],
                 "title_en": meta["title_en"],
                 "category": meta["category"],
-                "defaults": meta["defaults_bn"]
+                "defaults": meta["defaults_bn"],
+                "defaults_bn": meta["defaults_bn"],
+                "defaults_en": meta["defaults_en"]
             })
         return result
 

@@ -1,4 +1,4 @@
-﻿from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field
 from typing import Dict, Any, List, Optional
 
 class RefineClauseRequest(BaseModel):
@@ -48,6 +48,7 @@ class GenerateDocumentResponse(BaseModel):
 
 class SaveContractRequest(BaseModel):
     id: Optional[str] = None
+    owner_id: Optional[str] = None
     title: str
     document_type: str
     language: str = "bn"
