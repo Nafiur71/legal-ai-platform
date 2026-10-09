@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from typing import Dict, Any, List
 from app.config import TEMPLATES_DIR
@@ -188,6 +188,11 @@ class TemplateEngine:
         meta = self.get_template_meta(doc_type)
         template = self.env.get_template(meta["template_file"])
         title = meta["title_bn"] if language == "bn" else meta["title_en"]
+        if "ref_id" not in data:
+            import hashlib
+            core_str = f"{doc_type}_{data.get('execution_date', '')}_{data.get('landlord_name', '')}_{data.get('client_name', '')}_{data.get('partner1_name', '')}"
+            short = hashlib.md5(core_str.encode('utf-8')).hexdigest()[:6].upper()
+            data["ref_id"] = f"SLA-BD-{short}"
         return template.render(
             title=title,
             data=data,
@@ -195,23 +200,104 @@ class TemplateEngine:
         )
 
     def generate_docx(self, doc_type: str, data: Dict[str, Any], language: str = "bn") -> io.BytesIO:
+        import base64
+        from docx.shared import Inches, Pt, RGBColor
+
         meta = self.get_template_meta(doc_type)
         doc = Document()
         title = meta["title_bn"] if language == "bn" else meta["title_en"]
-        
-        doc.add_heading(title, level=0)
-        doc.add_paragraph(f"Execution Date: {data.get('execution_date', '')}")
 
-        doc.add_heading("Parties Involved", level=1)
+        # Title
+        heading = doc.add_heading(title, level=0)
+        p_date = doc.add_paragraph()
+        p_date.add_run(f"Execution Date / সম্পাদনের তারিখ: ").bold = True
+        p_date.add_run(str(data.get('execution_date', '..................')))
+
+        # Section 1: Parties
+        doc.add_heading("1. Parties / পক্ষগণের বিবরণ", level=1)
+        # Filter out internal/binary keys
+        skip_keys = {"party1_signature", "party2_signature", "custom_clauses", "ref_id", "show_stamp"}
         for key, val in data.items():
-            if isinstance(val, str) and val and not key.startswith("custom"):
-                doc.add_paragraph(f"{key.replace('_', ' ').capitalize()}: {val}")
+            if key not in skip_keys and isinstance(val, (str, int, float)) and val:
+                p = doc.add_paragraph()
+                p.add_run(f"• {key.replace('_', ' ').title()}: ").bold = True
+                p.add_run(str(val))
 
-        if "custom_clauses" in data and isinstance(data["custom_clauses"], list):
-            doc.add_heading("Special AI Clauses", level=1)
+        # Section 2: Standard Legal Clauses
+        doc.add_heading("2. Contract Terms & Clauses / মূল শর্তাবলি", level=1)
+        if doc_type == "tenancy_agreement":
+            clauses = [
+                ("Term & Duration / চুক্তির মেয়াদ", f"মেয়াদ: {data.get('duration_months', '12')} মাস, কার্যকরের তারিখ: {data.get('start_date', '...')}" if language == "bn" else f"Duration: {data.get('duration_months', '12')} months, starting from {data.get('start_date', '...')}."),
+                ("Monthly Rent / মাসিক ভাড়া", f"মাসিক ভাড়া: ৳ {data.get('rent_amount', '...')} টাকা ({data.get('rent_in_words', '')})। প্রতি মাসের {data.get('payment_due_day', '7')} তারিখের মধ্যে পরিশোধযোগ্য।" if language == "bn" else f"Monthly Rent: {data.get('rent_amount', '...')} BDT, payable by day {data.get('payment_due_day', '7')}."),
+                ("Security Deposit / অগ্রিম জামানত", f"ফেরতযোগ্য অগ্রিম জামানত: ৳ {data.get('deposit_amount', '...')} টাকা।" if language == "bn" else f"Refundable security deposit: {data.get('deposit_amount', '...')} BDT."),
+                ("Utility & Maintenance / ইউটিলিটি", str(data.get('utility_terms', 'বিদ্যুৎ, গ্যাস ও পানির বিল ভাড়াটিয়া নিজ দায়িত্বে পরিশোধ করিবেন।'))),
+                ("Termination & Notice / চুক্তি অবসান", f"কমপক্ষে {data.get('notice_period_months', '2')} মাসের লিখিত নোটিশ সাপেক্ষে চুক্তি বাতিল করা যাইবে।" if language == "bn" else f"Termination requires at least {data.get('notice_period_months', '2')} month(s) written notice.")
+            ]
+        elif doc_type == "partnership_agreement":
+            clauses = [
+                ("Capital Contribution / মূলধন অনুপাত", f"মোট মূলধন: ৳ {data.get('total_capital', '...')} টাকা। ১ম অংশীদার: {data.get('partner1_share', '50')}%, ২য় অংশীদার: {data.get('partner2_share', '50')}%।" if language == "bn" else f"Total Capital: {data.get('total_capital', '...')} BDT. Partner 1: {data.get('partner1_share', '50')}%, Partner 2: {data.get('partner2_share', '50')}%."),
+                ("Profit & Loss / লাভ-লোকসান বণ্টন", "অংশীদারদের মূলধনের অনুপাত অনুযায়ী লাভ-লোকসান বণ্টিত হইবে।" if language == "bn" else "Profits and losses shall be divided in proportion to capital contributions."),
+                ("Bank Operations / ব্যাংক হিসাব পরিচালনা", f"ব্যাংক হিসাব: {data.get('bank_operation', 'উভয় অংশীদারের যৌথ স্বাক্ষরে পরিচালিত হইবে।')}" if language == "bn" else f"Bank Account: {data.get('bank_operation', 'Joint signatures')}."),
+                ("Dissolution / কারবার অবসান", f"কারবার অবসানের জন্য কমপক্ষে {data.get('notice_period_months', '3')} মাসের লিখিত নোটিশ আবশ্যক।" if language == "bn" else f"Dissolution requires at least {data.get('notice_period_months', '3')} months notice.")
+            ]
+        elif doc_type == "freelance_contract":
+            clauses = [
+                ("Scope of Work / কাজের পরিধি", str(data.get('scope_of_work', 'চুক্তিতে উল্লেখিত নির্ধারিত সার্ভিস ও ডেলিভারেবলস সরবরাহকরণ।'))),
+                ("Compensation / পারিশ্রমিক ও পেমেন্ট", f"মোট পারিশ্রমিক: {data.get('currency', '৳')} {data.get('total_amount', '...')}। {data.get('payment_milestones', '')}"),
+                ("Deadline / ডেলিভারি সময়সীমা", f"চূড়ান্ত ডেলিভারির তারিখ: {data.get('deadline', 'নির্ধারিত তারিখ')}" if language == "bn" else f"Delivery deadline: {data.get('deadline', 'TBD')}."),
+                ("Intellectual Property / স্বত্বাধিকার", "সম্পূর্ণ পারিশ্রমিক পরিশোধ সাপেক্ষে ডেলিভারেবলসের কপিরাইট গ্রাহকের অনুকূলে হস্তান্তরিত হইবে।" if language == "bn" else "All IP rights transfer to the client upon full payment.")
+            ]
+        elif doc_type == "employment_agreement":
+            clauses = [
+                ("Remuneration / বেতন ও সুবিধাদি", f"মাসিক বেতন: ৳ {data.get('salary_amount', '...')} টাকা।" if language == "bn" else f"Monthly salary: {data.get('salary_amount', '...')} BDT."),
+                ("Probation / শিক্ষানবিসকাল", f"শিক্ষানবিসকাল: {data.get('probation_months', '3')} মাস।" if language == "bn" else f"Probation period: {data.get('probation_months', '3')} months."),
+                ("Termination Notice / চাকরি অবসান", f"চাকরি অবসানের জন্য {data.get('notice_period_days', '30')} দিনের লিখিত নোটিশ প্রয়োজন।" if language == "bn" else f"Termination requires {data.get('notice_period_days', '30')} days notice.")
+            ]
+        else: # nda_agreement
+            clauses = [
+                ("Purpose of Disclosure / তথ্য বিনিময়ের উদ্দেশ্য", str(data.get('purpose', 'ব্যবসায়িক আলোচনা ও প্রযুক্তিগত মূল্যায়ন।'))),
+                ("Confidentiality Term / গোপনীয়তার মেয়াদ", f"গোপনীয়তা রক্ষার মেয়াদ: {data.get('duration_years', '2')} বছর।" if language == "bn" else f"Duration: {data.get('duration_years', '2')} years."),
+                ("Non-Disclosure Obligations / অ-প্রকাশ বাধ্যবাধকতা", "উভয় পক্ষ গোপনীয় তথ্যের সর্বোচ্চ সুরক্ষা বজায় রাখিতে অঙ্গীকারবদ্ধ।" if language == "bn" else "Strict standard of care required to maintain confidentiality.")
+            ]
+
+        for c_title, c_text in clauses:
+            doc.add_heading(c_title, level=2)
+            doc.add_paragraph(c_text)
+
+        # Section 3: Special AI Clauses
+        if "custom_clauses" in data and isinstance(data["custom_clauses"], list) and data["custom_clauses"]:
+            doc.add_heading("3. Special AI Clauses / বিশেষ ধারাসমূহ", level=1)
             for c in data["custom_clauses"]:
-                doc.add_heading(c.get("title", "Clause"), level=2)
+                doc.add_heading(c.get("title", "Special Clause / বিশেষ ধারা"), level=2)
                 doc.add_paragraph(c.get("text", ""))
+
+        # Section 4: Signatures
+        doc.add_heading("4. Signatures / স্বাক্ষর ও সম্মতি", level=1)
+        p_sig_note = doc.add_paragraph("উভয় পক্ষ সুস্থ মস্তিষ্কে সজ্ঞানে এই চুক্তিতে স্বাক্ষর করিলেন।" if language == "bn" else "The parties hereto execute this agreement voluntarily.")
+
+        def embed_signature(sig_key: str, party_name: str, label: str):
+            p = doc.add_paragraph()
+            p.add_run(f"\n{label} ({party_name or '...'}):\n").bold = True
+            sig_val = data.get(sig_key)
+            if sig_val and isinstance(sig_val, str) and sig_val.startswith("data:image"):
+                try:
+                    _, b64data = sig_val.split(",", 1)
+                    img_bytes = base64.b64decode(b64data)
+                    doc.add_picture(io.BytesIO(img_bytes), width=Inches(1.8))
+                except Exception:
+                    p.add_run("[Signed Digitally / ডিজিটাল স্বাক্ষর সংরক্ষিত]")
+            else:
+                p.add_run("স্বাক্ষর: ......................................................\n")
+
+        p1_name = data.get('landlord_name') or data.get('client_name') or data.get('partner1_name') or data.get('company_name') or data.get('disclosing_party_name') or '১ম পক্ষ'
+        p2_name = data.get('tenant_name') or data.get('freelancer_name') or data.get('partner2_name') or data.get('employee_name') or data.get('receiving_party_name') or '২য় পক্ষ'
+
+        embed_signature('party1_signature', p1_name, "১ম পক্ষের স্বাক্ষর / First Party")
+        embed_signature('party2_signature', p2_name, "২য় পক্ষের স্বাক্ষর / Second Party")
+
+        # Footer
+        p_foot = doc.add_paragraph()
+        p_foot.add_run(f"\nSmartLegal AI • Verified Document | Ref: {data.get('ref_id', 'SLA-BD-CERTIFIED')}").italic = True
 
         target_stream = io.BytesIO()
         doc.save(target_stream)

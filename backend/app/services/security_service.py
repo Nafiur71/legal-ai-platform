@@ -42,7 +42,14 @@ class SecurityService:
         """Verifies whether document content matches the provided SHA-256 fingerprint."""
         computed = cls.compute_sha256(content)
         expected_clean = expected_hash.strip().lower()
-        is_match = (computed.lower() == expected_clean) or (computed[:len(expected_clean)].lower() == expected_clean)
+        if expected_clean.startswith("sla-sec-"):
+            expected_clean = expected_clean.replace("sla-sec-", "")
+
+        # Require at least 12 characters (short hash length) to prevent empty or trivial prefix bypass
+        if len(expected_clean) < 12:
+            is_match = False
+        else:
+            is_match = (computed.lower() == expected_clean) or (computed[:len(expected_clean)].lower() == expected_clean)
 
         return {
             "is_valid": is_match,

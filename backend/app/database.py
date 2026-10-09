@@ -1,13 +1,26 @@
-﻿import sqlite3
+import os
+import sqlite3
 import json
 import uuid
 from datetime import datetime
 from pathlib import Path
 
-DB_PATH = Path(__file__).resolve().parent.parent / "legal_contracts.db"
+DEFAULT_DB = Path(__file__).resolve().parent.parent / "legal_contracts.db"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+env_db = os.getenv("DB_PATH")
+if env_db:
+    DB_PATH = Path(env_db)
+elif (DATA_DIR / "legal_contracts.db").exists():
+    DB_PATH = DATA_DIR / "legal_contracts.db"
+elif DEFAULT_DB.exists():
+    DB_PATH = DEFAULT_DB
+else:
+    DB_PATH = DATA_DIR / "legal_contracts.db"
 
 def get_connection():
-    conn = sqlite3.connect(str(DB_PATH))
+    conn = sqlite3.connect(str(DB_PATH), timeout=15)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -45,6 +58,11 @@ def save_contract(title: str, doc_type: str, language: str, data: dict, contract
             SET title = ?, document_type = ?, language = ?, data_json = ?, updated_at = ?
             WHERE id = ?
         """, (title, doc_type, language, json.dumps(data, ensure_ascii=False), now, contract_id))
+        if cursor.rowcount == 0:
+            cursor.execute("""
+                INSERT INTO contracts (id, title, document_type, language, data_json, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (contract_id, title, doc_type, language, json.dumps(data, ensure_ascii=False), now, now))
     
     conn.commit()
     conn.close()
@@ -87,9 +105,9 @@ def delete_contract(contract_id: str) -> bool:
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM contracts WHERE id = ?", (contract_id,))
-    changes = conn.total_changes
+    deleted = cursor.rowcount > 0
     conn.commit()
     conn.close()
-    return changes > 0
+    return deleted
 
 init_db()

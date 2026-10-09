@@ -1,4 +1,4 @@
-﻿from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field
 from typing import Dict, Any, List, Optional
 
 class RefineClauseRequest(BaseModel):
@@ -40,6 +40,8 @@ class GenerateDocumentRequest(BaseModel):
     document_type: str
     language: str = "bn"
     data: Dict[str, Any]
+    watermark_type: Optional[str] = "none"
+    show_stamp: Optional[bool] = True
 
 class GenerateDocumentResponse(BaseModel):
     title: str

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ 'bn' if language == 'bn' else 'en' }}">
 <head>
   <meta charset="UTF-8">
@@ -223,7 +223,7 @@
 </head>
 <body>
   <div class="document-container" id="legal-document-root">
-    <div class="stamp-header-space" id="stamp-header">
+    <div class="stamp-header-space" id="stamp-header" {% if data.show_stamp is defined and not data.show_stamp %}style="display: none;"{% endif %}>
       <div>
         <div style="font-size: 10pt; color: #991b1b; text-transform: uppercase;">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</div>
         <div style="font-size: 13pt; font-weight: 800;">নন-জুডিশিয়াল স্ট্যাম্প (NON-JUDICIAL)</div>
@@ -243,7 +243,7 @@
         </div>
         <div>
           <strong style="color: #0f172a;">SmartLegal AI • ভেরিফাইড আইনি দলিল</strong><br>
-          রেফারেন্স আইডি: SLA-BD-{{ range(10000, 99999) | random }} | প্ল্যাটফর্ম ভেরিফিকেশন কোড সক্রিয়
+          রেফারেন্স আইডি: {{ data.ref_id or 'SLA-BD-CERTIFIED' }} | প্ল্যাটফর্ম ভেরিফিকেশন কোড সক্রিয়
         </div>
       </div>
       <div>

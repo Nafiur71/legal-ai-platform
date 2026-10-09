@@ -1,5 +1,6 @@
-﻿import json
+import json
 import logging
+import re
 import requests
 from typing import Dict, Any, List
 from app.config import GEMINI_API_KEY, GEMINI_MODEL
@@ -10,6 +11,24 @@ class AIService:
     def __init__(self):
         self.api_key = GEMINI_API_KEY
         self.model = GEMINI_MODEL
+
+    @staticmethod
+    def _parse_number(val: Any, default: float = 0.0) -> float:
+        """Safely parses Bengali and English numbers from strings, ints, or floats."""
+        if val is None:
+            return default
+        s = str(val).strip()
+        bangla_digits = "০১২৩৪৫৬৭৮৯"
+        for i, b in enumerate(bangla_digits):
+            s = s.replace(b, str(i))
+        s = s.replace(',', '')
+        match = re.search(r'[-+]?\d*\.?\d+', s)
+        if match:
+            try:
+                return float(match.group(0))
+            except ValueError:
+                return default
+        return default
 
     def _call_gemini(self, prompt: str, system_instruction: str = None) -> str:
         if not self.api_key:
@@ -37,8 +56,11 @@ class AIService:
             resp = requests.post(url, json=payload, timeout=25)
             if resp.status_code == 200:
                 data = resp.json()
-                text = data["candidates"][0]["content"]["parts"][0]["text"]
-                return text
+                candidates = data.get("candidates", [])
+                if candidates:
+                    parts = candidates[0].get("content", {}).get("parts", [])
+                    if parts and "text" in parts[0]:
+                        return parts[0]["text"]
             else:
                 logger.warning(f"Gemini API returned {resp.status_code}: {resp.text}")
         except Exception as e:
@@ -184,17 +206,11 @@ class AIService:
         score = 92
 
         if document_type == "tenancy_agreement":
-            rent = data.get("rent_amount", 0)
-            deposit = data.get("deposit_amount", 0)
-            notice = data.get("notice_period_months", 1)
+            rent_val = self._parse_number(data.get("rent_amount"), 0)
+            deposit_val = self._parse_number(data.get("deposit_amount"), 0)
+            notice_val = self._parse_number(data.get("notice_period_months"), 1)
 
-            try:
-                rent_val = float(str(rent).replace(',', '')) if rent else 0
-                deposit_val = float(str(deposit).replace(',', '')) if deposit else 0
-            except ValueError:
-                rent_val, deposit_val = 0, 0
-
-            if deposit_val < rent_val:
+            if rent_val > 0 and deposit_val < rent_val:
                 score -= 10
                 issues.append({
                     "severity": "medium",
@@ -203,7 +219,7 @@ class AIService:
                     "suggestion": "কমপক্ষে ২ বা ৩ মাসের মাসিক ভাড়ার সমপরিমাণ অগ্রিম জামানত রাখা যুক্তিযুক্ত।"
                 })
 
-            if int(notice) < 2:
+            if notice_val < 2:
                 score -= 8
                 issues.append({
                     "severity": "low",
@@ -211,10 +227,37 @@ class AIService:
                     "description": "১ মাসের নোটিশ পিরিয়ড বাড়ি বদল বা নতুন ভাড়াটিয়া পাওয়ার জন্য কিছুটা অপ্রতুল হতে পারে।",
                     "suggestion": "উভয় পক্ষের সুবিধার জন্য নোটিশ পিরিয়ড ২ মাস করা নিরাপদ।"
                 })
+        elif document_type == "partnership_agreement":
+            share1 = self._parse_number(data.get("partner1_share"), 50)
+            share2 = self._parse_number(data.get("partner2_share"), 50)
+            if (share1 + share2) != 100:
+                score -= 12
+                issues.append({
+                    "severity": "high",
+                    "title": "অংশীদারি শেয়ার অসামঞ্জস্য (Share Ratio Mismatch)",
+                    "description": f"অংশীদারদের শেয়ারের যোগফল {share1 + share2}% (১০০% হওয়া আবশ্যক)।",
+                    "suggestion": "উভয় অংশীদারের শেয়ারের অনুপাত সমন্বয় করে মোট ১০০% নির্ধারণ করুন।"
+                })
+        elif document_type == "employment_agreement":
+            probation = self._parse_number(data.get("probation_months"), 3)
+            if probation > 6:
+                score -= 10
+                issues.append({
+                    "severity": "medium",
+                    "title": "অতিরিক্ত দীর্ঘ শিক্ষানবিসকাল (Excessive Probation)",
+                    "description": "বাংলাদেশ শ্রম আইন অনুযায়ী সাধারণ পদে শিক্ষানবিসকাল ৬ মাসের অধিক হওয়া অনুচিত।",
+                    "suggestion": "শিক্ষানবিসকাল কমিয়ে ৩ থেকে ৬ মাসের মধ্যে সীমাবদ্ধ রাখুন।"
+                })
+
+        summary = (
+            "চুক্তিপত্রটিতে মৌলিক সুরক্ষাসমূহ বিদ্যমান। চিহ্নিত পয়েন্টগুলো সমাধান করিলে এটি আদালতে সম্পূর্ণ সুষম ও সুরক্ষিত থাকিবে।"
+            if issues else
+            "চুক্তিপত্রটিতে কোনো বড় আইনি ঝুঁকি বা অসংগতি চিহ্নিত হয়নি। এটি ব্যবহারের জন্য মানসম্মত ও ভারসাম্যপূর্ণ।"
+        )
 
         return {
             "score": max(score, 70),
-            "summary": "চুক্তিপত্রটিতে মৌলিক সুরক্ষাসমূহ বিদ্যমান। চিহ্নিত পয়েন্টগুলো সমাধান করিলে এটি আদালতে সম্পূর্ণ সুষম ও সুরক্ষিত থাকিবে।",
+            "summary": summary,
             "issues": issues
         }
 

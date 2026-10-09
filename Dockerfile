@@ -10,8 +10,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Install system dependencies for headless Chromium/PDF and font rendering
 RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium \
+    fonts-beng \
+    fonts-noto-core \
     fonts-noto-cjk \
-    fonts-sil-padauk \
     curl \
     && rm -rf /var/lib/apt/lists/*
 

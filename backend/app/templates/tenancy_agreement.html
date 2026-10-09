@@ -1,4 +1,4 @@
-﻿{% extends 'base_document.html' %}
+{% extends 'base_document.html' %}
 
 {% block content %}
 <div class="doc-header">
@@ -112,14 +112,14 @@
         <img src="{{ data.party1_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
       {% endif %}
       <strong>{{ '১ম পক্ষের স্বাক্ষর (মালিক)' if language == 'bn' else "First Party's Signature (Landlord)" }}</strong><br>
-      {{ data.landlord_name }}
+      {{ data.landlord_name or '................................................' }}
     </div>
     <div class="sig-box">
       {% if data.party2_signature %}
         <img src="{{ data.party2_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
       {% endif %}
       <strong>{{ '২য় পক্ষের স্বাক্ষর (ভাড়াটিয়া)' if language == 'bn' else "Second Party's Signature (Tenant)" }}</strong><br>
-      {{ data.tenant_name }}
+      {{ data.tenant_name or '................................................' }}
     </div>
   </div>
 </div>

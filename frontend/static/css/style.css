@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --primary: #1e3a8a;
   --primary-hover: #1d4ed8;
   --secondary: #0ea5e9;
@@ -75,7 +75,13 @@ body {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-actions .btn {
+  padding: 6px 11px;
+  font-size: 0.82rem;
 }
 
 /* Layout */
@@ -347,9 +353,28 @@ body {
   background: #f8fafc;
 }
 
+/* Responsive Mobile & Tablet Layout */
+@media (max-width: 992px) {
+  .main-wrapper {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+  .wizard-panel {
+    width: 100%;
+    min-width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .preview-panel {
+    width: 100%;
+    padding: 16px 10px;
+  }
+}
+
 /* Print Styles */
 @media print {
-  .navbar, .wizard-panel, .modal-overlay, .preview-panel > .preview-bar {
+  .navbar, .wizard-panel, .modal-overlay, .preview-panel > .preview-bar, .toast-container, .mobile-view-tabs {
     display: none !important;
   }
   .main-wrapper {
@@ -365,3 +390,315 @@ body {
     max-width: 100%;
   }
 }
+
+/* ========================================================
+   WORLD-CLASS UX/UI UPGRADES: TOAST, DROPDOWN, WIZARD, ZOOM
+   ======================================================== */
+
+/* 1. Toast Notification System */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast-item {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 290px;
+  max-width: 440px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s ease;
+}
+
+.toast-item.toast-success { background: #059669; border-left: 5px solid #10b981; }
+.toast-item.toast-error { background: #dc2626; border-left: 5px solid #f87171; }
+.toast-item.toast-info { background: #2563eb; border-left: 5px solid #60a5fa; }
+.toast-item.toast-warning { background: #d97706; border-left: 5px solid #fbbf24; }
+
+.toast-item .toast-icon { font-size: 1.15rem; flex-shrink: 0; }
+.toast-item .toast-msg { flex: 1; line-height: 1.4; word-break: break-word; }
+.toast-item .toast-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+}
+.toast-item .toast-close:hover { color: #ffffff; }
+
+.toast-fade-out {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateY(-15px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 2. Dropdown Component */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.15);
+  min-width: 230px;
+  padding: 6px;
+  z-index: 80;
+  display: none;
+  flex-direction: column;
+  gap: 3px;
+  animation: dropdownFadeIn 0.18s ease-out;
+}
+
+.dropdown.active .dropdown-menu {
+  display: flex;
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.dropdown-item:hover {
+  background: #f1f5f9;
+  color: var(--primary);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 4px 0;
+}
+
+/* 3. Demo Data Button */
+.btn-demo {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.35);
+  border: none;
+}
+.btn-demo:hover {
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.5);
+  transform: translateY(-1px);
+  color: white;
+}
+
+/* 4. Wizard Progress Bar & Step Footer Navigation */
+.wizard-progress-bar-container {
+  padding: 10px 20px;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.wizard-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+.wizard-progress-track {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.wizard-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  border-radius: 10px;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step-nav-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 5. Prompt Suggestion Chips */
+.prompt-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+.prompt-chip {
+  background: #ffffff;
+  border: 1px solid #c7d2fe;
+  color: #4338ca;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.prompt-chip:hover {
+  background: #ede9fe;
+  border-color: #818cf8;
+  transform: translateY(-1px);
+}
+
+/* 6. Preview Zoom Controls */
+.zoom-controls {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.zoom-btn {
+  background: none;
+  border: none;
+  padding: 5px 9px;
+  cursor: pointer;
+  color: #475569;
+  font-size: 0.8rem;
+  transition: background 0.15s;
+}
+
+.zoom-btn:hover {
+  background: #f1f5f9;
+  color: var(--primary);
+}
+
+.zoom-level {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #334155;
+  padding: 0 6px;
+  min-width: 44px;
+  text-align: center;
+}
+
+.preview-wrapper {
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+  transform-origin: top center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* 7. Fullscreen Reading Mode */
+.reader-fullscreen-active .preview-panel {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 150 !important;
+  background: rgba(15, 23, 42, 0.94) !important;
+  padding: 30px 20px !important;
+  overflow-y: auto !important;
+}
+
+.reader-fullscreen-active .preview-panel .preview-bar {
+  background: #ffffff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* 8. Mobile View Switcher Tabs */
+.mobile-view-tabs {
+  display: none;
+  background: #ffffff;
+  border-bottom: 1px solid var(--card-border);
+  width: 100%;
+  position: sticky;
+  top: 65px;
+  z-index: 45;
+}
+
+.mobile-tab-btn {
+  flex: 1;
+  padding: 11px;
+  border: none;
+  background: #f8fafc;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.mobile-tab-btn.active {
+  background: #ffffff;
+  color: var(--primary);
+  border-bottom: 3px solid var(--primary);
+}
+
+@media (max-width: 992px) {
+  .mobile-view-tabs {
+    display: flex;
+  }
+  .mobile-hide-wizard .wizard-panel {
+    display: none !important;
+  }
+  .mobile-hide-preview .preview-panel {
+    display: none !important;
+  }
+}
+

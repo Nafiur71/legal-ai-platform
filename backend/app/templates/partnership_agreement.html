@@ -1,4 +1,4 @@
-﻿{% extends 'base_document.html' %}
+{% extends 'base_document.html' %}
 
 {% block content %}
 <div class="doc-header">
@@ -95,14 +95,14 @@
         <img src="{{ data.party1_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
       {% endif %}
       <strong>{{ '১ম অংশীদারের স্বাক্ষর' if language == 'bn' else 'First Partner Signature' }}</strong><br>
-      {{ data.partner1_name }}
+      {{ data.partner1_name or '................................................' }}
     </div>
     <div class="sig-box">
       {% if data.party2_signature %}
         <img src="{{ data.party2_signature }}" style="max-height: 48px; display: block; margin: 0 auto 6px auto;">
       {% endif %}
       <strong>{{ '২য় অংশীদারের স্বাক্ষর' if language == 'bn' else 'Second Partner Signature' }}</strong><br>
-      {{ data.partner2_name }}
+      {{ data.partner2_name or '................................................' }}
     </div>
   </div>
 </div>

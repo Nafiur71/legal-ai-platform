@@ -1,4 +1,14 @@
-﻿from fastapi.testclient import TestClient
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+if sys.stdout.encoding != "utf-8":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
+from fastapi.testclient import TestClient
 from app.main import app
 
 client = TestClient(app)
@@ -110,6 +120,12 @@ def test_index_frontend():
     print("[PASS] Frontend HTML Serving Passed")
 
 if __name__ == "__main__":
+    import sys
+    if sys.stdout.encoding != "utf-8":
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+        except Exception:
+            pass
     test_health()
     test_list_templates()
     test_generate_document()

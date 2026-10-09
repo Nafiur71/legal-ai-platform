@@ -1,4 +1,4 @@
-﻿import sys
+import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -52,7 +52,14 @@ def list_available_templates():
 @app.post("/api/generate", response_model=GenerateDocumentResponse)
 def generate_document(req: GenerateDocumentRequest):
     try:
-        html = template_engine.render_html(req.document_type, req.data, req.language)
+        render_data = dict(req.data)
+        if req.show_stamp is not None:
+            render_data["show_stamp"] = req.show_stamp
+
+        html = template_engine.render_html(req.document_type, render_data, req.language)
+        if req.watermark_type and req.watermark_type.lower() not in ["none", ""]:
+            html = security_service.apply_watermark(html, req.watermark_type)
+
         meta = template_engine.get_template_meta(req.document_type)
         title = meta["title_bn"] if req.language == "bn" else meta["title_en"]
         return GenerateDocumentResponse(
@@ -205,11 +212,12 @@ def get_shared_contract(contract_id: str):
     item = get_contract(contract_id)
     if not item:
         raise HTTPException(status_code=404, detail="Contract not found")
-    html = template_engine.render_html(item["document_type"], item["data"], item["language"])
+    html = template_engine.render_html(item["document_type"], item["data"], item.get("language", "bn"))
     return {
         "id": item["id"],
         "title": item["title"],
         "document_type": item["document_type"],
+        "language": item.get("language", "bn"),
         "rendered_html": html,
         "data": item["data"]
     }
@@ -224,7 +232,14 @@ def submit_remote_signature(contract_id: str, req: RemoteSignRequest):
 @app.post("/api/export/pdf")
 def export_pdf(req: GenerateDocumentRequest):
     try:
-        html = template_engine.render_html(req.document_type, req.data, req.language)
+        render_data = dict(req.data)
+        if req.show_stamp is not None:
+            render_data["show_stamp"] = req.show_stamp
+
+        html = template_engine.render_html(req.document_type, render_data, req.language)
+        if req.watermark_type and req.watermark_type.lower() not in ["none", ""]:
+            html = security_service.apply_watermark(html, req.watermark_type)
+
         pdf_bytes = pdf_service.convert_html_to_pdf(html)
         filename = f"{req.document_type}_{req.language}.pdf"
         return Response(

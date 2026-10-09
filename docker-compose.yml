@@ -13,6 +13,7 @@ services:
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       - HOST=0.0.0.0
       - PORT=8000
+      - DB_PATH=/app/backend/data/legal_contracts.db
     volumes:
       # Persistent storage for SQLite contracts DB
       - contracts_data:/app/backend/data

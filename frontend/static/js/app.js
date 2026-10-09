@@ -12,7 +12,149 @@ let state = {
   sigTarget: 'p1',
   isDrawing: false,
   watermarkMode: 'none', // 'none' | 'draft' | 'confidential'
-  currentDocHash: ''
+  currentDocHash: '',
+  isViewingNotice: false,
+  zoomLevel: 1.0
+};
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function showToast(message, type = 'info', duration = 3200) {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast-item toast-${type}`;
+
+  const iconMap = {
+    success: 'fa-circle-check',
+    error: 'fa-circle-exclamation',
+    warning: 'fa-triangle-exclamation',
+    info: 'fa-circle-info'
+  };
+  const icon = iconMap[type] || 'fa-circle-info';
+
+  toast.innerHTML = `
+    <i class="fa-solid ${icon} toast-icon"></i>
+    <div class="toast-msg">${escapeHtml(message)}</div>
+    <button class="toast-close" title="বন্ধ করুন">✕</button>
+  `;
+
+  const closeBtn = toast.querySelector('.toast-close');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      toast.classList.add('toast-fade-out');
+      setTimeout(() => toast.remove(), 250);
+    });
+  }
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    if (toast.parentElement) {
+      toast.classList.add('toast-fade-out');
+      setTimeout(() => toast.remove(), 250);
+    }
+  }, duration);
+}
+
+const sampleContractsData = {
+  tenancy_agreement: {
+    execution_date: '১০ অক্টোবর ২০২৬',
+    landlord_name: 'মোহাম্মদ রফিকুল ইসলাম',
+    landlord_father: 'মরহুম আব্দুল হামিদ',
+    landlord_address: 'বাড়ি নং ১২, রোড নং ৫, ধানমন্ডি, ঢাকা-১২০৫',
+    landlord_nid: '১৯৮৫২৬৯২৪৭৮১২',
+    landlord_phone: '০১৭১১-২২৩৩৪৪',
+    tenant_name: 'তানভীর আহমেদ চৌধুরী',
+    tenant_father: 'আনোয়ারুল ইসলাম চৌধুরী',
+    tenant_address: 'গ্রাম: সুখপুর, থানা: সোনারগাঁও, জেলা: নারায়ণগঞ্জ',
+    tenant_nid: '১৯৯২০৩৪৫৬৭৮৯০',
+    tenant_phone: '০১৮২২-৩৩৪৪৫৫',
+    property_address: 'ফ্ল্যাট নং ৪/বি (৪র্থ তলা), বাড়ি নং ১২, রোড নং ৫, ধানমন্ডি আ/এ, ঢাকা',
+    property_type: 'আবাসিক ফ্ল্যাট (৩ বেডরুম, ৩ বাথরুম, ড্রয়িং-ডাইনিং)',
+    start_date: '০১ নভেম্বর ২০২৬',
+    duration_months: 24,
+    rent_amount: '৩৫০০০',
+    rent_in_words: 'পঁয়ত্রিশ হাজার টাকা মাত্র',
+    payment_due_day: 7,
+    deposit_amount: '১০০০০০',
+    notice_period_months: 2,
+    utility_terms: 'বিদ্যুৎ ও গ্যাস বিল ভাড়াটিয়া মিটার রিডিং অনুযায়ী পরিশোধ করিবেন। পানি ও সার্ভিস চার্জ মাসিক ৫,০০০ টাকা মালিককে প্রদান করিবেন।',
+    witness1_name: 'কাজী মশিউর রহমান',
+    witness1_address: 'ধানমন্ডি, ঢাকা',
+    witness2_name: 'সাকিব আল হাসান',
+    witness2_address: 'লালমাটিয়া, ঢাকা'
+  },
+  nda_agreement: {
+    execution_date: '১০ অক্টোবর ২০২৬',
+    disclosing_party_name: 'নেক্সটজেন টেকনোলজিস লিমিটেড',
+    disclosing_party_address: 'লেভেল ৭, গুলশান-২, ঢাকা-১২১২',
+    disclosing_party_rep: 'রাশেদ করিম (ব্যবস্থাপনা পরিচালক)',
+    receiving_party_name: 'আইটি সলিউশনস বাংলাদেশ',
+    receiving_party_address: 'বাড়ি নং ৪৫, বনানী, ঢাকা-১২১৩',
+    receiving_party_rep: 'ফারহানা আহমেদ (প্রধান নির্বাহী কর্মকর্তা)',
+    purpose: 'এআই অ্যালগরিদম ও ফিনটেক সফটওয়্যার ডেভেলপমেন্ট প্রজেক্টের কারিগরি ও ব্যবসায়িক গোপনীয় তথ্য পারস্পরিক পর্যালোচনা।',
+    duration_years: 3
+  },
+  freelance_contract: {
+    execution_date: '১০ অক্টোবর ২০২৬',
+    client_name: 'গ্লোবাল ক্রিয়েটিভ মিডিয়া',
+    client_address: 'উত্তরা সেক্টর ৩, ঢাকা-১২৩০',
+    client_email: 'contact@globalcreative.com',
+    freelancer_name: 'আরিফুল হক',
+    freelancer_title: 'Full-Stack Web Developer & UI Designer',
+    freelancer_address: 'মিরপুর ডিওএইচএস, ঢাকা',
+    freelancer_email: 'ariful.dev@gmail.com',
+    scope_of_work: 'সম্পূর্ণ রেসপনসিভ ই-কমার্স ওয়েব প্ল্যাটফর্ম ও অ্যাডমিন ড্যাশবোর্ড তৈরি, পেমেন্ট গেটওয়ে ইন্টিগ্রেশন এবং ক্লাউড ডিপ্লয়মেন্ট।',
+    currency: '৳',
+    total_amount: '১,৫০,০০০',
+    payment_milestones: 'প্রকল্প শুরুর পূর্বে ৩০% অগ্রিম, UI/UX অনুমোদনের পর ৪০% এবং চূড়ান্ত সফল হ্যান্ডওভারের পর অবশিষ্ট ৩০% পরিশোধ।',
+    deadline: '১৫ ডিসেম্বর ২০২৬',
+    free_revisions: 3
+  },
+  partnership_agreement: {
+    execution_date: '১০ অক্টোবর ২০২৬',
+    partner1_name: 'মাহমুদুল হাসান',
+    partner1_father: 'সামসুল হক',
+    partner1_address: 'ধানমন্ডি, ঢাকা',
+    partner1_nid: '১৯৮৮২৬৯১২২৩৩৪',
+    partner1_phone: '০১৭০০-১১২২৩৩',
+    partner2_name: 'আহমেদ জুবায়ের',
+    partner2_father: 'রেজাউল করিম',
+    partner2_address: 'বনশ্রী, ঢাকা',
+    partner2_nid: '১৯৯০২৬৯৫৫৬৬৭৭',
+    partner2_phone: '০১৮০০-৪৪৫৫৬৬',
+    firm_name: 'ইনোভেক্স কনসাল্টিং পার্টনার্স',
+    firm_address: 'কাওরান বাজার, ঢাকা-১২১৫',
+    total_capital: '১০,০০,০০০ (দশ লক্ষ টাকা)',
+    partner1_share: 60,
+    partner2_share: 40,
+    bank_operation: 'যেকোনো তপশিলি ব্যাংকে উভয় অংশীদারের যৌথ স্বাক্ষরে ব্যাংক হিসাব পরিচালিত হইবে।',
+    notice_period_months: 3
+  },
+  employment_agreement: {
+    execution_date: '১০ অক্টোবর ২০২৬',
+    company_name: 'প্রাইম সফটওয়্যার সলিউশনস লিমিটেড',
+    company_address: 'তেজগাঁও শিল্প এলাকা, ঢাকা-১২০৮',
+    company_rep: 'মোস্তাফিজুর রহমান (হেড অব এইচআর)',
+    employee_name: 'মেহেদী হাসান সুমন',
+    employee_father: 'নুরুল ইসলাম',
+    employee_address: 'পল্লবী, মিরপুর, ঢাকা-১২১৬',
+    employee_nid: '১৯৯৪২৬৯৮৮৭৭৬৬',
+    employee_phone: '০১৯১১-৮৮৯৯০০',
+    designation: 'Senior Software Engineer',
+    department: 'Software Engineering & Cloud Architecture',
+    salary_amount: '৮৫,০০০ (পঁচাশি হাজার টাকা মাত্র)'
+  }
 };
 
 const formDefinitions = {
@@ -162,6 +304,11 @@ async function loadSharedContractForSigning(shareId) {
       const item = await res.json();
       state.currentContractId = item.id;
       state.currentTemplate = item.document_type;
+      if (item.language) {
+        state.currentLang = item.language;
+        const langSel = document.getElementById('lang-select');
+        if (langSel) langSel.value = item.language;
+      }
       document.getElementById('template-select').value = item.document_type;
       setupTemplate(item.document_type, item.data);
       
@@ -180,6 +327,7 @@ async function loadSharedContractForSigning(shareId) {
 
 function setupTemplate(docType, loadedData = null) {
   state.currentTemplate = docType;
+  state.isViewingNotice = false;
   
   if (loadedData) {
     state.formData = loadedData;
@@ -235,6 +383,7 @@ function renderFormFields() {
 
   document.querySelectorAll('.field-input').forEach(input => {
     input.addEventListener('input', (e) => {
+      state.isViewingNotice = false;
       const key = e.target.getAttribute('data-key');
       state.formData[key] = e.target.value;
       debouncedRender();
@@ -259,7 +408,9 @@ async function triggerDocumentRender() {
       body: JSON.stringify({
         document_type: state.currentTemplate,
         language: state.currentLang,
-        data: state.formData
+        data: state.formData,
+        watermark_type: state.watermarkMode,
+        show_stamp: state.showStamp
       })
     });
     if (res.ok) {
@@ -502,11 +653,17 @@ window.loadContractById = async function(id, docType) {
     const res = await fetch(`/api/contracts/${id}`);
     const item = await res.json();
     state.currentContractId = item.id;
+    if (item.language) {
+      state.currentLang = item.language;
+      const langSel = document.getElementById('lang-select');
+      if (langSel) langSel.value = item.language;
+    }
     document.getElementById('template-select').value = item.document_type;
     setupTemplate(item.document_type, item.data);
     document.getElementById('history-modal').style.display = 'none';
+    showToast('চুক্তিটি সফলভাবে লোড করা হয়েছে!', 'success');
   } catch (err) {
-    alert('চুক্তি লোড করতে ব্যর্থ হয়েছে: ' + err.message);
+    showToast('চুক্তি লোড করতে ব্যর্থ হয়েছে: ' + err.message, 'error');
   }
 };
 
@@ -514,9 +671,10 @@ window.deleteContractById = async function(id) {
   if (!confirm('আপনি কি নিশ্চিত এই চুক্তিটি মুছে ফেলতে চান?')) return;
   try {
     await fetch(`/api/contracts/${id}`, { method: 'DELETE' });
+    showToast('চুক্তিটি মুছে ফেলা হয়েছে।', 'info');
     openHistoryModal();
   } catch (err) {
-    alert('মুছতে ব্যর্থ হয়েছে: ' + err.message);
+    showToast('মুছতে ব্যর্থ হয়েছে: ' + err.message, 'error');
   }
 };
 
@@ -556,16 +714,169 @@ async function openClauseExplainer(clauseText) {
   }
 }
 
+function switchStep(stepNum) {
+  stepNum = parseInt(stepNum, 10);
+  if (isNaN(stepNum) || stepNum < 1 || stepNum > 4) return;
+
+  document.querySelectorAll('.step-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.step-content').forEach(c => c.style.display = 'none');
+
+  const activeTab = document.querySelector(`.step-tab[data-step="${stepNum}"]`);
+  if (activeTab) activeTab.classList.add('active');
+
+  const stepEl = document.getElementById(`step-${stepNum}`);
+  if (stepEl) stepEl.style.display = 'block';
+
+  // Update progress bar
+  const percent = stepNum * 25;
+  const stepTitles = {
+    1: 'পক্ষের তথ্য',
+    2: 'মূল শর্তাবলি',
+    3: 'AI কাস্টম ধারা',
+    4: 'স্বাক্ষর ও সমাপ্তি'
+  };
+  const progText = document.getElementById('wizard-progress-text');
+  const progPct = document.getElementById('wizard-progress-percent');
+  const progFill = document.getElementById('wizard-progress-fill');
+  if (progText) progText.innerText = `ধাপ ${stepNum} / ৪ : ${stepTitles[stepNum]} (${percent}% সম্পন্ন)`;
+  if (progPct) progPct.innerText = `${percent}%`;
+  if (progFill) progFill.style.width = `${percent}%`;
+
+  const scrollContainer = document.querySelector('.form-scroll-container');
+  if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function attachEvents() {
   document.querySelectorAll('.step-tab').forEach(tab => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.step-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.step-content').forEach(c => c.style.display = 'none');
-      tab.classList.add('active');
-      const stepNum = tab.getAttribute('data-step');
-      document.getElementById(`step-${stepNum}`).style.display = 'block';
+      switchStep(tab.getAttribute('data-step'));
     });
   });
+
+  document.querySelectorAll('.btn-next-step').forEach(btn => {
+    btn.addEventListener('click', () => {
+      switchStep(btn.getAttribute('data-target'));
+    });
+  });
+
+  document.querySelectorAll('.btn-prev-step').forEach(btn => {
+    btn.addEventListener('click', () => {
+      switchStep(btn.getAttribute('data-target'));
+    });
+  });
+
+  const btnFinishSave = document.getElementById('btn-finish-save');
+  if (btnFinishSave) {
+    btnFinishSave.addEventListener('click', () => {
+      document.getElementById('btn-save-draft').click();
+    });
+  }
+
+  // 1-Click Demo Fill
+  const btnDemoFill = document.getElementById('btn-demo-fill');
+  if (btnDemoFill) {
+    btnDemoFill.addEventListener('click', () => {
+      const demoData = sampleContractsData[state.currentTemplate];
+      if (!demoData) return;
+      state.formData = { ...state.formData, ...demoData };
+      Object.keys(demoData).forEach(key => {
+        const input = document.getElementById(key);
+        if (input) input.value = demoData[key];
+      });
+      triggerDocumentRender();
+      showToast('✨ নমুনা বাস্তবসম্মত তথ্য সফলভাবে পূরণ করা হয়েছে!', 'success');
+    });
+  }
+
+  // Dropdown menus toggle & outside click
+  document.querySelectorAll('.dropdown').forEach(dd => {
+    const toggle = dd.querySelector('.dropdown-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.dropdown').forEach(other => {
+          if (other !== dd) other.classList.remove('active');
+        });
+        dd.classList.toggle('active');
+      });
+    }
+  });
+
+  window.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown')) {
+      document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('active'));
+    }
+  });
+
+  // AI Prompt Suggestion Chips in Step 3
+  document.querySelectorAll('.prompt-chip[data-prompt]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const input = document.getElementById('ai-clause-input');
+      if (input) {
+        input.value = chip.getAttribute('data-prompt');
+        input.focus();
+        showToast('ধারাটি ইনপুটে যুক্ত করা হয়েছে', 'info', 1800);
+      }
+    });
+  });
+
+  // Chatbot Suggestion Chips
+  document.querySelectorAll('.chat-suggestion-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const q = chip.getAttribute('data-query');
+      const input = document.getElementById('chat-input');
+      if (input && q) {
+        input.value = q;
+        const sendBtn = document.getElementById('btn-chat-send');
+        if (sendBtn) sendBtn.click();
+      }
+    });
+  });
+
+  // Preview Zoom & Fullscreen Controls
+  const updateZoom = (newZoom) => {
+    state.zoomLevel = Math.max(0.6, Math.min(1.5, Math.round(newZoom * 10) / 10));
+    const wrapper = document.getElementById('preview-wrapper');
+    const levelText = document.getElementById('zoom-level-text');
+    if (wrapper) wrapper.style.transform = `scale(${state.zoomLevel})`;
+    if (levelText) levelText.innerText = `${Math.round(state.zoomLevel * 100)}%`;
+  };
+
+  const btnZoomIn = document.getElementById('btn-zoom-in');
+  const btnZoomOut = document.getElementById('btn-zoom-out');
+  const btnZoomReset = document.getElementById('btn-zoom-reset');
+  if (btnZoomIn) btnZoomIn.addEventListener('click', () => updateZoom(state.zoomLevel + 0.1));
+  if (btnZoomOut) btnZoomOut.addEventListener('click', () => updateZoom(state.zoomLevel - 0.1));
+  if (btnZoomReset) btnZoomReset.addEventListener('click', () => updateZoom(1.0));
+
+  const btnFsReader = document.getElementById('btn-fullscreen-reader');
+  if (btnFsReader) {
+    btnFsReader.addEventListener('click', () => {
+      const isFs = document.body.classList.toggle('reader-fullscreen-active');
+      btnFsReader.innerHTML = isFs ? '<i class="fa-solid fa-compress"></i>' : '<i class="fa-solid fa-expand"></i>';
+      if (isFs) {
+        showToast('পূর্ণাঙ্গ পেপার রিডিং মোড চালু হয়েছে (Esc চাপুন বন্ধ করতে)', 'info', 2500);
+      }
+    });
+  }
+
+  // Mobile View Switcher (Tabs)
+  const btnMobWizard = document.getElementById('btn-mobile-tab-wizard');
+  const btnMobPreview = document.getElementById('btn-mobile-tab-preview');
+  if (btnMobWizard && btnMobPreview) {
+    btnMobWizard.addEventListener('click', () => {
+      btnMobWizard.classList.add('active');
+      btnMobPreview.classList.remove('active');
+      document.body.classList.remove('mobile-hide-wizard');
+      document.body.classList.add('mobile-hide-preview');
+    });
+    btnMobPreview.addEventListener('click', () => {
+      btnMobPreview.classList.add('active');
+      btnMobWizard.classList.remove('active');
+      document.body.classList.remove('mobile-hide-preview');
+      document.body.classList.add('mobile-hide-wizard');
+    });
+  }
 
   document.getElementById('template-select').addEventListener('change', (e) => {
     state.currentContractId = null;
@@ -641,7 +952,7 @@ function attachEvents() {
         ${data.is_registration_mandatory ? '<div style="margin-top:8px; padding:6px 8px; background:#fee2e2; color:#991b1b; border-radius:4px; font-size:0.8rem; font-weight:bold;">⚠️ ১ বছরের অধিক হওয়ায় সাব-রেজিস্ট্রি অফিসে রেজিস্ট্রেশন বাধ্যতামূলক।</div>' : ''}
       `;
     } catch (e) {
-      alert('স্ট্যাম্প হিসাব করতে ব্যর্থ হয়েছে।');
+      showToast('স্ট্যাম্প হিসাব করতে ব্যর্থ হয়েছে।', 'error');
     }
   });
 
@@ -677,6 +988,7 @@ function attachEvents() {
     const input = document.getElementById('share-url-input');
     input.select();
     navigator.clipboard.writeText(input.value);
+    showToast('শেয়ারিং লিংক ক্লিপবোর্ডে কপি করা হয়েছে!', 'success');
     const btn = document.getElementById('btn-copy-share-url');
     btn.innerHTML = '<i class="fa-solid fa-check"></i> কপিড!';
     setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-copy"></i> কপি'; }, 1500);
@@ -701,7 +1013,8 @@ function attachEvents() {
     const q = chatInput.value.trim();
     if (!q) return;
 
-    chatBody.innerHTML += `<div class="chat-bubble-user">${q}</div>`;
+    const cleanQ = escapeHtml(q);
+    chatBody.innerHTML += `<div class="chat-bubble-user">${cleanQ}</div>`;
     chatInput.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
 
@@ -718,7 +1031,7 @@ function attachEvents() {
       const data = await res.json();
       const loader = document.getElementById(loaderId);
       if (loader) {
-        loader.innerHTML = data.answer.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        loader.innerHTML = escapeHtml(data.answer).replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       }
       chatBody.scrollTop = chatBody.scrollHeight;
     } catch (e) {
@@ -755,7 +1068,7 @@ function attachEvents() {
 
   document.getElementById('btn-run-upload-audit').addEventListener('click', async () => {
     const text = document.getElementById('upload-text-input').value.trim();
-    if (!text) return alert('অনুগ্রহ করে টেক্সট বা ফাইল প্রদান করুন।');
+    if (!text) return showToast('অনুগ্রহ করে টেক্সট বা ফাইল প্রদান করুন।', 'warning');
 
     const btn = document.getElementById('btn-run-upload-audit');
     const oldText = btn.innerHTML;
@@ -789,8 +1102,9 @@ function attachEvents() {
           </div>
         `).join('')}
       `;
+      showToast('ডকুমেন্ট অডিট সম্পন্ন হয়েছে!', 'success');
     } catch (err) {
-      alert('অডিট করতে সমস্যা হয়েছে।');
+      showToast('অডিট করতে সমস্যা হয়েছে।', 'error');
     } finally {
       btn.innerHTML = oldText;
       btn.disabled = false;
@@ -822,15 +1136,16 @@ function attachEvents() {
       const oldText = btn.innerHTML;
       btn.innerHTML = '<i class="fa-solid fa-check" style="color: #10b981;"></i> সেভ হয়েছে!';
       setTimeout(() => { btn.innerHTML = oldText; }, 2000);
+      showToast('চুক্তিটি ডেটাবেসে সফলভাবে সংরক্ষিত হয়েছে!', 'success');
     } catch (err) {
-      alert('ডাটাবেসে সেভ করতে সমস্যা হয়েছে।');
+      showToast('ডাটাবেসে সেভ করতে সমস্যা হয়েছে।', 'error');
     }
   });
 
   // AI Refine Clause Button
   document.getElementById('btn-refine-clause').addEventListener('click', async () => {
     const rawInput = document.getElementById('ai-clause-input').value.trim();
-    if (!rawInput) return alert('অনুগ্রহ করে শর্তটি লিখুন।');
+    if (!rawInput) return showToast('অনুগ্রহ করে শর্তটি লিখুন।', 'warning');
 
     const btn = document.getElementById('btn-refine-clause');
     const originalText = btn.innerHTML;
@@ -855,9 +1170,10 @@ function attachEvents() {
         document.getElementById('ai-res-risk').innerText = (data.risk_level || 'Low') + ' Risk';
         document.getElementById('ai-res-text').innerText = data.refined_clause;
         document.getElementById('ai-clause-result').style.display = 'block';
+        showToast('ধারাটি আইনি ভাষায় পলিশ করা হয়েছে!', 'success');
       }
     } catch (err) {
-      alert('AI রূপান্তর করতে ব্যর্থ হয়েছে।');
+      showToast('AI রূপান্তর করতে ব্যর্থ হয়েছে।', 'error');
     } finally {
       btn.innerHTML = originalText;
       btn.disabled = false;
@@ -884,7 +1200,7 @@ function attachEvents() {
   });
 
   // Universal Modal Closers
-  const allModals = ['explainer-modal', 'sign-modal', 'history-modal', 'upload-modal', 'stamp-calc-modal', 'share-modal'];
+  const allModals = ['explainer-modal', 'sign-modal', 'history-modal', 'upload-modal', 'stamp-calc-modal', 'share-modal', 'notice-modal', 'verify-modal'];
   const closeAllModals = () => {
     allModals.forEach(id => {
       const el = document.getElementById(id);
@@ -903,7 +1219,8 @@ function attachEvents() {
 
   ['close-explainer', 'btn-close-explainer-footer', 'close-sign', 'btn-close-sign-footer',
    'close-history', 'btn-close-history-footer', 'close-upload', 'btn-close-upload-footer',
-   'close-stamp-calc', 'btn-close-stamp-calc-footer', 'close-share', 'btn-close-share-footer'].forEach(btnId => {
+   'close-stamp-calc', 'btn-close-stamp-calc-footer', 'close-share', 'btn-close-share-footer',
+   'close-notice', 'btn-close-notice-footer', 'close-verify', 'btn-close-verify-footer'].forEach(btnId => {
     const btn = document.getElementById(btnId);
     if (btn) btn.addEventListener('click', closeAllModals);
   });
@@ -914,6 +1231,11 @@ function attachEvents() {
 
   // PDF Export
   document.getElementById('btn-pdf').addEventListener('click', async () => {
+    if (state.isViewingNotice) {
+      window.print();
+      return;
+    }
+
     const btn = document.getElementById('btn-pdf');
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> তৈরি হচ্ছে...';
@@ -926,7 +1248,9 @@ function attachEvents() {
         body: JSON.stringify({
           document_type: state.currentTemplate,
           language: state.currentLang,
-          data: state.formData
+          data: state.formData,
+          watermark_type: state.watermarkMode,
+          show_stamp: state.showStamp
         })
       });
 
@@ -939,11 +1263,12 @@ function attachEvents() {
         document.body.appendChild(a);
         a.click();
         a.remove();
+        showToast('PDF সফলভাবে ডাউনলোড হয়েছে!', 'success');
       } else {
-        alert('PDF তৈরি করতে সমস্যা হয়েছে।');
+        showToast('PDF তৈরি করতে সমস্যা হয়েছে।', 'error');
       }
     } catch (err) {
-      alert('PDF ডাউনলোড ব্যর্থ হয়েছে: ' + err.message);
+      showToast('PDF ডাউনলোড ব্যর্থ হয়েছে: ' + err.message, 'error');
     } finally {
       btn.innerHTML = originalText;
       btn.disabled = false;
@@ -977,11 +1302,12 @@ function attachEvents() {
         document.body.appendChild(a);
         a.click();
         a.remove();
+        showToast('Word ফাইল সফলভাবে ডাউনলোড হয়েছে!', 'success');
       } else {
-        alert('Word ফাইল তৈরি করতে সমস্যা হয়েছে।');
+        showToast('Word ফাইল তৈরি করতে সমস্যা হয়েছে।', 'error');
       }
     } catch (err) {
-      alert('DOCX ডাউনলোড ব্যর্থ হয়েছে: ' + err.message);
+      showToast('DOCX ডাউনলোড ব্যর্থ হয়েছে: ' + err.message, 'error');
     } finally {
       btn.innerHTML = originalText;
       btn.disabled = false;
@@ -1035,9 +1361,9 @@ function attachEvents() {
 
   if (btnOpenNotice && noticeModal) {
     btnOpenNotice.addEventListener('click', () => {
-      const landlord = state.formData.landlord_name || state.formData.party1_name || state.formData.employer_name || '';
-      const tenant = state.formData.tenant_name || state.formData.party2_name || state.formData.employee_name || '';
-      const address = state.formData.property_address || state.formData.landlord_address || '';
+      const landlord = state.formData.landlord_name || state.formData.company_name || state.formData.partner1_name || state.formData.client_name || state.formData.disclosing_party_name || '';
+      const tenant = state.formData.tenant_name || state.formData.employee_name || state.formData.partner2_name || state.formData.freelancer_name || state.formData.receiving_party_name || '';
+      const address = state.formData.property_address || state.formData.landlord_address || state.formData.company_address || state.formData.firm_address || '';
 
       const landlordInput = document.getElementById('notice-landlord');
       const tenantInput = document.getElementById('notice-tenant');
@@ -1089,11 +1415,12 @@ function attachEvents() {
           document.getElementById('notice-output-title').innerText = data.title;
           document.getElementById('notice-output-body').innerText = data.body;
           document.getElementById('notice-output-container').style.display = 'block';
+          showToast('আইনি নোটিশ সফলভাবে তৈরি হয়েছে!', 'success');
         } else {
-          alert('নোটিশ তৈরি করতে সমস্যা হয়েছে।');
+          showToast('নোটিশ তৈরি করতে সমস্যা হয়েছে।', 'error');
         }
       } catch (err) {
-        alert('ত্রুটি: ' + err.message);
+        showToast('ত্রুটি: ' + err.message, 'error');
       } finally {
         btnGenerateNoticeSubmit.innerHTML = originalBtnText;
         btnGenerateNoticeSubmit.disabled = false;
@@ -1105,6 +1432,7 @@ function attachEvents() {
     btnCopyNotice.addEventListener('click', () => {
       if (!lastGeneratedNotice) return;
       navigator.clipboard.writeText(lastGeneratedNotice.body).then(() => {
+        showToast('আইনি নোটিশ ক্লিপবোর্ডে কপি হয়েছে!', 'success');
         btnCopyNotice.innerHTML = '<i class="fa-solid fa-check"></i> কপি হয়েছে!';
         setTimeout(() => {
           btnCopyNotice.innerHTML = '<i class="fa-solid fa-copy"></i> কপি';
@@ -1116,11 +1444,17 @@ function attachEvents() {
   if (btnInjectNotice) {
     btnInjectNotice.addEventListener('click', () => {
       if (!lastGeneratedNotice) return;
+      state.isViewingNotice = true;
+      const safeTitle = escapeHtml(lastGeneratedNotice.title);
+      const safeSubject = escapeHtml(lastGeneratedNotice.subject);
+      const safeBody = escapeHtml(lastGeneratedNotice.body);
+      const safeDate = escapeHtml(lastGeneratedNotice.date);
       const container = document.getElementById('preview-container');
-      container.innerHTML = '<div style="font-family: Hind Siliguri, sans-serif; padding: 20px; line-height: 1.8; color: #0f172a;"><div style="border-bottom: 2px solid #991b1b; padding-bottom: 8px; margin-bottom: 20px; text-align: center;"><h2 style="font-size: 18pt; color: #991b1b; margin: 0;">' + lastGeneratedNotice.title + '</h2><div style="font-size: 11pt; color: #475569; margin-top: 4px;">আইনি ও প্রথাগত উচ্ছেদ/নবায়ন নোটিশ</div></div><div style="font-weight: 700; color: #1e3a8a; margin-bottom: 14px;">' + lastGeneratedNotice.subject + '</div><div style="white-space: pre-wrap; font-size: 13pt; color: #1e293b;">' + lastGeneratedNotice.body + '</div><div style="margin-top: 30px; border-top: 1px dashed #cbd5e1; padding-top: 10px; font-size: 9pt; color: #64748b; text-align: center;">SmartLegal AI Notice Engine • প্রস্তুতের তারিখ: ' + lastGeneratedNotice.date + '</div></div>';
+      container.innerHTML = '<div style="font-family: Hind Siliguri, sans-serif; padding: 20px; line-height: 1.8; color: #0f172a;"><div style="border-bottom: 2px solid #991b1b; padding-bottom: 8px; margin-bottom: 20px; text-align: center;"><h2 style="font-size: 18pt; color: #991b1b; margin: 0;">' + safeTitle + '</h2><div style="font-size: 11pt; color: #475569; margin-top: 4px;">আইনি ও প্রথাগত উচ্ছেদ/নবায়ন নোটিশ</div></div><div style="font-weight: 700; color: #1e3a8a; margin-bottom: 14px;">' + safeSubject + '</div><div style="white-space: pre-wrap; font-size: 13pt; color: #1e293b;">' + safeBody + '</div><div style="margin-top: 30px; border-top: 1px dashed #cbd5e1; padding-top: 10px; font-size: 9pt; color: #64748b; text-align: center;">SmartLegal AI Notice Engine • প্রস্তুতের তারিখ: ' + safeDate + '</div></div>';
       noticeModal.style.display = 'none';
       applyWatermarkToPreview();
       refreshDocumentHash();
+      showToast('আইনি নোটিশ প্রিভিউতে প্রদর্শিত হচ্ছে', 'info');
     });
   }
 
@@ -1146,7 +1480,7 @@ function attachEvents() {
     btnRunVerifySubmit.addEventListener('click', async () => {
       const expectedHash = document.getElementById('verify-hash-input').value.trim();
       if (!expectedHash) {
-        alert('অনুগ্রহ করে রেফারেন্স হ্যাশ কোড ইনপুট দিন।');
+        showToast('অনুগ্রহ করে রেফারেন্স হ্যাশ কোড ইনপুট দিন।', 'warning');
         return;
       }
 
@@ -1172,20 +1506,47 @@ function attachEvents() {
 
           if (result.is_valid) {
             verifyResultBox.innerHTML = '<div style="background: #ecfdf5; border: 1.5px solid #10b981; border-radius: 8px; padding: 14px; color: #065f46;"><div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1rem; margin-bottom: 6px;"><i class="fa-solid fa-circle-check" style="color: #10b981; font-size: 1.2rem;"></i> দলিলটি ১০০% অবিকৃত ও খাঁটি (AUTHENTIC & UN-TAMPERED)</div><p style="font-size: 0.85rem; margin: 0; line-height: 1.5;">ক্রিপ্টোগ্রাফিক হ্যাশ শতভাগ মিলে গেছে। স্বাক্ষরের পর দলিলে কোনো কাটছাঁট বা অবৈধ পরিবর্তন করা হয়নি।</p><div style="margin-top: 8px; font-family: monospace; font-size: 0.78rem; color: #047857;">Computed Hash: ' + result.computed_hash + '</div></div>';
+            showToast('দলিলটি ১০০% অবিকৃত ও খাঁটি!', 'success');
           } else {
             verifyResultBox.innerHTML = '<div style="background: #fef2f2; border: 1.5px solid #ef4444; border-radius: 8px; padding: 14px; color: #991b1b;"><div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1rem; margin-bottom: 6px;"><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444; font-size: 1.2rem;"></i> সতর্কতা: দলিলটি বিকৃত বা পরিবর্তিত (TAMPERED / MODIFIED)</div><p style="font-size: 0.85rem; margin: 0; line-height: 1.5;">প্রদত্ত রেফারেন্স হ্যাশের সাথে বর্তমান দলিলের হ্যাশ মেলেনি। মূল ডকুমেন্টের তথ্য বিকৃত বা পরিবর্তন করা হয়েছে।</p><div style="margin-top: 8px; font-family: monospace; font-size: 0.78rem; color: #b91c1c;">Current Hash: ' + result.computed_hash + '</div></div>';
+            showToast('সতর্কতা: দলিলটিতে তথ্য পরিবর্তন পাওয়া গেছে!', 'error');
           }
         } else {
-          alert('হ্যাশ যাচাই করতে ব্যর্থ হয়েছে।');
+          showToast('হ্যাশ যাচাই করতে ব্যর্থ হয়েছে।', 'error');
         }
       } catch (err) {
-        alert('ত্রুটি: ' + err.message);
+        showToast('ত্রুটি: ' + err.message, 'error');
       } finally {
         btnRunVerifySubmit.innerHTML = '<i class="fa-solid fa-shield-halved"></i> দলিলের প্রমাণিকতা যাচাই করুন';
         btnRunVerifySubmit.disabled = false;
       }
     });
   }
+
+  // Global Keyboard Shortcuts
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      const btnSave = document.getElementById('btn-save-draft');
+      if (btnSave) btnSave.click();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
+      e.preventDefault();
+      const btnPdf = document.getElementById('btn-pdf');
+      if (btnPdf) btnPdf.click();
+    }
+    if (e.key === 'Escape') {
+      if (document.body.classList.contains('reader-fullscreen-active')) {
+        document.body.classList.remove('reader-fullscreen-active');
+        const fsBtn = document.getElementById('btn-fullscreen-reader');
+        if (fsBtn) fsBtn.innerHTML = '<i class="fa-solid fa-expand"></i>';
+      }
+      document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('active'));
+      const chatbotWin = document.getElementById('chatbot-window');
+      if (chatbotWin) chatbotWin.style.display = 'none';
+      closeAllModals();
+    }
+  });
 
 }
 
