@@ -17,7 +17,7 @@
   </div>
 
   <div style="text-align: center; margin: 10px 0; font-weight: bold; color: #64748b;">
-    --- {{ 'এবং (And)' }} ---
+    --- {{ 'এবং' if language == 'bn' else 'AND' }} ---
   </div>
 
   <div class="party-block">
@@ -31,12 +31,12 @@
 
 <div class="highlight-box">
   <strong>{{ 'পদবি ও কর্মক্ষেত্র (Designation & Department):' if language == 'bn' else 'Designation & Workplace:' }}</strong><br>
-  <strong>{{ data.designation or 'সফটওয়্যার ইঞ্জিনিয়ার / মার্কেটিং এক্সিকিউটিভ' }}</strong> | {{ 'বিভাগ:' if language == 'bn' else 'Department:' }} {{ data.department or 'তথ্যপ্রযুক্তি বিভাগ' }}
+  <strong>{{ data.designation or ('সফটওয়্যার ইঞ্জিনিয়ার / মার্কেটিং এক্সিকিউটিভ' if language == 'bn' else 'Software Engineer / Executive') }}</strong> | {{ 'বিভাগ:' if language == 'bn' else 'Department:' }} {{ data.department or ('তথ্যপ্রযুক্তি বিভাগ' if language == 'bn' else 'IT Department') }}
 </div>
 
 <div class="clauses-container">
   <div class="clause-item">
-    <span class="clause-number">১.</span>
+    <span class="clause-number">{{ '১.' if language == 'bn' else '1.' }}</span>
     <span class="clause-title">{{ 'বেতন ও সুবিধাদি (Remuneration & Benefits):' if language == 'bn' else 'Compensation & Benefits:' }}</span>
     {{ 'কর্মকর্তার সর্বসাকুল্যে মাসিক বেতন নির্ধারণ করা হইল মোট' if language == 'bn' else 'Total gross monthly remuneration is fixed at' }} 
     <strong>৳ {{ data.salary_amount or '..................' }} {{ 'টাকা' if language == 'bn' else 'BDT' }}</strong>, 
@@ -44,7 +44,7 @@
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">২.</span>
+    <span class="clause-number">{{ '২.' if language == 'bn' else '2.' }}</span>
     <span class="clause-title">{{ 'শিক্ষানবিসকাল (Probation Period):' if language == 'bn' else 'Probationary Period:' }}</span>
     {{ 'যোগদানের তারিখ হইতে প্রাথমিক' if language == 'bn' else 'Commencing from joining date, the initial period of' }} 
     <strong>{{ data.probation_months or '৩' }} {{ 'মাস' if language == 'bn' else 'months' }}</strong> 
@@ -52,19 +52,19 @@
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৩.</span>
+    <span class="clause-number">{{ '৩.' if language == 'bn' else '3.' }}</span>
     <span class="clause-title">{{ 'কাজের সময় ও ছুটি (Working Hours & Leave):' if language == 'bn' else 'Working Hours & Leave:' }}</span>
     {{ 'সাপ্তাহিক কর্মঘণ্টা হইবে দৈনিক ৮ ঘণ্টা (সপ্তাহে ৫ দিন)। প্রচলিত শ্রম আইন এবং কোম্পানির বার্ষিক ছুটির নীতিমালা মোতাবেক সবেতন ছুটি প্রাপ্য হইবেন।' if language == 'bn' else 'Standard working hours shall be 40 hours per week. Leave shall accrue per statutory labor guidelines.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৪.</span>
+    <span class="clause-number">{{ '৪.' if language == 'bn' else '4.' }}</span>
     <span class="clause-title">{{ 'গোপনীয়তা ও নন-কম্পিট (Confidentiality & Non-Compete):' if language == 'bn' else 'Confidentiality & Non-Compete:' }}</span>
     {{ 'চাকরিকালীন সময়ে এবং চাকরি অবসানের পরবর্তী ১ বছর কর্মচারী কোম্পানির কোনো ব্যবসায়িক তথ্য, গ্রাহক তালিকা বা ক্লাউড কোডবেস প্রতিদ্বন্দ্বী প্রতিষ্ঠানের নিকট প্রকাশ বা অপব্যবহার করিতে পারিবেন না।' if language == 'bn' else 'The employee covenants not to disclose trade secrets or work for immediate competitors for a period of 1 year post-termination.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৫.</span>
+    <span class="clause-number">{{ '৫.' if language == 'bn' else '5.' }}</span>
     <span class="clause-title">{{ 'চাকরি অবসান ও নোটিশ (Termination Notice):' if language == 'bn' else 'Termination & Notice:' }}</span>
     {{ 'উভয় পক্ষ' if language == 'bn' else 'Either party may terminate the employment by serving' }} 
     <strong>{{ data.notice_period_days or '৩০' }} {{ 'দিনের' if language == 'bn' else 'days' }}</strong> 

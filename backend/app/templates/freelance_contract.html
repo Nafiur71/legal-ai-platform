@@ -17,7 +17,7 @@
   </div>
 
   <div style="text-align: center; margin: 10px 0; font-weight: bold; color: #64748b;">
-    --- {{ 'এবং (And)' }} ---
+    --- {{ 'এবং' if language == 'bn' else 'AND' }} ---
   </div>
 
   <div class="party-block">
@@ -31,12 +31,12 @@
 
 <div class="highlight-box">
   <strong>{{ 'কাজের পরিধি (Scope of Work / Deliverables):' if language == 'bn' else 'Scope of Work & Deliverables:' }}</strong><br>
-  {{ data.scope_of_work or 'নির্দিষ্ট সফটওয়্যার ডেভেলপমেন্ট, UI/UX ডিজাইন, কনসালটেন্সি অথবা নির্ধারিত ডেলিভারেবলস সরবরাহ করণ।' if language == 'bn' else 'Provision of specified software development, digital design, or strategic advisory services as detailed herein.' }}
+  {{ data.scope_of_work or ('নির্দিষ্ট সফটওয়্যার ডেভেলপমেন্ট, UI/UX ডিজাইন, কনসালটেন্সি অথবা নির্ধারিত ডেলিভারেবলস সরবরাহ করণ।' if language == 'bn' else 'Provision of specified software development, digital design, or strategic advisory services as detailed herein.') }}
 </div>
 
 <div class="clauses-container">
   <div class="clause-item">
-    <span class="clause-number">১.</span>
+    <span class="clause-number">{{ '১.' if language == 'bn' else '1.' }}</span>
     <span class="clause-title">{{ 'পারিশ্রমিক ও পেমেন্ট শর্ত (Compensation & Milestones):' if language == 'bn' else 'Compensation & Payment Terms:' }}</span>
     {{ 'মোট পারিশ্রমিক নির্ধারণ করা হইল' if language == 'bn' else 'The total contract fee is agreed at' }} 
     <strong>{{ data.currency or '৳' }} {{ data.total_amount or '..................' }}</strong>। 
@@ -44,21 +44,21 @@
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">২.</span>
+    <span class="clause-number">{{ '২.' if language == 'bn' else '2.' }}</span>
     <span class="clause-title">{{ 'ডেলিভারি সময়সীমা (Timeline & Delivery):' if language == 'bn' else 'Timeline & Milestones:' }}</span>
     {{ 'সেবা প্রদানকারী নির্ধারিত কাজ আগামী' if language == 'bn' else 'The contractor shall deliver the project on or before' }} 
-    <strong>{{ data.deadline or 'নির্ধারিত তারিখের' }}</strong> 
+    <strong>{{ data.deadline or ('নির্ধারিত তারিখের' if language == 'bn' else 'agreed date') }}</strong> 
     {{ 'মধ্যে সমাপ্ত করিয়া হস্তান্তর করিতে প্রতিশ্রুতিবদ্ধ।' if language == 'bn' else 'unless extended by mutual written agreement.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৩.</span>
+    <span class="clause-number">{{ '৩.' if language == 'bn' else '3.' }}</span>
     <span class="clause-title">{{ 'বৌদ্ধিক সম্পত্তি ও স্বত্বাধিকার (Intellectual Property Rights):' if language == 'bn' else 'Intellectual Property Rights:' }}</span>
     {{ 'সম্পূর্ণ চুক্তিভিত্তিক পারিশ্রমিক পরিশোধ সাপেক্ষে তৈরি করা সফটওয়্যার, ডিজাইন বা আর্টওয়ার্কের সর্বস্বত্ব গ্রাহক (Client)-এর নিকট হস্তান্তরিত হইবে। অর্থ সম্পূর্ণ পরিশোধের পূর্বে সকল স্বত্ব ফ্রিল্যান্সারের সংরক্ষিত থাকিবে।' if language == 'bn' else 'Subject to full and final receipt of payment, all intellectual property rights and copyrights in the deliverables shall transfer solely to the Client.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৪.</span>
+    <span class="clause-number">{{ '৪.' if language == 'bn' else '4.' }}</span>
     <span class="clause-title">{{ 'সংশোধন ও রিভিশন নীতি (Revisions & Changes):' if language == 'bn' else 'Revisions & Modifications:' }}</span>
     {{ 'গ্রাহক ডেলিভারির পর সর্বোচ্চ' if language == 'bn' else 'The Client is entitled to up to' }} 
     <strong>{{ data.free_revisions or '২' }} {{ 'বার বিনামূল্যে যৌক্তিক সংশোধনের' if language == 'bn' else 'rounds of minor revisions' }}</strong> 
@@ -66,7 +66,7 @@
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৫.</span>
+    <span class="clause-number">{{ '৫.' if language == 'bn' else '5.' }}</span>
     <span class="clause-title">{{ 'স্বাধীন ঠিকাদারি মর্যাদা (Independent Contractor Status):' if language == 'bn' else 'Independent Contractor Status:' }}</span>
     {{ 'সেবা প্রদানকারী একজন স্বাধীন পরামর্শক হিসেবে দায়িত্ব পালন করিবেন এবং গ্রাহক প্রতিষ্ঠানের কর্মচারী বলিয়া গণ্য হইবেন না।' if language == 'bn' else 'The contractor acts as an independent contractor, not an employee, agent, or partner of the Client.' }}
   </div>

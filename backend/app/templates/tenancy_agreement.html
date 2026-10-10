@@ -18,7 +18,7 @@
   </div>
 
   <div style="text-align: center; margin: 10px 0; font-weight: bold; color: #64748b;">
-    --- {{ 'এবং (And)' }} ---
+    --- {{ 'এবং' if language == 'bn' else 'AND' }} ---
   </div>
 
   <div class="party-block">
@@ -32,7 +32,7 @@
 
 <div class="highlight-box">
   <strong>{{ 'ভাড়াকৃত সম্পত্তির বিবরণ:' if language == 'bn' else 'Description of Demised Premises:' }}</strong><br>
-  {{ data.property_address or 'ফ্ল্যাট/দোকান নং ........., হোল্ডিং নং .............., রোড .............., এলাকা .......................।' }}
+  {{ data.property_address or ('ফ্ল্যাট/দোকান নং ........., হোল্ডিং নং .............., রোড .............., এলাকা .......................।' if language == 'bn' else 'Flat/Shop No ........., Holding No .............., Road .............., Area .......................') }}
   {% if data.property_type %}
     ({{ 'ধরণ:' if language == 'bn' else 'Type:' }} {{ data.property_type }})
   {% endif %}
@@ -44,7 +44,7 @@
 
 <div class="clauses-container">
   <div class="clause-item">
-    <span class="clause-number">১.</span>
+    <span class="clause-number">{{ '১.' if language == 'bn' else '1.' }}</span>
     <span class="clause-title">{{ 'চুক্তির মেয়াদ (Duration):' if language == 'bn' else 'Term & Duration:' }}</span>
     {{ 'এই চুক্তির মেয়াদ হইবে মোট' if language == 'bn' else 'This tenancy shall be effective for a period of' }} 
     <strong>{{ data.duration_months or '১২' }} {{ 'মাস' if language == 'bn' else 'months' }}</strong>, 
@@ -53,7 +53,7 @@
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">২.</span>
+    <span class="clause-number">{{ '২.' if language == 'bn' else '2.' }}</span>
     <span class="clause-title">{{ 'মাসিক ভাড়া ও পরিশোধ বিধি (Monthly Rent):' if language == 'bn' else 'Monthly Rent & Payment:' }}</span>
     {{ 'ভাড়াকৃত সম্পত্তির মাসিক ভাড়া ধার্য করা হইল' if language == 'bn' else 'The monthly rent is fixed at' }} 
     <strong>৳ {{ data.rent_amount or '..................' }} ({{ data.rent_in_words or '' }}) {{ 'টাকা' if language == 'bn' else 'BDT' }}</strong>। 
@@ -63,7 +63,7 @@
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৩.</span>
+    <span class="clause-number">{{ '৩.' if language == 'bn' else '3.' }}</span>
     <span class="clause-title">{{ 'অগ্রিম জামানত (Security Deposit):' if language == 'bn' else 'Security Deposit:' }}</span>
     {{ '২য় পক্ষ ১ম পক্ষকে ফেরতযোগ্য অগ্রিম জামানত বাবদ' if language == 'bn' else 'The Tenant has deposited an advance sum of' }} 
     <strong>৳ {{ data.deposit_amount or '..................' }} {{ 'টাকা' if language == 'bn' else 'BDT' }}</strong> 
@@ -71,19 +71,19 @@
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৪.</span>
+    <span class="clause-number">{{ '৪.' if language == 'bn' else '4.' }}</span>
     <span class="clause-title">{{ 'ইউটিলিটি ও সার্ভিস চার্জ (Utility Bills):' if language == 'bn' else 'Utility & Service Charges:' }}</span>
     {{ data.utility_terms or ('বিদ্যুৎ বিল, গ্যাস বিল ও সার্ভিস চার্জ ২য় পক্ষ নিজ দায়িত্বে প্রতি মাসে সময়মতো পরিশোধ করিবেন এবং রসিদ ১ম পক্ষকে প্রদর্শন করিবেন।' if language == 'bn' else 'Electricity, gas, water, and building service charges shall be borne and paid punctually by the Tenant.') }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৫.</span>
+    <span class="clause-number">{{ '৫.' if language == 'bn' else '5.' }}</span>
     <span class="clause-title">{{ 'ব্যবহার বিধি ও সাবলেট নিষেধাজ্ঞা (Usage & Subletting):' if language == 'bn' else 'Permitted Use & No Subletting:' }}</span>
     {{ 'ভাড়াকৃত প্রাঙ্গণ শুধুমাত্র বসবাস/বৈধ ব্যবসার উদ্দেশ্যে ব্যবহৃত হইবে। ১ম পক্ষের লিখিত অনুমতি ব্যতিরেকে কোনো অবস্থাতেই অন্য কাহারো নিকট সাবলেট বা হস্তান্তর করা যাইবে না।' if language == 'bn' else 'The premises shall be used strictly for designated lawful purposes. Subletting in whole or in part without written consent is strictly prohibited.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৬.</span>
+    <span class="clause-number">{{ '৬.' if language == 'bn' else '6.' }}</span>
     <span class="clause-title">{{ 'চুক্তি বাতিল ও নোটিশ পিরিয়ড (Notice Period & Termination):' if language == 'bn' else 'Termination & Notice:' }}</span>
     {{ 'মেয়াদ শেষ হইবার পূর্বে কোনো পক্ষ চুক্তি বাতিল করিতে চাহিলে অন্য পক্ষকে কমপক্ষে' if language == 'bn' else 'Either party may terminate this agreement prior to expiry by serving at least' }} 
     <strong>{{ data.notice_period_months or '২' }} {{ 'মাসের' if language == 'bn' else 'month(s)' }}</strong> 
@@ -128,14 +128,14 @@
   <strong style="color: #475569;">{{ 'সাক্ষীগণের স্বাক্ষর:' if language == 'bn' else 'Witness Signatures:' }}</strong>
   <div class="witness-grid">
     <div class="witness-box">
-      ১. স্বাক্ষর: ...........................................<br>
-      নাম: {{ data.witness1_name or '...........................................' }}<br>
-      ঠিকানা: {{ data.witness1_address or '...........................................' }}
+      {{ '১. স্বাক্ষর:' if language == 'bn' else '1. Signature:' }} ...........................................<br>
+      {{ 'নাম:' if language == 'bn' else 'Name:' }} {{ data.witness1_name or '...........................................' }}<br>
+      {{ 'ঠিকানা:' if language == 'bn' else 'Address:' }} {{ data.witness1_address or '...........................................' }}
     </div>
     <div class="witness-box">
-      ২. স্বাক্ষর: ...........................................<br>
-      নাম: {{ data.witness2_name or '...........................................' }}<br>
-      ঠিকানা: {{ data.witness2_address or '...........................................' }}
+      {{ '২. স্বাক্ষর:' if language == 'bn' else '2. Signature:' }} ...........................................<br>
+      {{ 'নাম:' if language == 'bn' else 'Name:' }} {{ data.witness2_name or '...........................................' }}<br>
+      {{ 'ঠিকানা:' if language == 'bn' else 'Address:' }} {{ data.witness2_address or '...........................................' }}
     </div>
   </div>
 </div>

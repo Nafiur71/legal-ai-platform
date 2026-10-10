@@ -17,7 +17,7 @@
   </div>
 
   <div style="text-align: center; margin: 10px 0; font-weight: bold; color: #64748b;">
-    --- {{ 'এবং (And)' }} ---
+    --- {{ 'এবং' if language == 'bn' else 'AND' }} ---
   </div>
 
   <div class="party-block">
@@ -30,30 +30,30 @@
 
 <div class="highlight-box">
   <strong>{{ 'চুক্তির উদ্দেশ্য (Purpose of Disclosure):' if language == 'bn' else 'Purpose of Disclosure:' }}</strong><br>
-  {{ data.purpose or 'ব্যবসায়িক আলোচনা, যৌথ উদ্যোগ মূল্যায়ন, প্রযুক্তিগত পর্যালোচনা বা সেবা বিনিময়ের উদ্দেশ্য।' if language == 'bn' else 'Evaluation of commercial transaction, business collaboration, proprietary technology development, or consulting services.' }}
+  {{ data.purpose or ('ব্যবসায়িক আলোচনা, যৌথ উদ্যোগ মূল্যায়ন, প্রযুক্তিগত পর্যালোচনা বা সেবা বিনিময়ের উদ্দেশ্য।' if language == 'bn' else 'Evaluation of commercial transaction, business collaboration, proprietary technology development, or consulting services.') }}
 </div>
 
 <div class="clauses-container">
   <div class="clause-item">
-    <span class="clause-number">১.</span>
+    <span class="clause-number">{{ '১.' if language == 'bn' else '1.' }}</span>
     <span class="clause-title">{{ 'গোপনীয় তথ্যের সংজ্ঞা (Definition of Confidential Information):' if language == 'bn' else 'Confidential Information Defined:' }}</span>
     {{ 'উক্ত চুক্তির অধীনে প্রকাশকারী পক্ষ কর্তৃক প্রদানকৃত সকল প্রযুক্তিগত ডেটা, সফটওয়্যার কোড, ব্যবসায়িক কৌশল, গ্রাহক তালিকা, আর্থিক হিসাব এবং বৌদ্ধিক সম্পত্তি গোপনীয় তথ্য হিসেবে গণ্য হইবে।' if language == 'bn' else 'Confidential Information includes all trade secrets, financial records, customer data, source code, designs, and proprietary methodologies disclosed directly or indirectly.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">২.</span>
+    <span class="clause-number">{{ '২.' if language == 'bn' else '2.' }}</span>
     <span class="clause-title">{{ 'অ-প্রকাশ ও সুরক্ষার দায়বদ্ধতা (Non-Disclosure Obligations):' if language == 'bn' else 'Standard of Care & Non-Disclosure:' }}</span>
     {{ 'গ্রহণকারী পক্ষ সর্বোচ্চ সতর্কতা বজায় রাখিবেন এবং প্রকাশকারী পক্ষের পূর্বানুমোদন ব্যতিরেকে কোনো তৃতীয় পক্ষের নিকট এই তথ্য প্রকাশ বা নিজের অননুমোদিত ব্যবসায় ব্যবহার করিবেন না।' if language == 'bn' else 'The Receiving Party covenants to protect confidentiality using at least a reasonable standard of care and shall not disclose or exploit such information for unauthorized commercial gain.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৩.</span>
+    <span class="clause-number">{{ '৩.' if language == 'bn' else '3.' }}</span>
     <span class="clause-title">{{ 'ব্যতিক্রমসমূহ (Standard Exclusions):' if language == 'bn' else 'Exclusions from Confidentiality:' }}</span>
     {{ 'যেসব তথ্য কোনো চুক্তি লঙ্ঘন ব্যতীত জনসাধারণের নিকট পূর্ব হইতেই প্রকাশিত, অথবা কোনো আদালতের নির্দেশে বাধ্য হইয়া প্রকাশ করিতে হয়, তাহা এই চুক্তির আওতামুক্ত থাকিবে।' if language == 'bn' else 'Information lawfully known prior to disclosure, independently developed without access, or compelled by valid judicial order shall be excluded.' }}
   </div>
 
   <div class="clause-item">
-    <span class="clause-number">৪.</span>
+    <span class="clause-number">{{ '৪.' if language == 'bn' else '4.' }}</span>
     <span class="clause-title">{{ 'গোপনীয়তার মেয়াদ (Term of Obligation):' if language == 'bn' else 'Term & Duration:' }}</span>
     {{ 'এই চুক্তির অধীনে তথ্যের গোপনীয়তা রক্ষার মেয়াদ কার্যকর থাকিবে' if language == 'bn' else 'Confidentiality obligations shall survive for a period of' }} 
     <strong>{{ data.duration_years or '২' }} {{ 'বছর' if language == 'bn' else 'years' }}</strong> 

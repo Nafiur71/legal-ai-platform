@@ -157,120 +157,213 @@ const sampleContractsData = {
   }
 };
 
+const sampleContractsData_en = {
+  tenancy_agreement: {
+    execution_date: 'October 10, 2026',
+    landlord_name: 'Mohammad Rafiqul Islam',
+    landlord_father: 'Late Abdul Hamid',
+    landlord_address: 'House 12, Road 5, Dhanmondi, Dhaka-1205',
+    landlord_nid: '1985269247812',
+    landlord_phone: '01711-223344',
+    tenant_name: 'Tanvir Ahmed Chowdhury',
+    tenant_father: 'Anwarul Islam Chowdhury',
+    tenant_address: 'Village: Sukhpur, Thana: Sonargaon, Narayanganj',
+    tenant_nid: '1992034567890',
+    tenant_phone: '01822-334455',
+    property_address: 'Flat 4/B (4th Floor), House 12, Road 5, Dhanmondi R/A, Dhaka',
+    property_type: 'Residential Apartment (3 Bed, 3 Bath, Drawing-Dining)',
+    start_date: 'November 01, 2026',
+    duration_months: 24,
+    rent_amount: '35000',
+    rent_in_words: 'Thirty-Five Thousand BDT Only',
+    payment_due_day: 7,
+    deposit_amount: '100000',
+    notice_period_months: 2,
+    utility_terms: 'Electricity, gas, and utility bills shall be borne directly by the Tenant per monthly meter reading. Service and security charges of BDT 5,000 shall be paid monthly to the Landlord.',
+    witness1_name: 'Kazi Moshiur Rahman',
+    witness1_address: 'Dhanmondi, Dhaka',
+    witness2_name: 'Shakib Al Hasan',
+    witness2_address: 'Lalmatia, Dhaka'
+  },
+  nda_agreement: {
+    execution_date: 'October 10, 2026',
+    disclosing_party_name: 'NextGen Technologies Ltd.',
+    disclosing_party_address: 'Level 7, Gulshan-2, Dhaka-1212',
+    disclosing_party_rep: 'Rashed Karim (Managing Director)',
+    receiving_party_name: 'IT Solutions Bangladesh Ltd.',
+    receiving_party_address: 'House 45, Banani, Dhaka-1213',
+    receiving_party_rep: 'Farhana Ahmed (Chief Executive Officer)',
+    purpose: 'Mutual evaluation and confidential due diligence regarding proprietary AI algorithms, cloud microservices codebase, and enterprise fintech architecture.',
+    duration_years: 3
+  },
+  freelance_contract: {
+    execution_date: 'October 10, 2026',
+    client_name: 'Global Creative Media Inc.',
+    client_address: 'Uttara Sector 3, Dhaka-1230',
+    client_email: 'contact@globalcreative.com',
+    freelancer_name: 'Ariful Haque',
+    freelancer_title: 'Full-Stack Web Developer & UI Designer',
+    freelancer_address: 'Mirpur DOHS, Dhaka',
+    freelancer_email: 'ariful.dev@gmail.com',
+    scope_of_work: 'End-to-end development of responsive web application, interactive client portal, Stripe & SSLCommerz gateway integration, and production cloud deployment.',
+    currency: 'BDT',
+    total_amount: '150000',
+    payment_milestones: '30% advance deposit upon signing, 40% milestone release upon UI/UX approval, and remaining 30% upon final acceptance & source code handover.',
+    deadline: 'December 15, 2026',
+    free_revisions: 3
+  },
+  partnership_agreement: {
+    execution_date: 'October 10, 2026',
+    partner1_name: 'Mahmudul Hasan',
+    partner1_father: 'Shamsul Haque',
+    partner1_address: 'Dhanmondi, Dhaka',
+    partner1_nid: '1988269122334',
+    partner1_phone: '01700-112233',
+    partner2_name: 'Ahmed Zubair',
+    partner2_father: 'Rezaul Karim',
+    partner2_address: 'Banasree, Dhaka',
+    partner2_nid: '1990269556677',
+    partner2_phone: '01800-445566',
+    firm_name: 'Innovex Consulting Partners',
+    firm_address: 'Kawran Bazar, Dhaka-1215',
+    total_capital: '1000000',
+    partner1_share: 60,
+    partner2_share: 40,
+    bank_operation: 'Joint signatures of both partners in any scheduled commercial bank.',
+    notice_period_months: 3
+  },
+  employment_agreement: {
+    execution_date: 'October 10, 2026',
+    company_name: 'Prime Software Solutions Ltd.',
+    company_address: 'Tejgaon Industrial Area, Dhaka-1208',
+    company_rep: 'Mostafizur Rahman (Head of HR)',
+    employee_name: 'Mehedi Hasan Sumon',
+    employee_father: 'Nurul Islam',
+    employee_address: 'Pallabi, Mirpur, Dhaka-1216',
+    employee_nid: '1994269887766',
+    employee_phone: '01911-889900',
+    designation: 'Senior Software Engineer',
+    department: 'Software Engineering & Cloud Architecture',
+    salary_amount: '85000',
+    probation_months: 3,
+    notice_period_days: 30
+  }
+};
+
 const formDefinitions = {
   tenancy_agreement: {
     step1: [
-      { id: 'execution_date', label: 'চুক্তির তারিখ / Execution Date', type: 'text' },
-      { id: 'landlord_name', label: '১ম পক্ষ: বাড়িওয়ালার নাম', type: 'text' },
-      { id: 'landlord_father', label: 'বাড়িওয়ালার পিতা/স্বামীর নাম', type: 'text' },
-      { id: 'landlord_address', label: 'বাড়িওয়ালার ঠিকানা', type: 'text' },
-      { id: 'landlord_nid', label: 'এনআইডি / পাসপোর্ট নং', type: 'text' },
-      { id: 'landlord_phone', label: 'মোবাইল নম্বর', type: 'text' },
-      { id: 'tenant_name', label: '২য় পক্ষ: ভাড়াটিয়ার নাম', type: 'text' },
-      { id: 'tenant_father', label: 'ভাড়াটিয়ার পিতা/স্বামীর নাম', type: 'text' },
-      { id: 'tenant_address', label: 'ভাড়াটিয়ার স্থায়ী ঠিকানা', type: 'text' },
-      { id: 'tenant_nid', label: 'ভাড়াটিয়ার এনআইডি নং', type: 'text' },
-      { id: 'tenant_phone', label: 'ভাড়াটিয়ার মোবাইল নম্বর', type: 'text' }
+      { id: 'execution_date', label: 'চুক্তির তারিখ / Execution Date', label_en: 'Date of Execution', type: 'text' },
+      { id: 'landlord_name', label: '১ম পক্ষ: বাড়িওয়ালার নাম', label_en: 'Landlord Full Name (First Party)', type: 'text' },
+      { id: 'landlord_father', label: 'বাড়িওয়ালার পিতা/স্বামীর নাম', label_en: "Landlord's Father / Spouse Name", type: 'text' },
+      { id: 'landlord_address', label: 'বাড়িওয়ালার ঠিকানা', label_en: 'Landlord Address', type: 'text' },
+      { id: 'landlord_nid', label: 'এনআইডি / পাসপোর্ট নং', label_en: 'Landlord NID / Passport', type: 'text' },
+      { id: 'landlord_phone', label: 'মোবাইল নম্বর', label_en: 'Landlord Phone Number', type: 'text' },
+      { id: 'tenant_name', label: '২য় পক্ষ: ভাড়াটিয়ার নাম', label_en: 'Tenant Full Name (Second Party)', type: 'text' },
+      { id: 'tenant_father', label: 'ভাড়াটিয়ার পিতা/স্বামীর নাম', label_en: "Tenant's Father / Spouse Name", type: 'text' },
+      { id: 'tenant_address', label: 'ভাড়াটিয়ার স্থায়ী ঠিকানা', label_en: 'Tenant Permanent Address', type: 'text' },
+      { id: 'tenant_nid', label: 'ভাড়াটিয়ার এনআইডি নং', label_en: 'Tenant NID / Passport', type: 'text' },
+      { id: 'tenant_phone', label: 'ভাড়াটিয়ার মোবাইল নম্বর', label_en: 'Tenant Phone Number', type: 'text' }
     ],
     step2: [
-      { id: 'property_address', label: 'ভাড়াকৃত সম্পত্তির ঠিকানা ও পূর্ণ বিবরণ', type: 'textarea' },
-      { id: 'property_type', label: 'সম্পত্তির ধরণ (যেমন: আবাসিক ফ্ল্যাট / দোকান / বাণিজ্যিক স্পেস)', type: 'text' },
-      { id: 'start_date', label: 'চুক্তি কার্যকরের তারিখ', type: 'text' },
-      { id: 'duration_months', label: 'চুক্তির মেয়াদ (মাসে)', type: 'number' },
-      { id: 'rent_amount', label: 'মাসিক ভাড়া (টাকায়)', type: 'text' },
-      { id: 'rent_in_words', label: 'ভাড়ার পরিমাণ (কথায়)', type: 'text' },
-      { id: 'payment_due_day', label: 'প্রতি মাসের কত তারিখের মধ্যে পরিশোধযোগ্য', type: 'number' },
-      { id: 'deposit_amount', label: 'অগ্রিম জামানতের পরিমাণ (টাকায়)', type: 'text' },
-      { id: 'notice_period_months', label: 'চুক্তি বাতিলের নোটিশ পিরিয়ড (মাসে)', type: 'number' },
-      { id: 'utility_terms', label: 'ইউটিলিটি ও সার্ভিস চার্জ শর্ত', type: 'textarea' }
+      { id: 'property_address', label: 'ভাড়াকৃত সম্পত্তির ঠিকানা ও পূর্ণ বিবরণ', label_en: 'Premises Address & Detailed Description', type: 'textarea' },
+      { id: 'property_type', label: 'সম্পত্তির ধরণ (যেমন: আবাসিক ফ্ল্যাট / দোকান / বাণিজ্যিক স্পেস)', label_en: 'Property Type (e.g., Residential Apartment / Commercial Space)', type: 'text' },
+      { id: 'start_date', label: 'চুক্তি কার্যকরের তারিখ', label_en: 'Tenancy Commencement Date', type: 'text' },
+      { id: 'duration_months', label: 'চুক্তির মেয়াদ (মাসে)', label_en: 'Duration of Tenancy (Months)', type: 'number' },
+      { id: 'rent_amount', label: 'মাসিক ভাড়া (টাকায়)', label_en: 'Monthly Rent (in BDT)', type: 'text' },
+      { id: 'rent_in_words', label: 'ভাড়ার পরিমাণ (কথায়)', label_en: 'Rent Amount in Words', type: 'text' },
+      { id: 'payment_due_day', label: 'প্রতি মাসের কত তারিখের মধ্যে পরিশোধযোগ্য', label_en: 'Payment Due Day of the Month (e.g. 7th)', type: 'number' },
+      { id: 'deposit_amount', label: 'অগ্রিম জামানতের পরিমাণ (টাকায়)', label_en: 'Advance Security Deposit (in BDT)', type: 'text' },
+      { id: 'notice_period_months', label: 'চুক্তি বাতিলের নোটিশ পিরিয়ড (মাসে)', label_en: 'Termination Notice Period (Months)', type: 'number' },
+      { id: 'utility_terms', label: 'ইউটিলিটি ও সার্ভিস চার্জ শর্ত', label_en: 'Utility & Maintenance Terms', type: 'textarea' }
     ],
     step4: [
-      { id: 'witness1_name', label: '১ম সাক্ষীর নাম', type: 'text' },
-      { id: 'witness1_address', label: '১ম সাক্ষীর ঠিকানা', type: 'text' },
-      { id: 'witness2_name', label: '২য় সাক্ষীর নাম', type: 'text' },
-      { id: 'witness2_address', label: '২য় সাক্ষীর ঠিকানা', type: 'text' }
+      { id: 'witness1_name', label: '১ম সাক্ষীর নাম', label_en: '1st Witness Name', type: 'text' },
+      { id: 'witness1_address', label: '১ম সাক্ষীর ঠিকানা', label_en: '1st Witness Address', type: 'text' },
+      { id: 'witness2_name', label: '২য় সাক্ষীর নাম', label_en: '2nd Witness Name', type: 'text' },
+      { id: 'witness2_address', label: '২য় সাক্ষীর ঠিকানা', label_en: '2nd Witness Address', type: 'text' }
     ]
   },
   nda_agreement: {
     step1: [
-      { id: 'execution_date', label: 'চুক্তির তারিখ / Date', type: 'text' },
-      { id: 'disclosing_party_name', label: 'তথ্য প্রকাশকারী (Disclosing Party) নাম/প্রতিষ্ঠান', type: 'text' },
-      { id: 'disclosing_party_address', label: 'প্রকাশকারীর ঠিকানা', type: 'text' },
-      { id: 'disclosing_party_rep', label: 'অনুমোদিত প্রতিনিধি ও পদবি', type: 'text' },
-      { id: 'receiving_party_name', label: 'তথ্য গ্রহণকারী (Receiving Party) নাম/প্রতিষ্ঠান', type: 'text' },
-      { id: 'receiving_party_address', label: 'গ্রহণকারীর ঠিকানা', type: 'text' },
-      { id: 'receiving_party_rep', label: 'অনুমোদিত প্রতিনিধি ও পদবি', type: 'text' }
+      { id: 'execution_date', label: 'চুক্তির তারিখ / Date', label_en: 'Date of Execution', type: 'text' },
+      { id: 'disclosing_party_name', label: 'তথ্য প্রকাশকারী (Disclosing Party) নাম/প্রতিষ্ঠান', label_en: 'Disclosing Party Name / Entity', type: 'text' },
+      { id: 'disclosing_party_address', label: 'প্রকাশকারীর ঠিকানা', label_en: 'Disclosing Party Address', type: 'text' },
+      { id: 'disclosing_party_rep', label: 'অনুমোদিত প্রতিনিধি ও পদবি', label_en: 'Authorized Representative & Title', type: 'text' },
+      { id: 'receiving_party_name', label: 'তথ্য গ্রহণকারী (Receiving Party) নাম/প্রতিষ্ঠান', label_en: 'Receiving Party Name / Entity', type: 'text' },
+      { id: 'receiving_party_address', label: 'গ্রহণকারীর ঠিকানা', label_en: 'Receiving Party Address', type: 'text' },
+      { id: 'receiving_party_rep', label: 'অনুমোদিত প্রতিনিধি ও পদবি', label_en: 'Authorized Representative & Title', type: 'text' }
     ],
     step2: [
-      { id: 'purpose', label: 'তথ্য বিনিময়ের মূল উদ্দেশ্য (Business Purpose)', type: 'textarea' },
-      { id: 'duration_years', label: 'গোপনীয়তার মেয়াদ (বছরে)', type: 'number' }
+      { id: 'purpose', label: 'তথ্য বিনিময়ের মূল উদ্দেশ্য (Business Purpose)', label_en: 'Authorized Business Purpose', type: 'textarea' },
+      { id: 'duration_years', label: 'গোপনীয়তার মেয়াদ (বছরে)', label_en: 'Confidentiality Term (Years)', type: 'number' }
     ],
     step4: []
   },
   freelance_contract: {
     step1: [
-      { id: 'execution_date', label: 'চুক্তির তারিখ / Date', type: 'text' },
-      { id: 'client_name', label: 'গ্রাহকের নাম / ক্লায়েন্ট কোম্পানি', type: 'text' },
-      { id: 'client_address', label: 'গ্রাহকের ঠিকানা', type: 'text' },
-      { id: 'client_email', label: 'গ্রাহকের অফিসিয়াল ইমেইল', type: 'text' },
-      { id: 'freelancer_name', label: 'ফ্রিল্যান্সার / পরামর্শকের নাম', type: 'text' },
-      { id: 'freelancer_title', label: 'পেশাগত পদবি (যেমন: Full-Stack Developer)', type: 'text' },
-      { id: 'freelancer_address', label: 'ঠিকানা', type: 'text' },
-      { id: 'freelancer_email', label: 'ইমেইল', type: 'text' }
+      { id: 'execution_date', label: 'চুক্তির তারিখ / Date', label_en: 'Date of Execution', type: 'text' },
+      { id: 'client_name', label: 'গ্রাহকের নাম / ক্লায়েন্ট কোম্পানি', label_en: 'Client Name / Organization', type: 'text' },
+      { id: 'client_address', label: 'গ্রাহকের ঠিকানা', label_en: 'Client Address', type: 'text' },
+      { id: 'client_email', label: 'গ্রাহকের অফিসিয়াল ইমেইল', label_en: 'Client Email', type: 'text' },
+      { id: 'freelancer_name', label: 'ফ্রিল্যান্সার / পরামর্শকের নাম', label_en: 'Freelancer / Consultant Name', type: 'text' },
+      { id: 'freelancer_title', label: 'পেশাগত পদবি (যেমন: Full-Stack Developer)', label_en: 'Professional Title (e.g., Full-Stack Developer)', type: 'text' },
+      { id: 'freelancer_address', label: 'ঠিকানা', label_en: 'Freelancer Address', type: 'text' },
+      { id: 'freelancer_email', label: 'ইমেইল', label_en: 'Freelancer Email', type: 'text' }
     ],
     step2: [
-      { id: 'scope_of_work', label: 'কাজের পরিধি ও ডেলিভারেবলস (Scope of Work)', type: 'textarea' },
-      { id: 'currency', label: 'কারেন্সি প্রতীক (যেমন: ৳ বা $)', type: 'text' },
-      { id: 'total_amount', label: 'মোট পারিশ্রমিকের পরিমাণ', type: 'text' },
-      { id: 'payment_milestones', label: 'পেমেন্ট মাইলস্টোন ও শর্তাবলি', type: 'textarea' },
-      { id: 'deadline', label: 'কাজের চূড়ান্ত সমাপ্তির তারিখ', type: 'text' },
-      { id: 'free_revisions', label: 'বিনামূল্যে রিভিশন সংখ্যা', type: 'number' }
+      { id: 'scope_of_work', label: 'কাজের পরিধি ও ডেলিভারেবলস (Scope of Work)', label_en: 'Scope of Work & Deliverables', type: 'textarea' },
+      { id: 'currency', label: 'কারেন্সি প্রতীক (যেমন: ৳ বা $)', label_en: 'Currency Symbol (e.g., BDT or USD)', type: 'text' },
+      { id: 'total_amount', label: 'মোট পারিশ্রমিকের পরিমাণ', label_en: 'Total Fee / Compensation', type: 'text' },
+      { id: 'payment_milestones', label: 'পেমেন্ট মাইলস্টোন ও শর্তাবলি', label_en: 'Payment Milestones & Schedule', type: 'textarea' },
+      { id: 'deadline', label: 'কাজের চূড়ান্ত সমাপ্তির তারিখ', label_en: 'Project Completion Deadline', type: 'text' },
+      { id: 'free_revisions', label: 'বিনামূল্যে রিভিশন সংখ্যা', label_en: 'Included Revisions Count', type: 'number' }
     ],
     step4: []
   },
   partnership_agreement: {
     step1: [
-      { id: 'execution_date', label: 'চুক্তির তারিখ / Date', type: 'text' },
-      { id: 'partner1_name', label: '১ম অংশীদারের নাম', type: 'text' },
-      { id: 'partner1_father', label: '১ম অংশীদারের পিতা/স্বামীর নাম', type: 'text' },
-      { id: 'partner1_address', label: '১ম অংশীদারের ঠিকানা', type: 'text' },
-      { id: 'partner1_nid', label: '১ম অংশীদারের এনআইডি নং', type: 'text' },
-      { id: 'partner1_phone', label: '১ম অংশীদারের মোবাইল', type: 'text' },
-      { id: 'partner2_name', label: '২য় অংশীদারের নাম', type: 'text' },
-      { id: 'partner2_father', label: '২য় অংশীদারের পিতা/স্বামীর নাম', type: 'text' },
-      { id: 'partner2_address', label: '২য় অংশীদারের ঠিকানা', type: 'text' },
-      { id: 'partner2_nid', label: '২য় অংশীদারের এনআইডি নং', type: 'text' },
-      { id: 'partner2_phone', label: '২য় অংশীদারের মোবাইল', type: 'text' }
+      { id: 'execution_date', label: 'চুক্তির তারিখ / Date', label_en: 'Date of Execution', type: 'text' },
+      { id: 'partner1_name', label: '১ম অংশীদারের নাম', label_en: '1st Partner Full Name', type: 'text' },
+      { id: 'partner1_father', label: '১ম অংশীদারের পিতা/স্বামীর নাম', label_en: "1st Partner Father/Spouse Name", type: 'text' },
+      { id: 'partner1_address', label: '১ম অংশীদারের ঠিকানা', label_en: '1st Partner Address', type: 'text' },
+      { id: 'partner1_nid', label: '১ম অংশীদারের এনআইডি নং', label_en: '1st Partner NID No', type: 'text' },
+      { id: 'partner1_phone', label: '১ম অংশীদারের মোবাইল', label_en: '1st Partner Phone', type: 'text' },
+      { id: 'partner2_name', label: '২য় অংশীদারের নাম', label_en: '2nd Partner Full Name', type: 'text' },
+      { id: 'partner2_father', label: '২য় অংশীদারের পিতা/স্বামীর নাম', label_en: "2nd Partner Father/Spouse Name", type: 'text' },
+      { id: 'partner2_address', label: '২য় অংশীদারের ঠিকানা', label_en: '2nd Partner Address', type: 'text' },
+      { id: 'partner2_nid', label: '২য় অংশীদারের এনআইডি নং', label_en: '2nd Partner NID No', type: 'text' },
+      { id: 'partner2_phone', label: '২য় অংশীদারের মোবাইল', label_en: '2nd Partner Phone', type: 'text' }
     ],
     step2: [
-      { id: 'firm_name', label: 'অংশীদারি প্রতিষ্ঠানের নাম', type: 'text' },
-      { id: 'firm_address', label: 'প্রধান কার্যালয়ের ঠিকানা', type: 'text' },
-      { id: 'total_capital', label: 'প্রাথমিক মোট মূলধন (টাকায়)', type: 'text' },
-      { id: 'partner1_share', label: '১ম অংশীদারের শেয়ার/মুনাফার হার (%)', type: 'number' },
-      { id: 'partner2_share', label: '২য় অংশীদারের শেয়ার/মুনাফার হার (%)', type: 'number' },
-      { id: 'bank_operation', label: 'ব্যাংক হিসাব পরিচালনা পদ্ধতি', type: 'text' },
-      { id: 'notice_period_months', label: 'অংশীদারি অবসানের নোটিশ (মাসে)', type: 'number' }
+      { id: 'firm_name', label: 'অংশীদারি প্রতিষ্ঠানের নাম', label_en: 'Partnership Firm Name', type: 'text' },
+      { id: 'firm_address', label: 'প্রধান কার্যালয়ের ঠিকানা', label_en: 'Principal Place of Business', type: 'text' },
+      { id: 'total_capital', label: 'প্রাথমিক মোট মূলধন (টাকায়)', label_en: 'Total Initial Capital (BDT)', type: 'text' },
+      { id: 'partner1_share', label: '১ম অংশীদারের শেয়ার/মুনাফার হার (%)', label_en: '1st Partner Profit/Loss Share (%)', type: 'number' },
+      { id: 'partner2_share', label: '২য় অংশীদারের শেয়ার/মুনাফার হার (%)', label_en: '2nd Partner Profit/Loss Share (%)', type: 'number' },
+      { id: 'bank_operation', label: 'ব্যাংক হিসাব পরিচালনা পদ্ধতি', label_en: 'Bank Operation Terms', type: 'text' },
+      { id: 'notice_period_months', label: 'অংশীদারি অবসানের নোটিশ (মাসে)', label_en: 'Dissolution Notice Period (Months)', type: 'number' }
     ],
     step4: []
   },
   employment_agreement: {
     step1: [
-      { id: 'execution_date', label: 'যোগদানের তারিখ / Execution Date', type: 'text' },
-      { id: 'company_name', label: 'প্রতিষ্ঠানের নাম (Employer)', type: 'text' },
-      { id: 'company_address', label: 'কোম্পানির ঠিকানা', type: 'text' },
-      { id: 'company_rep', label: 'কর্তৃপক্ষের নাম ও পদবি', type: 'text' },
-      { id: 'employee_name', label: 'কর্মচারী / কর্মকর্তার নাম', type: 'text' },
-      { id: 'employee_father', label: 'পিতা/স্বামীর নাম', type: 'text' },
-      { id: 'employee_address', label: 'স্থায়ী ঠিকানা', type: 'text' },
-      { id: 'employee_nid', label: 'এনআইডি নং', type: 'text' },
-      { id: 'employee_phone', label: 'মোবাইল নম্বর', type: 'text' }
+      { id: 'execution_date', label: 'যোগদানের তারিখ / Execution Date', label_en: 'Appointment / Commencement Date', type: 'text' },
+      { id: 'company_name', label: 'প্রতিষ্ঠানের নাম (Employer)', label_en: 'Employer / Company Name', type: 'text' },
+      { id: 'company_address', label: 'কোম্পানির ঠিকানা', label_en: 'Office Address', type: 'text' },
+      { id: 'company_rep', label: 'কর্তৃপক্ষের নাম ও পদবি', label_en: 'Authorized Signatory & Designation', type: 'text' },
+      { id: 'employee_name', label: 'কর্মচারী / কর্মকর্তার নাম', label_en: 'Employee Full Name', type: 'text' },
+      { id: 'employee_father', label: 'পিতা/স্বামীর নাম', label_en: "Father / Spouse Name", type: 'text' },
+      { id: 'employee_address', label: 'স্থায়ী ঠিকানা', label_en: 'Residential Address', type: 'text' },
+      { id: 'employee_nid', label: 'এনআইডি নং', label_en: 'Employee NID No', type: 'text' },
+      { id: 'employee_phone', label: 'মোবাইল নম্বর', label_en: 'Employee Phone Number', type: 'text' }
     ],
     step2: [
-      { id: 'designation', label: 'পদবি (Designation)', type: 'text' },
-      { id: 'department', label: 'বিভাগ (Department)', type: 'text' },
-      { id: 'salary_amount', label: 'মাসিক সর্বসাকুল্যে বেতন (টাকায়)', type: 'text' },
-      { id: 'probation_months', label: 'শিক্ষানবিসকাল (মাসে)', type: 'number' },
-      { id: 'notice_period_days', label: 'চাকরি অবসানের নোটিশ পিরিয়ড (দিনে)', type: 'number' }
+      { id: 'designation', label: 'পদবি (Designation)', label_en: 'Job Title / Designation', type: 'text' },
+      { id: 'department', label: 'বিভাগ (Department)', label_en: 'Department / Unit', type: 'text' },
+      { id: 'salary_amount', label: 'মাসিক সর্বসাকুল্যে বেতন (টাকায়)', label_en: 'Gross Monthly Remuneration (BDT)', type: 'text' },
+      { id: 'probation_months', label: 'শিক্ষানবিসকাল (মাসে)', label_en: 'Probationary Period (Months)', type: 'number' },
+      { id: 'notice_period_days', label: 'চাকরি অবসানের নোটিশ পিরিয়ড (দিনে)', label_en: 'Notice Period for Separation (Days)', type: 'number' }
     ],
     step4: []
   }
@@ -308,6 +401,7 @@ async function loadSharedContractForSigning(shareId) {
         state.currentLang = item.language;
         const langSel = document.getElementById('lang-select');
         if (langSel) langSel.value = item.language;
+        updateUILanguage(item.language);
       }
       document.getElementById('template-select').value = item.document_type;
       setupTemplate(item.document_type, item.data);
@@ -323,6 +417,174 @@ async function loadSharedContractForSigning(shareId) {
   } catch (e) {
     console.error('Failed to load shared contract:', e);
   }
+}
+
+function updateUILanguage(lang) {
+  state.currentLang = lang;
+  const isEn = lang === 'en';
+
+  // Template select options
+  const tmplOptions = {
+    tenancy_agreement: isEn ? '🏠 House / Commercial Tenancy Agreement' : '🏠 বাড়ি / ফ্ল্যাট / দোকান ভাড়ার চুক্তি',
+    nda_agreement: isEn ? '🔒 Non-Disclosure Agreement (NDA)' : '🔒 নন-ডিসক্লোজার চুক্তি (NDA)',
+    freelance_contract: isEn ? '💼 Freelance & Service Contract' : '💼 ফ্রিল্যান্স ও সার্ভিস চুক্তি',
+    partnership_agreement: isEn ? '🤝 Partnership Business Deed' : '🤝 অংশীদারি কারবার চুক্তিপত্র (Partnership Deed)',
+    employment_agreement: isEn ? '👔 Employment & Appointment Contract' : '👔 কর্মসংস্থান ও চাকরির চুক্তি (Employment Contract)'
+  };
+  const tmplSelect = document.getElementById('template-select');
+  if (tmplSelect) {
+    Array.from(tmplSelect.options).forEach(opt => {
+      if (tmplOptions[opt.value]) opt.textContent = tmplOptions[opt.value];
+    });
+  }
+
+  // Wizard tab labels
+  const stepTabs = document.querySelectorAll('.step-tab');
+  if (stepTabs.length >= 4) {
+    stepTabs[0].innerHTML = `<i class="fa-solid fa-users"></i> ${isEn ? '1. Parties Info' : '১. পক্ষের তথ্য'}`;
+    stepTabs[1].innerHTML = `<i class="fa-solid fa-file-contract"></i> ${isEn ? '2. Core Terms' : '২. মূল শর্তাবলি'}`;
+    stepTabs[2].innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> ${isEn ? '3. AI Custom Clauses' : '৩. AI কাস্টম ধারা'}`;
+    stepTabs[3].innerHTML = `<i class="fa-solid fa-signature"></i> ${isEn ? '4. Signatures & Finish' : '৪. স্বাক্ষর ও সমাপ্তি'}`;
+  }
+
+  // Wizard navigation buttons
+  const step1Next = document.querySelector('#step-1 .btn-next-step');
+  if (step1Next) step1Next.innerHTML = isEn ? 'Next: Core Terms <i class="fa-solid fa-arrow-right"></i>' : 'পরবর্তী: মূল শর্তাবলি <i class="fa-solid fa-arrow-right"></i>';
+
+  const step2Prev = document.querySelector('#step-2 .btn-prev-step');
+  if (step2Prev) step2Prev.innerHTML = isEn ? '<i class="fa-solid fa-arrow-left"></i> Previous Step' : '<i class="fa-solid fa-arrow-left"></i> পূর্ববর্তী ধাপ';
+
+  const step2Next = document.querySelector('#step-2 .btn-next-step');
+  if (step2Next) step2Next.innerHTML = isEn ? 'Next: AI Custom Clauses <i class="fa-solid fa-arrow-right"></i>' : 'পরবর্তী: AI কাস্টম ধারা <i class="fa-solid fa-arrow-right"></i>';
+
+  const step3Prev = document.querySelector('#step-3 .btn-prev-step');
+  if (step3Prev) step3Prev.innerHTML = isEn ? '<i class="fa-solid fa-arrow-left"></i> Previous Step' : '<i class="fa-solid fa-arrow-left"></i> পূর্ববর্তী ধাপ';
+
+  const step3Next = document.querySelector('#step-3 .btn-next-step');
+  if (step3Next) step3Next.innerHTML = isEn ? 'Next: Signatures & Finish <i class="fa-solid fa-arrow-right"></i>' : 'পরবর্তী: স্বাক্ষর ও সমাপ্তি <i class="fa-solid fa-arrow-right"></i>';
+
+  const step4Prev = document.querySelector('#step-4 .btn-prev-step');
+  if (step4Prev) step4Prev.innerHTML = isEn ? '<i class="fa-solid fa-arrow-left"></i> Previous Step' : '<i class="fa-solid fa-arrow-left"></i> পূর্ববর্তী ধাপ';
+
+  const step4Finish = document.getElementById('btn-finish-save');
+  if (step4Finish) step4Finish.innerHTML = isEn ? '<i class="fa-solid fa-floppy-disk"></i> Save Contract' : '<i class="fa-solid fa-floppy-disk"></i> চুক্তি সংরক্ষণ করুন';
+
+  // AI Refiner Section
+  const aiInput = document.getElementById('ai-clause-input');
+  if (aiInput) {
+    aiInput.placeholder = isEn 
+      ? "e.g., 'Tenant may not keep any pets and quiet hours start at 11 PM...'" 
+      : "যেমন: 'ভাড়াটিয়া রাত ১১টার পর কোনো বহিরাগত আনতে পারবে না এবং ফ্ল্যাটে কোনো পোষা বিড়াল বা কুকুর রাখা যাবে না...'";
+  }
+  const btnRefine = document.getElementById('btn-refine-clause');
+  if (btnRefine) {
+    btnRefine.innerHTML = isEn ? '<i class="fa-solid fa-wand-magic-sparkles"></i> Polish into Legal Language with AI' : '<i class="fa-solid fa-wand-magic-sparkles"></i> AI দিয়ে আইনি ভাষায় পলিশ করুন';
+  }
+  const btnAddClause = document.getElementById('btn-add-clause');
+  if (btnAddClause) {
+    btnAddClause.innerHTML = isEn ? '<i class="fa-solid fa-plus"></i> Add Clause to Contract' : '<i class="fa-solid fa-plus"></i> চুক্তিতে ধারাটি যুক্ত করুন';
+  }
+  const btnExplainAction = document.getElementById('btn-explain-clause-action');
+  if (btnExplainAction) {
+    btnExplainAction.innerHTML = isEn ? '<i class="fa-solid fa-lightbulb"></i> Explain Simply' : '<i class="fa-solid fa-lightbulb"></i> সহজ ব্যাখ্যা দেখুন';
+  }
+
+  // Chips
+  const chipContainer = document.getElementById('clause-chips-container');
+  if (chipContainer) {
+    if (isEn) {
+      chipContainer.innerHTML = `
+        <button type="button" class="prompt-chip" data-prompt="Strictly no pets, dogs or cats allowed on the premises."><i class="fa-solid fa-paw"></i> No Pets</button>
+        <button type="button" class="prompt-chip" data-prompt="Late rent payment shall incur a delay penalty of BDT 100 per day."><i class="fa-solid fa-clock"></i> Late Fee</button>
+        <button type="button" class="prompt-chip" data-prompt="Subletting the premises in whole or part is strictly prohibited without prior written consent."><i class="fa-solid fa-ban"></i> No Subletting</button>
+        <button type="button" class="prompt-chip" data-prompt="Premises shall strictly be used for residential purposes and not for political or commercial activities."><i class="fa-solid fa-building-circle-xmark"></i> Residential Only</button>
+      `;
+    } else {
+      chipContainer.innerHTML = `
+        <button type="button" class="prompt-chip" data-prompt="ফ্ল্যাটে কোনো প্রকার কুকুর, বিড়াল বা পোষা প্রাণী পালন করা সম্পূর্ণরূপে নিষিদ্ধ থাকিবে।"><i class="fa-solid fa-paw"></i> পোষা প্রাণী নিষিদ্ধ</button>
+        <button type="button" class="prompt-chip" data-prompt="নির্ধারিত তারিখের পর ভাড়া পরিশোধ করিলে দৈনিক ১০০ টাকা হারে বিলম্ব জরিমানা প্রদান করিতে হইবে।"><i class="fa-solid fa-clock"></i> বিলম্বে জরিমানা</button>
+        <button type="button" class="prompt-chip" data-prompt="মালিকের লিখিত পূর্বানুমতি ব্যতীত ভাড়াকৃত স্পেস কোনো তৃতীয় পক্ষকে সাবলেট বা উপভাড়া দেওয়া যাইবে না।"><i class="fa-solid fa-ban"></i> সাবলেট নিষিদ্ধ</button>
+        <button type="button" class="prompt-chip" data-prompt="আবাসিক ফ্ল্যাট কোনো বাণিজ্যিক, রাজনৈতিক বা আইনবহির্ভূত কাজে ব্যবহার করা যাইবে না।"><i class="fa-solid fa-building-circle-xmark"></i> বাণিজ্যিক ব্যবহার নিষেধ</button>
+      `;
+    }
+    chipContainer.querySelectorAll('.prompt-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        if (aiInput) {
+          aiInput.value = chip.getAttribute('data-prompt');
+          aiInput.focus();
+        }
+      });
+    });
+  }
+
+  // Step 4 E-Signature Card
+  const step4SignBtn = document.getElementById('btn-step4-sign');
+  if (step4SignBtn) {
+    step4SignBtn.innerHTML = isEn ? '<i class="fa-solid fa-pen-nib"></i> Open Signature Canvas' : '<i class="fa-solid fa-pen-nib"></i> স্বাক্ষর ক্যানভাস খুলুন';
+  }
+
+  // Preview Bar Controls
+  const editModeLabel = document.getElementById('edit-mode-label');
+  if (editModeLabel) {
+    editModeLabel.innerText = isEn ? (state.isDirectEdit ? '✅ Direct Edit Active' : 'Direct Edit on Paper') : (state.isDirectEdit ? '✅ এডিট মোড চলছে' : 'সরাসরি পেপারে এডিট');
+  }
+  const stampBtn = document.getElementById('btn-toggle-stamp');
+  if (stampBtn) {
+    stampBtn.innerHTML = `<i class="fa-solid fa-stamp"></i> ${isEn ? '300 Tk Stamp' : '৩০০ টাকার স্ট্যাম্প'}`;
+  }
+  const watermarkLabel = document.getElementById('watermark-label');
+  if (watermarkLabel) {
+    const wmText = state.watermarkMode === 'none' 
+      ? (isEn ? 'Watermark: Off' : 'ওয়াটারমার্ক: বন্ধ') 
+      : (state.watermarkMode === 'draft' ? (isEn ? 'Watermark: Draft' : 'ওয়াটারমার্ক: খসড়া') : (isEn ? 'Watermark: Confidential' : 'ওয়াটারমার্ক: গোপনীয়'));
+    watermarkLabel.innerText = wmText;
+  }
+
+  // Header quick buttons
+  const btnDemoFill = document.getElementById('btn-demo-fill');
+  if (btnDemoFill) {
+    btnDemoFill.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> ${isEn ? 'Load Demo Data' : 'নমুনা ডেমো লোড'}`;
+  }
+  const btnExportMenu = document.getElementById('btn-export-menu');
+  if (btnExportMenu) {
+    btnExportMenu.innerHTML = `<i class="fa-solid fa-download"></i> ${isEn ? 'Download' : 'ডাউনলোড'} <i class="fa-solid fa-chevron-down" style="font-size: 0.72rem; margin-left: 2px;"></i>`;
+  }
+  const btnPdf = document.getElementById('btn-pdf');
+  if (btnPdf) {
+    btnPdf.innerHTML = `<i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i> ${isEn ? 'PDF Format (Official Print)' : 'PDF ফরম্যাট (অফিসিয়াল প্রিন্ট)'}`;
+  }
+  const btnDocx = document.getElementById('btn-docx');
+  if (btnDocx) {
+    btnDocx.innerHTML = `<i class="fa-solid fa-file-word" style="color: #2563eb;"></i> ${isEn ? 'Word / DOCX Format' : 'Word / DOCX ফরম্যাট'}`;
+  }
+  const btnStampCalc = document.getElementById('btn-open-stamp-calc');
+  if (btnStampCalc) {
+    btnStampCalc.innerHTML = `<i class="fa-solid fa-calculator"></i> ${isEn ? 'Stamp Calculator' : 'স্ট্যাম্প ক্যালকুলেটর'}`;
+  }
+  const btnNoticeGen = document.getElementById('btn-open-notice-gen');
+  if (btnNoticeGen) {
+    btnNoticeGen.innerHTML = `<i class="fa-solid fa-gavel"></i> ${isEn ? 'Legal Notice' : 'আইনি নোটিশ জেনারেটর'}`;
+  }
+  const btnShare = document.getElementById('btn-share-contract');
+  if (btnShare) {
+    btnShare.innerHTML = `<i class="fa-solid fa-share-nodes"></i> ${isEn ? 'Share & Sign' : 'শেয়ার ও রিমোট সাইন'}`;
+  }
+  const btnSaved = document.getElementById('btn-saved-contracts');
+  if (btnSaved) {
+    btnSaved.innerHTML = `<i class="fa-solid fa-folder-open"></i> ${isEn ? 'Saved Contracts' : 'সংরক্ষিত চুক্তি'}`;
+  }
+  const btnNewContract = document.getElementById('btn-new-contract');
+  if (btnNewContract) {
+    btnNewContract.innerHTML = `<i class="fa-solid fa-file-circle-plus"></i> ${isEn ? 'New' : 'নতুন চুক্তি'}`;
+  }
+
+  // Active step refresh
+  const activeTab = document.querySelector('.step-tab.active');
+  const currentStep = activeTab ? activeTab.getAttribute('data-step') : 1;
+  switchStep(currentStep);
+
+  // Re-render form fields with English/Bengali labels
+  renderFormFields();
 }
 
 function setupTemplate(docType, loadedData = null) {
@@ -354,18 +616,19 @@ function renderFormFields() {
   const buildFields = (fields) => {
     return fields.map(f => {
       const val = state.formData[f.id] || '';
+      const label = (state.currentLang === 'en' && f.label_en) ? f.label_en : f.label;
       if (f.type === 'textarea') {
         return `
           <div class="form-group">
-            <label class="form-label">${f.label}</label>
-            <textarea class="form-textarea field-input" data-key="${f.id}" rows="2">${val}</textarea>
+            <label class="form-label">${label}</label>
+            <textarea id="${f.id}" class="form-textarea field-input" data-key="${f.id}" rows="2">${val}</textarea>
           </div>
         `;
       }
       return `
         <div class="form-group">
-          <label class="form-label">${f.label}</label>
-          <input type="${f.type}" class="form-input field-input" data-key="${f.id}" value="${val}">
+          <label class="form-label">${label}</label>
+          <input type="${f.type}" id="${f.id}" class="form-input field-input" data-key="${f.id}" value="${val}">
         </div>
       `;
     }).join('');
@@ -378,7 +641,9 @@ function renderFormFields() {
   if (def.step4 && def.step4.length > 0) {
     step4Container.innerHTML = buildFields(def.step4);
   } else {
-    step4Container.innerHTML = '<p style="color: #64748b; font-size: 0.9rem;">এই চুক্তির জন্য পৃথক সাক্ষীর ফর্ম প্রযোজ্য নয়। মূল পক্ষদ্বয়ের সরাসরি স্বাক্ষরই যথেষ্ট।</p>';
+    step4Container.innerHTML = state.currentLang === 'en'
+      ? '<p style="color: #64748b; font-size: 0.9rem;">Separate witness details are not required for this document. Signatures of the primary parties are sufficient.</p>'
+      : '<p style="color: #64748b; font-size: 0.9rem;">এই চুক্তির জন্য পৃথক সাক্ষীর ফর্ম প্রযোজ্য নয়। মূল পক্ষদ্বয়ের সরাসরি স্বাক্ষরই যথেষ্ট।</p>';
   }
 
   document.querySelectorAll('.field-input').forEach(input => {
@@ -657,6 +922,7 @@ window.loadContractById = async function(id, docType) {
       state.currentLang = item.language;
       const langSel = document.getElementById('lang-select');
       if (langSel) langSel.value = item.language;
+      updateUILanguage(item.language);
     }
     document.getElementById('template-select').value = item.document_type;
     setupTemplate(item.document_type, item.data);
@@ -682,7 +948,8 @@ async function openClauseExplainer(clauseText) {
   const modal = document.getElementById('explainer-modal');
   const content = document.getElementById('explainer-content');
   modal.style.display = 'flex';
-  content.innerHTML = '<p style="text-align: center; color: #6366f1; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> AI বিশ্লেষণ চলছে...</p>';
+  const isEn = state.currentLang === 'en';
+  content.innerHTML = `<p style="text-align: center; color: #6366f1; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> ${isEn ? 'AI Legal Analysis in progress...' : 'AI বিশ্লেষণ চলছে...'}</p>`;
 
   try {
     const res = await fetch('/api/ai/explain-clause', {
@@ -693,24 +960,24 @@ async function openClauseExplainer(clauseText) {
     const data = await res.json();
     content.innerHTML = `
       <div style="background: #eff6ff; border-left: 4px solid #2563eb; padding: 12px; margin-bottom: 16px; border-radius: 0 8px 8px 0;">
-        <h4 style="color: #1e3a8a; margin-bottom: 6px; font-size: 0.95rem;">সহজ সারসংক্ষেপ:</h4>
+        <h4 style="color: #1e3a8a; margin-bottom: 6px; font-size: 0.95rem;">${isEn ? 'Plain Summary:' : 'সহজ সারসংক্ষেপ:'}</h4>
         <p style="font-size: 0.92rem; color: #1e293b; line-height: 1.6;">${data.simple_explanation}</p>
       </div>
       <div style="margin-bottom: 16px;">
-        <h4 style="color: #0f172a; margin-bottom: 8px; font-size: 0.9rem;"><i class="fa-solid fa-circle-check" style="color: #10b981;"></i> মূল দায়িত্ব:</h4>
+        <h4 style="color: #0f172a; margin-bottom: 8px; font-size: 0.9rem;"><i class="fa-solid fa-circle-check" style="color: #10b981;"></i> ${isEn ? 'Key Obligations:' : 'মূল দায়িত্ব:'}</h4>
         <ul style="padding-left: 20px; font-size: 0.88rem; color: #334155;">
-          ${data.key_obligations.map(o => `<li style="margin-bottom: 4px;">${o}</li>`).join('')}
+          ${(data.key_obligations || []).map(o => `<li style="margin-bottom: 4px;">${o}</li>`).join('')}
         </ul>
       </div>
       <div>
-        <h4 style="color: #b91c1c; margin-bottom: 8px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> সম্ভাব্য ঝুঁকি:</h4>
+        <h4 style="color: #b91c1c; margin-bottom: 8px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> ${isEn ? 'Potential Risks:' : 'সম্ভাব্য ঝুঁকি:'}</h4>
         <ul style="padding-left: 20px; font-size: 0.88rem; color: #7f1d1d;">
-          ${data.potential_risks.map(r => `<li style="margin-bottom: 4px;">${r}</li>`).join('')}
+          ${(data.potential_risks || []).map(r => `<li style="margin-bottom: 4px;">${r}</li>`).join('')}
         </ul>
       </div>
     `;
   } catch (err) {
-    content.innerHTML = '<p style="color: #ef4444;">AI ব্যাখ্যা লোড করতে ব্যর্থ হয়েছে।</p>';
+    content.innerHTML = `<p style="color: #ef4444;">${isEn ? 'Failed to load AI explanation.' : 'AI ব্যাখ্যা লোড করতে ব্যর্থ হয়েছে।'}</p>`;
   }
 }
 
@@ -729,7 +996,13 @@ function switchStep(stepNum) {
 
   // Update progress bar
   const percent = stepNum * 25;
-  const stepTitles = {
+  const isEn = state.currentLang === 'en';
+  const stepTitles = isEn ? {
+    1: 'Parties Information',
+    2: 'Core Terms & Conditions',
+    3: 'AI Custom Clauses',
+    4: 'Signatures & Finish'
+  } : {
     1: 'পক্ষের তথ্য',
     2: 'মূল শর্তাবলি',
     3: 'AI কাস্টম ধারা',
@@ -738,7 +1011,9 @@ function switchStep(stepNum) {
   const progText = document.getElementById('wizard-progress-text');
   const progPct = document.getElementById('wizard-progress-percent');
   const progFill = document.getElementById('wizard-progress-fill');
-  if (progText) progText.innerText = `ধাপ ${stepNum} / ৪ : ${stepTitles[stepNum]} (${percent}% সম্পন্ন)`;
+  if (progText) progText.innerText = isEn 
+    ? `Step ${stepNum} / 4 : ${stepTitles[stepNum]} (${percent}% completed)`
+    : `ধাপ ${stepNum} / ৪ : ${stepTitles[stepNum]} (${percent}% সম্পন্ন)`;
   if (progPct) progPct.innerText = `${percent}%`;
   if (progFill) progFill.style.width = `${percent}%`;
 
@@ -776,15 +1051,15 @@ function attachEvents() {
   const btnDemoFill = document.getElementById('btn-demo-fill');
   if (btnDemoFill) {
     btnDemoFill.addEventListener('click', () => {
-      const demoData = sampleContractsData[state.currentTemplate];
+      const isEn = state.currentLang === 'en';
+      const demoData = (isEn && sampleContractsData_en[state.currentTemplate]) 
+        ? sampleContractsData_en[state.currentTemplate] 
+        : sampleContractsData[state.currentTemplate];
       if (!demoData) return;
       state.formData = { ...state.formData, ...demoData };
-      Object.keys(demoData).forEach(key => {
-        const input = document.getElementById(key);
-        if (input) input.value = demoData[key];
-      });
+      renderFormFields();
       triggerDocumentRender();
-      showToast('✨ নমুনা বাস্তবসম্মত তথ্য সফলভাবে পূরণ করা হয়েছে!', 'success');
+      showToast(isEn ? '✨ Realistic English demo data filled successfully!' : '✨ নমুনা বাস্তবসম্মত তথ্য সফলভাবে পূরণ করা হয়েছে!', 'success');
     });
   }
 
@@ -885,6 +1160,7 @@ function attachEvents() {
 
   document.getElementById('lang-select').addEventListener('change', (e) => {
     state.currentLang = e.target.value;
+    updateUILanguage(state.currentLang);
     triggerDocumentRender();
   });
 
