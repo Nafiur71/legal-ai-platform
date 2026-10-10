@@ -419,13 +419,96 @@ async function loadSharedContractForSigning(shareId) {
   }
 }
 
+function isDefaultOrSampleData() {
+  if (!state.formData || Object.keys(state.formData).length === 0) return true;
+  const d = state.formData;
+  const bnKeywords = ['১০ অক্টোবর', '১২ সেপ্টেম্বর', 'রফিকুল ইসলাম', 'তানভীর আহমেদ', 'নেক্সটজেন', 'টেকনোভেশন', 'গ্লোবাল ক্রিয়েটিভ', 'নেক্সাস ডিজিটাল', 'মাহমুদুল হাসান', 'প্রাইম সফটওয়্যার', 'ইনোভেক্স', 'ধানমন্ডি', 'উত্তরা'];
+  const enKeywords = ['October 10', 'September 12', 'Rafiqul Islam', 'Tanvir Ahmed', 'NextGen Technologies', 'Global Creative', 'Mahmudul Hasan', 'Prime Software', 'Dhanmondi', 'Uttara'];
+  
+  for (const k in d) {
+    if (typeof d[k] === 'string') {
+      if (bnKeywords.some(w => d[k].includes(w)) || enKeywords.some(w => d[k].includes(w))) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 function updateUILanguage(lang) {
   state.currentLang = lang;
   const isEn = lang === 'en';
 
-  // Template select options
+  // Synchronize language dropdown
+  const langSel = document.getElementById('lang-select');
+  if (langSel && langSel.value !== lang) langSel.value = lang;
+
+  // Auto-switch demo data if the current data is sample/default
+  if (isDefaultOrSampleData()) {
+    state.formData = isEn 
+      ? JSON.parse(JSON.stringify(sampleContractsData_en[state.currentTemplate] || {}))
+      : JSON.parse(JSON.stringify(sampleContractsData[state.currentTemplate] || {}));
+    state.customClauses = state.formData.custom_clauses || [];
+  }
+
+  // 1. Top Navbar & Brand
+  const brandSub = document.getElementById('brand-subtitle');
+  if (brandSub) brandSub.textContent = isEn ? 'Intelligent Legal Automation & Document Generator' : 'বুদ্ধিমান আইনি অটোমেশন ও ডকুমেন্ট জেনারেটর';
+
+  const btnDemoFill = document.getElementById('btn-demo-fill');
+  if (btnDemoFill) {
+    btnDemoFill.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> ${isEn ? 'Load Demo Data' : 'নমুনা ডেটা পূরণ'}`;
+    btnDemoFill.title = isEn ? 'Fill form with realistic demo data in 1-click' : 'এক ক্লিকে বাস্তবসম্মত আইনি নমুনা তথ্য দিয়ে ফর্ম পূরণ করুন';
+  }
+
+  const btnToolsMenu = document.getElementById('btn-tools-menu');
+  if (btnToolsMenu) btnToolsMenu.innerHTML = `<i class="fa-solid fa-toolbox" style="color: #6366f1;"></i> ${isEn ? 'Legal Tools' : 'আইনি টুলস'} <i class="fa-solid fa-chevron-down" style="font-size: 0.72rem; margin-left: 2px;"></i>`;
+
+  const btnStampCalc = document.getElementById('btn-open-stamp-calc');
+  if (btnStampCalc) btnStampCalc.innerHTML = `<i class="fa-solid fa-calculator" style="color: #ea580c;"></i> ${isEn ? 'Stamp Duty Calculator' : 'স্ট্যাম্প ডিউটি ক্যালকুলেটর'}`;
+
+  const btnNotice = document.getElementById('btn-open-notice');
+  if (btnNotice) btnNotice.innerHTML = `<i class="fa-solid fa-bullhorn" style="color: #dc2626;"></i> ${isEn ? 'Legal Notice Generator' : 'আইনি নোটিশ জেনারেটর'}`;
+
+  const btnUploadAudit = document.getElementById('btn-upload-audit');
+  if (btnUploadAudit) btnUploadAudit.innerHTML = `<i class="fa-solid fa-file-arrow-up" style="color: #7c3aed;"></i> ${isEn ? 'File Upload & AI Audit' : 'ফাইল আপলোড ও AI অডিট'}`;
+
+  const btnVerifyTamper = document.getElementById('btn-verify-tamper');
+  if (btnVerifyTamper) btnVerifyTamper.innerHTML = `<i class="fa-solid fa-fingerprint" style="color: #0d9488;"></i> ${isEn ? 'SHA-256 Hash Authenticity' : 'SHA-256 হ্যাশ প্রমাণিকতা'}`;
+
+  const btnHistory = document.getElementById('btn-history');
+  if (btnHistory) btnHistory.innerHTML = `<i class="fa-solid fa-clock-rotate-left"></i> ${isEn ? 'History' : 'হিস্ট্রি'}`;
+
+  const btnShare = document.getElementById('btn-share-contract');
+  if (btnShare) btnShare.innerHTML = `<i class="fa-solid fa-share-nodes" style="color: #0284c7;"></i> ${isEn ? 'Share & Sign' : 'শেয়ার ও সাইন'}`;
+
+  const btnOpenSign = document.getElementById('btn-open-sign');
+  if (btnOpenSign) btnOpenSign.innerHTML = `<i class="fa-solid fa-signature" style="color: #059669;"></i> ${isEn ? 'E-Signature' : 'ই-স্বাক্ষর'}`;
+
+  const btnSaveDraft = document.getElementById('btn-save-draft');
+  if (btnSaveDraft) btnSaveDraft.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> ${isEn ? 'Save' : 'সেভ'}`;
+
+  const btnExportMenu = document.getElementById('btn-export-menu');
+  if (btnExportMenu) btnExportMenu.innerHTML = `<i class="fa-solid fa-download"></i> ${isEn ? 'Download' : 'ডাউনলোড'} <i class="fa-solid fa-chevron-down" style="font-size: 0.72rem; margin-left: 2px;"></i>`;
+
+  const btnPdf = document.getElementById('btn-pdf');
+  if (btnPdf) btnPdf.innerHTML = `<i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i> ${isEn ? 'PDF Format (Official Print)' : 'PDF ফরম্যাট (অফিসিয়াল প্রিন্ট)'}`;
+
+  const btnDocx = document.getElementById('btn-docx');
+  if (btnDocx) btnDocx.innerHTML = `<i class="fa-solid fa-file-word" style="color: #2563eb;"></i> ${isEn ? 'Word / DOCX Format' : 'Word / DOCX ফরম্যাট'}`;
+
+  // 2. Mobile View Switcher
+  const btnMobWizard = document.getElementById('btn-mobile-tab-wizard');
+  if (btnMobWizard) btnMobWizard.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> ${isEn ? 'Contract Editor' : 'চুক্তি এডিটর'}`;
+  const btnMobPreview = document.getElementById('btn-mobile-tab-preview');
+  if (btnMobPreview) btnMobPreview.innerHTML = `<i class="fa-solid fa-file-lines"></i> ${isEn ? 'Live Preview' : 'লাইভ প্রিভিউ'}`;
+
+  // 3. Template Bar
+  const tmplLabel = document.getElementById('template-bar-label');
+  if (tmplLabel) tmplLabel.textContent = isEn ? 'Document:' : 'চুক্তিপত্র:';
+
   const tmplOptions = {
-    tenancy_agreement: isEn ? '🏠 House / Commercial Tenancy Agreement' : '🏠 বাড়ি / ফ্ল্যাট / দোকান ভাড়ার চুক্তি',
+    tenancy_agreement: isEn ? '🏠 Residential / Commercial Tenancy Agreement' : '🏠 বাড়ি / ফ্ল্যাট / দোকান ভাড়ার চুক্তি',
     nda_agreement: isEn ? '🔒 Non-Disclosure Agreement (NDA)' : '🔒 নন-ডিসক্লোজার চুক্তি (NDA)',
     freelance_contract: isEn ? '💼 Freelance & Service Contract' : '💼 ফ্রিল্যান্স ও সার্ভিস চুক্তি',
     partnership_agreement: isEn ? '🤝 Partnership Business Deed' : '🤝 অংশীদারি কারবার চুক্তিপত্র (Partnership Deed)',
@@ -438,16 +521,16 @@ function updateUILanguage(lang) {
     });
   }
 
-  // Wizard tab labels
+  // 4. Wizard Step Navigation Tabs
   const stepTabs = document.querySelectorAll('.step-tab');
   if (stepTabs.length >= 4) {
     stepTabs[0].innerHTML = `<i class="fa-solid fa-users"></i> ${isEn ? '1. Parties Info' : '১. পক্ষের তথ্য'}`;
     stepTabs[1].innerHTML = `<i class="fa-solid fa-file-contract"></i> ${isEn ? '2. Core Terms' : '২. মূল শর্তাবলি'}`;
     stepTabs[2].innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> ${isEn ? '3. AI Custom Clauses' : '৩. AI কাস্টম ধারা'}`;
-    stepTabs[3].innerHTML = `<i class="fa-solid fa-signature"></i> ${isEn ? '4. Signatures & Finish' : '৪. স্বাক্ষর ও সমাপ্তি'}`;
+    stepTabs[3].innerHTML = `<i class="fa-solid fa-signature"></i> ${isEn ? '4. Signature & Finish' : '৪. স্বাক্ষর ও সমাপ্তি'}`;
   }
 
-  // Wizard navigation buttons
+  // 5. Wizard Step Footers
   const step1Next = document.querySelector('#step-1 .btn-next-step');
   if (step1Next) step1Next.innerHTML = isEn ? 'Next: Core Terms <i class="fa-solid fa-arrow-right"></i>' : 'পরবর্তী: মূল শর্তাবলি <i class="fa-solid fa-arrow-right"></i>';
 
@@ -461,7 +544,7 @@ function updateUILanguage(lang) {
   if (step3Prev) step3Prev.innerHTML = isEn ? '<i class="fa-solid fa-arrow-left"></i> Previous Step' : '<i class="fa-solid fa-arrow-left"></i> পূর্ববর্তী ধাপ';
 
   const step3Next = document.querySelector('#step-3 .btn-next-step');
-  if (step3Next) step3Next.innerHTML = isEn ? 'Next: Signatures & Finish <i class="fa-solid fa-arrow-right"></i>' : 'পরবর্তী: স্বাক্ষর ও সমাপ্তি <i class="fa-solid fa-arrow-right"></i>';
+  if (step3Next) step3Next.innerHTML = isEn ? 'Next: Signature & Finish <i class="fa-solid fa-arrow-right"></i>' : 'পরবর্তী: স্বাক্ষর ও সমাপ্তি <i class="fa-solid fa-arrow-right"></i>';
 
   const step4Prev = document.querySelector('#step-4 .btn-prev-step');
   if (step4Prev) step4Prev.innerHTML = isEn ? '<i class="fa-solid fa-arrow-left"></i> Previous Step' : '<i class="fa-solid fa-arrow-left"></i> পূর্ববর্তী ধাপ';
@@ -469,35 +552,41 @@ function updateUILanguage(lang) {
   const step4Finish = document.getElementById('btn-finish-save');
   if (step4Finish) step4Finish.innerHTML = isEn ? '<i class="fa-solid fa-floppy-disk"></i> Save Contract' : '<i class="fa-solid fa-floppy-disk"></i> চুক্তি সংরক্ষণ করুন';
 
-  // AI Refiner Section
+  // 6. Step 3 AI Clause Refiner Section
+  const aiTitle = document.querySelector('.ai-card-title');
+  if (aiTitle) aiTitle.innerHTML = `<i class="fa-solid fa-brain"></i> AI Legal Clause Refiner`;
+  const aiSub = document.querySelector('.ai-card p');
+  if (aiSub) aiSub.textContent = isEn 
+    ? 'Write your custom conditions in plain words. Our AI will draft them into legally binding contract clauses.' 
+    : 'আপনার কাস্টম কোনো শর্ত সাধারণ ভাষায় লিখুন। আমাদের AI তা আদালত ও চুক্তি আইনসম্মত ভাষায় রূপান্তর করবে।';
+
   const aiInput = document.getElementById('ai-clause-input');
   if (aiInput) {
     aiInput.placeholder = isEn 
-      ? "e.g., 'Tenant may not keep any pets and quiet hours start at 11 PM...'" 
+      ? "e.g., 'Tenant cannot bring outsiders after 11 PM and no pets allowed...'" 
       : "যেমন: 'ভাড়াটিয়া রাত ১১টার পর কোনো বহিরাগত আনতে পারবে না এবং ফ্ল্যাটে কোনো পোষা বিড়াল বা কুকুর রাখা যাবে না...'";
   }
-  const btnRefine = document.getElementById('btn-refine-clause');
-  if (btnRefine) {
-    btnRefine.innerHTML = isEn ? '<i class="fa-solid fa-wand-magic-sparkles"></i> Polish into Legal Language with AI' : '<i class="fa-solid fa-wand-magic-sparkles"></i> AI দিয়ে আইনি ভাষায় পলিশ করুন';
-  }
-  const btnAddClause = document.getElementById('btn-add-clause');
-  if (btnAddClause) {
-    btnAddClause.innerHTML = isEn ? '<i class="fa-solid fa-plus"></i> Add Clause to Contract' : '<i class="fa-solid fa-plus"></i> চুক্তিতে ধারাটি যুক্ত করুন';
-  }
-  const btnExplainAction = document.getElementById('btn-explain-clause-action');
-  if (btnExplainAction) {
-    btnExplainAction.innerHTML = isEn ? '<i class="fa-solid fa-lightbulb"></i> Explain Simply' : '<i class="fa-solid fa-lightbulb"></i> সহজ ব্যাখ্যা দেখুন';
-  }
 
-  // Chips
+  const btnRefine = document.getElementById('btn-refine-clause');
+  if (btnRefine) btnRefine.innerHTML = isEn ? '<i class="fa-solid fa-wand-magic-sparkles"></i> Polish into Legal Language with AI' : '<i class="fa-solid fa-wand-magic-sparkles"></i> AI দিয়ে আইনি ভাষায় পলিশ করুন';
+
+  const btnAddClause = document.getElementById('btn-add-clause');
+  if (btnAddClause) btnAddClause.innerHTML = isEn ? '<i class="fa-solid fa-plus"></i> Add Clause to Contract' : '<i class="fa-solid fa-plus"></i> চুক্তিতে ধারাটি যুক্ত করুন';
+
+  const btnExplainAction = document.getElementById('btn-explain-clause-action');
+  if (btnExplainAction) btnExplainAction.innerHTML = isEn ? '<i class="fa-solid fa-lightbulb"></i> View Plain Explanation' : '<i class="fa-solid fa-lightbulb"></i> সহজ ব্যাখ্যা দেখুন';
+
+  const customHeader = document.querySelector('#step-3 label.form-label');
+  if (customHeader) customHeader.textContent = isEn ? 'Attached Custom Clauses:' : 'সংযুক্ত কাস্টম শর্তাবলি:';
+
   const chipContainer = document.getElementById('clause-chips-container');
   if (chipContainer) {
     if (isEn) {
       chipContainer.innerHTML = `
-        <button type="button" class="prompt-chip" data-prompt="Strictly no pets, dogs or cats allowed on the premises."><i class="fa-solid fa-paw"></i> No Pets</button>
-        <button type="button" class="prompt-chip" data-prompt="Late rent payment shall incur a delay penalty of BDT 100 per day."><i class="fa-solid fa-clock"></i> Late Fee</button>
-        <button type="button" class="prompt-chip" data-prompt="Subletting the premises in whole or part is strictly prohibited without prior written consent."><i class="fa-solid fa-ban"></i> No Subletting</button>
-        <button type="button" class="prompt-chip" data-prompt="Premises shall strictly be used for residential purposes and not for political or commercial activities."><i class="fa-solid fa-building-circle-xmark"></i> Residential Only</button>
+        <button type="button" class="prompt-chip" data-prompt="Strictly no pets, dogs or cats allowed on the demised premises."><i class="fa-solid fa-paw"></i> No Pets Allowed</button>
+        <button type="button" class="prompt-chip" data-prompt="Late rent payments beyond due day shall incur a delay penalty of BDT 100 per day."><i class="fa-solid fa-clock"></i> Delay Penalty</button>
+        <button type="button" class="prompt-chip" data-prompt="Subletting or transferring the demised premises in whole or part is strictly prohibited without prior written consent."><i class="fa-solid fa-ban"></i> No Subletting</button>
+        <button type="button" class="prompt-chip" data-prompt="The premises shall strictly be used for residential purposes only and never for political or unauthorized commercial activities."><i class="fa-solid fa-building-circle-xmark"></i> Non-Commercial Only</button>
       `;
     } else {
       chipContainer.innerHTML = `
@@ -517,21 +606,21 @@ function updateUILanguage(lang) {
     });
   }
 
-  // Step 4 E-Signature Card
+  // 7. Step 4 E-Signature Section
+  const step4H4 = document.querySelector('#step-4 h4');
+  if (step4H4) step4H4.innerHTML = `<i class="fa-solid fa-signature"></i> ${isEn ? 'Digital E-Signature' : 'ডিজিটাল ই-স্বাক্ষর (E-Signature)'}`;
+  const step4P = document.querySelector('#step-4 p');
+  if (step4P) step4P.textContent = isEn ? 'Sign directly on screen or send a link to collect signatures remotely.' : 'স্ক্রিনে সরাসরি স্বাক্ষর করুন অথবা লিংক পাঠিয়ে অপর পক্ষের স্বাক্ষর সংগ্রহ করুন।';
   const step4SignBtn = document.getElementById('btn-step4-sign');
-  if (step4SignBtn) {
-    step4SignBtn.innerHTML = isEn ? '<i class="fa-solid fa-pen-nib"></i> Open Signature Canvas' : '<i class="fa-solid fa-pen-nib"></i> স্বাক্ষর ক্যানভাস খুলুন';
-  }
+  if (step4SignBtn) step4SignBtn.innerHTML = `<i class="fa-solid fa-pen-nib"></i> ${isEn ? 'Open Signature Canvas' : 'স্বাক্ষর ক্যানভাস খুলুন'}`;
 
-  // Preview Bar Controls
+  // 8. Live Paper Preview Toolbar
   const editModeLabel = document.getElementById('edit-mode-label');
   if (editModeLabel) {
     editModeLabel.innerText = isEn ? (state.isDirectEdit ? '✅ Direct Edit Active' : 'Direct Edit on Paper') : (state.isDirectEdit ? '✅ এডিট মোড চলছে' : 'সরাসরি পেপারে এডিট');
   }
   const stampBtn = document.getElementById('btn-toggle-stamp');
-  if (stampBtn) {
-    stampBtn.innerHTML = `<i class="fa-solid fa-stamp"></i> ${isEn ? '300 Tk Stamp' : '৩০০ টাকার স্ট্যাম্প'}`;
-  }
+  if (stampBtn) stampBtn.innerHTML = `<i class="fa-solid fa-stamp"></i> ${isEn ? '300 Tk Stamp' : '৩০০ টাকার স্ট্যাম্প'}`;
   const watermarkLabel = document.getElementById('watermark-label');
   if (watermarkLabel) {
     const wmText = state.watermarkMode === 'none' 
@@ -539,52 +628,172 @@ function updateUILanguage(lang) {
       : (state.watermarkMode === 'draft' ? (isEn ? 'Watermark: Draft' : 'ওয়াটারমার্ক: খসড়া') : (isEn ? 'Watermark: Confidential' : 'ওয়াটারমার্ক: গোপনীয়'));
     watermarkLabel.innerText = wmText;
   }
+  const tamperBadge = document.getElementById('tamper-status-badge');
+  if (tamperBadge) tamperBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${isEn ? 'SECURED' : 'সিকিউরড'}`;
 
-  // Header quick buttons
-  const btnDemoFill = document.getElementById('btn-demo-fill');
-  if (btnDemoFill) {
-    btnDemoFill.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> ${isEn ? 'Load Demo Data' : 'নমুনা ডেমো লোড'}`;
+  // 9. Floating Chatbot
+  const fabChatbot = document.getElementById('fab-chatbot');
+  if (fabChatbot) fabChatbot.title = isEn ? 'Chat with SmartLegal AI Assistant' : 'আইনAI সহকারী সাথে চ্যাট করুন';
+  const chatHeaderStrong = document.querySelector('#chatbot-window .chat-header strong');
+  if (chatHeaderStrong) chatHeaderStrong.textContent = isEn ? 'SmartLegal AI Advisor' : 'আইনAI সহকারী (Advisor)';
+  const chatFirstBubble = document.querySelector('#chat-body .chat-bubble-ai');
+  if (chatFirstBubble) {
+    if (isEn) {
+      chatFirstBubble.innerHTML = `
+        👋 Hello! I am your <strong>SmartLegal AI Advisor</strong>.<br>
+        Ask any legal question regarding Bangladesh contract laws, 300 Tk stamp duty, tenancy acts, or notices.
+        <div class="prompt-chips-container" style="margin-top: 10px; margin-bottom: 2px;">
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="How much stamp duty is required for house rent in Bangladesh?">💰 Stamp Duty Rates</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What are the legal rules for tenant eviction notice?">📜 Eviction Notice Law</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What is the law regarding refund of security deposit?">⚖️ Security Deposit Law</button>
+        </div>
+      `;
+    } else {
+      chatFirstBubble.innerHTML = `
+        👋 নমস্কার! আমি আপনার <strong>আইনAI সহকারী</strong>।<br>
+        চুক্তিপত্র, স্ট্যাম্পের নিয়ম, ভাড়া নিয়ন্ত্রণ আইন বা নোটিশ বিষয়ে যেকোনো আইনি প্রশ্ন আমাকে বাংলায় জিজ্ঞেস করতে পারেন।
+        <div class="prompt-chips-container" style="margin-top: 10px; margin-bottom: 2px;">
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="বাড়ি ভাড়া চুক্তির জন্য কত টাকার স্ট্যাম্প প্রয়োজন?">💰 স্ট্যাম্প ফি কত?</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="ভাড়াটিয়াকে উচ্ছেদের জন্য নোটিশের নিয়ম কি?">📜 উচ্ছেদ নোটিশের নিয়ম</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="চুক্তির জামানত বা সিকিউরিটি ডিপোজিট ফেরতের আইন কি?">⚖️ জামানত ফেরত আইন</button>
+        </div>
+      `;
+    }
+    chatFirstBubble.querySelectorAll('.chat-suggestion-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const q = chip.getAttribute('data-query');
+        const input = document.getElementById('chat-input');
+        if (input && q) {
+          input.value = q;
+          const sendBtn = document.getElementById('btn-chat-send');
+          if (sendBtn) sendBtn.click();
+        }
+      });
+    });
   }
-  const btnExportMenu = document.getElementById('btn-export-menu');
-  if (btnExportMenu) {
-    btnExportMenu.innerHTML = `<i class="fa-solid fa-download"></i> ${isEn ? 'Download' : 'ডাউনলোড'} <i class="fa-solid fa-chevron-down" style="font-size: 0.72rem; margin-left: 2px;"></i>`;
-  }
-  const btnPdf = document.getElementById('btn-pdf');
-  if (btnPdf) {
-    btnPdf.innerHTML = `<i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i> ${isEn ? 'PDF Format (Official Print)' : 'PDF ফরম্যাট (অফিসিয়াল প্রিন্ট)'}`;
-  }
-  const btnDocx = document.getElementById('btn-docx');
-  if (btnDocx) {
-    btnDocx.innerHTML = `<i class="fa-solid fa-file-word" style="color: #2563eb;"></i> ${isEn ? 'Word / DOCX Format' : 'Word / DOCX ফরম্যাট'}`;
-  }
-  const btnStampCalc = document.getElementById('btn-open-stamp-calc');
-  if (btnStampCalc) {
-    btnStampCalc.innerHTML = `<i class="fa-solid fa-calculator"></i> ${isEn ? 'Stamp Calculator' : 'স্ট্যাম্প ক্যালকুলেটর'}`;
-  }
-  const btnNoticeGen = document.getElementById('btn-open-notice-gen');
-  if (btnNoticeGen) {
-    btnNoticeGen.innerHTML = `<i class="fa-solid fa-gavel"></i> ${isEn ? 'Legal Notice' : 'আইনি নোটিশ জেনারেটর'}`;
-  }
-  const btnShare = document.getElementById('btn-share-contract');
-  if (btnShare) {
-    btnShare.innerHTML = `<i class="fa-solid fa-share-nodes"></i> ${isEn ? 'Share & Sign' : 'শেয়ার ও রিমোট সাইন'}`;
-  }
-  const btnSaved = document.getElementById('btn-saved-contracts');
-  if (btnSaved) {
-    btnSaved.innerHTML = `<i class="fa-solid fa-folder-open"></i> ${isEn ? 'Saved Contracts' : 'সংরক্ষিত চুক্তি'}`;
-  }
-  const btnNewContract = document.getElementById('btn-new-contract');
-  if (btnNewContract) {
-    btnNewContract.innerHTML = `<i class="fa-solid fa-file-circle-plus"></i> ${isEn ? 'New' : 'নতুন চুক্তি'}`;
-  }
+  const chatInput = document.getElementById('chat-input');
+  if (chatInput) chatInput.placeholder = isEn ? 'Ask your legal question...' : 'আইনি প্রশ্নটি লিখুন...';
 
-  // Active step refresh
+  // 10. Modals: Stamp Duty Calculator Modal
+  const stampModalH3 = document.querySelector('#stamp-calc-modal h3');
+  if (stampModalH3) stampModalH3.innerHTML = isEn 
+    ? '<i class="fa-solid fa-calculator"></i> Bangladesh Stamp Duty Calculator' 
+    : '<i class="fa-solid fa-calculator"></i> বাংলাদেশ স্ট্যাম্প ডিউটি ক্যালকুলেটর';
+  const calcDocType = document.getElementById('calc-doc-type');
+  if (calcDocType) {
+    calcDocType.options[0].textContent = isEn ? 'Residential / Commercial Tenancy' : 'বাড়ি / দোকান ভাড়ার চুক্তি';
+    calcDocType.options[1].textContent = isEn ? 'Partnership Business Deed' : 'অংশীদারি কারবার চুক্তি (Partnership)';
+    calcDocType.options[2].textContent = isEn ? 'Non-Disclosure Agreement (NDA)' : 'নন-ডিসক্লোজার চুক্তি (NDA)';
+    calcDocType.options[3].textContent = isEn ? 'Freelance Service Contract' : 'ফ্রিল্যান্স সার্ভিস চুক্তি';
+    calcDocType.options[4].textContent = isEn ? 'Employment Agreement' : 'কর্মসংস্থান ও চাকরির চুক্তি';
+  }
+  const calcLabels = document.querySelectorAll('#stamp-calc-modal label.form-label');
+  if (calcLabels.length >= 3) {
+    calcLabels[0].textContent = isEn ? 'Document Type:' : 'চুক্তির ধরণ:';
+    calcLabels[1].textContent = isEn ? 'Amount (Monthly Rent / Capital):' : 'টাকার পরিমাণ (ভাড়া / মূলধন):';
+    calcLabels[2].textContent = isEn ? 'Duration (Months):' : 'মেয়াদ (মাসে):';
+  }
+  const btnRunCalc = document.getElementById('btn-run-stamp-calc');
+  if (btnRunCalc) btnRunCalc.innerHTML = isEn ? '<i class="fa-solid fa-calculator"></i> Calculate Stamp Duty' : '<i class="fa-solid fa-calculator"></i> হিসাব করুন';
+  const btnCloseCalc = document.getElementById('btn-close-stamp-calc-footer');
+  if (btnCloseCalc) btnCloseCalc.textContent = isEn ? 'Close' : 'বন্ধ করুন';
+
+  // 11. Modals: Share & Remote Signing
+  const shareH3 = document.querySelector('#share-modal h3');
+  if (shareH3) shareH3.innerHTML = isEn ? '<i class="fa-solid fa-share-nodes"></i> Remote Signing & Shareable Link' : '<i class="fa-solid fa-share-nodes"></i> দূরবর্তী স্বাক্ষর ও শেয়ারিং লিংক';
+  const shareDesc = document.querySelector('#share-modal .modal-body p');
+  if (shareDesc) shareDesc.textContent = isEn 
+    ? 'Send the link below to your tenant, client, or partner. They can review and sign the contract directly from their phone or PC:' 
+    : 'নিচের লিংকটি ভাড়াটিয়া, ক্লায়েন্ট বা অংশীদারের কাছে পাঠান। তারা তাদের মোবাইল বা কম্পিউটার থেকেই চুক্তি পড়ে সরাসরি ডিজিটাল সই করতে পারবেন:';
+  const btnCopyShare = document.getElementById('btn-copy-share-url');
+  if (btnCopyShare) btnCopyShare.innerHTML = isEn ? '<i class="fa-solid fa-copy"></i> Copy' : '<i class="fa-solid fa-copy"></i> কপি';
+  const btnWaShare = document.getElementById('btn-whatsapp-share');
+  if (btnWaShare) btnWaShare.innerHTML = isEn ? '<i class="fa-brands fa-whatsapp"></i> Send via WhatsApp' : '<i class="fa-brands fa-whatsapp"></i> হোয়াটসঅ্যাপে পাঠান';
+  const btnCloseShare = document.getElementById('btn-close-share-footer');
+  if (btnCloseShare) btnCloseShare.textContent = isEn ? 'Close' : 'বন্ধ করুন';
+
+  // 12. Modals: E-Signature Canvas
+  const signH3 = document.querySelector('#sign-modal h3');
+  if (signH3) signH3.innerHTML = isEn ? '<i class="fa-solid fa-pen-nib" style="color: #059669;"></i> Digital Signature Pad' : '<i class="fa-solid fa-pen-nib" style="color: #059669;"></i> ডিজিটাল স্বাক্ষর প্যাড';
+  const signTargetP1 = document.getElementById('sign-target-p1');
+  if (signTargetP1) signTargetP1.textContent = isEn ? '1st Party (Landlord / Client)' : '১ম পক্ষ (মালিক/ক্লায়েন্ট)';
+  const signTargetP2 = document.getElementById('sign-target-p2');
+  if (signTargetP2) signTargetP2.textContent = isEn ? '2nd Party (Tenant / Employee)' : '২য় পক্ষ (ভাড়াটিয়া/কর্মী)';
+  const btnClearCanvas = document.getElementById('btn-clear-canvas');
+  if (btnClearCanvas) btnClearCanvas.innerHTML = isEn ? '<i class="fa-solid fa-eraser"></i> Clear' : '<i class="fa-solid fa-eraser"></i> মুছুন';
+  const btnCloseSign = document.getElementById('btn-close-sign-footer');
+  if (btnCloseSign) btnCloseSign.textContent = isEn ? 'Cancel' : 'বাতিল';
+  const btnApplySig = document.getElementById('btn-apply-signature');
+  if (btnApplySig) btnApplySig.innerHTML = isEn ? '<i class="fa-solid fa-check"></i> Attach Signature' : '<i class="fa-solid fa-check"></i> স্বাক্ষর সংযুক্ত করুন';
+
+  // 13. Modals: History Modal
+  const histH3 = document.querySelector('#history-modal h3');
+  if (histH3) histH3.innerHTML = isEn ? '<i class="fa-solid fa-clock-rotate-left"></i> Saved Contracts (Database History)' : '<i class="fa-solid fa-clock-rotate-left"></i> সংরক্ষিত চুক্তিসমূহ (Database History)';
+  const btnCloseHist = document.getElementById('btn-close-history-footer');
+  if (btnCloseHist) btnCloseHist.textContent = isEn ? 'Close' : 'বন্ধ করুন';
+
+  // 14. Modals: External Document Upload & AI Audit
+  const uploadH3 = document.querySelector('#upload-modal h3');
+  if (uploadH3) uploadH3.innerHTML = isEn ? '<i class="fa-solid fa-file-shield"></i> External Document Upload & AI Audit' : '<i class="fa-solid fa-file-shield"></i> বাইরের ডকুমেন্ট আপলোড ও AI অডিট';
+  const uploadText = document.getElementById('upload-text-input');
+  if (uploadText) uploadText.placeholder = isEn ? 'Paste full contract text here...' : 'চুক্তিপত্রের সম্পূর্ণ টেক্সট এখানে পেস্ট করুন...';
+  const btnRunAudit = document.getElementById('btn-run-upload-audit');
+  if (btnRunAudit) btnRunAudit.innerHTML = isEn ? '<i class="fa-solid fa-magnifying-glass-chart"></i> Audit Full Contract with AI' : '<i class="fa-solid fa-magnifying-glass-chart"></i> AI দিয়ে সম্পূর্ণ চুক্তি অডিট করুন';
+  const btnCloseUpload = document.getElementById('btn-close-upload-footer');
+  if (btnCloseUpload) btnCloseUpload.textContent = isEn ? 'Close' : 'বন্ধ করুন';
+
+  // 15. Modals: AI Clause Explainer
+  const explainerH3 = document.querySelector('#explainer-modal h3');
+  if (explainerH3) explainerH3.innerHTML = isEn ? '<i class="fa-solid fa-lightbulb" style="color: #eab308;"></i> Plain Language Legal Meaning' : '<i class="fa-solid fa-lightbulb" style="color: #eab308;"></i> সহজ ভাষায় আইনি ধারার অর্থ';
+  const btnCloseExplainer = document.getElementById('btn-close-explainer-footer');
+  if (btnCloseExplainer) btnCloseExplainer.textContent = isEn ? 'Close' : 'বন্ধ করুন';
+
+  // 16. Modals: Legal Notice Generator
+  const noticeH3 = document.querySelector('#notice-modal h3');
+  if (noticeH3) noticeH3.innerHTML = isEn ? '<i class="fa-solid fa-bullhorn"></i> Legal Notice Generator Engine' : '<i class="fa-solid fa-bullhorn"></i> আইনি নোটিশ জেনারেটর (Legal Notice Engine)';
+  const noticeDesc = document.querySelector('#notice-modal .modal-body p');
+  if (noticeDesc) noticeDesc.textContent = isEn ? 'Instantly draft legally sound vacate notices, lease renewals, or payment demand notices.' : 'ভাড়াটিয়া বা সংশ্লিষ্ট পক্ষের অনুকূলে এক ক্লিকে আইনি নোটিশ, উচ্ছেদ পত্র অথবা বকেয়া তাগিদপত্র প্রস্তুত করুন।';
+  const noticeTypeSelect = document.getElementById('notice-type-select');
+  if (noticeTypeSelect) {
+    noticeTypeSelect.options[0].textContent = isEn ? '🏠 Tenancy Vacate Notice' : '🏠 বাসা / দোকান ছাড়ার আইনি নোটিশ (Vacate Notice)';
+    noticeTypeSelect.options[1].textContent = isEn ? '📄 Contract Renewal & Terms Proposition' : '📄 চুক্তি নবায়ন ও শর্ত প্রস্তাবনা পত্র (Contract Renewal)';
+    noticeTypeSelect.options[2].textContent = isEn ? '⚠️ Rent Arrears Demand Notice' : '⚠️ বকেয়া ভাড়া ও পাওনা নিষ্পত্তির তাগিদপত্র (Demand Notice)';
+  }
+  const noticeLandlord = document.getElementById('notice-landlord');
+  if (noticeLandlord) noticeLandlord.placeholder = isEn ? 'Sender Name (Landlord)' : 'মালিকের নাম';
+  const noticeTenant = document.getElementById('notice-tenant');
+  if (noticeTenant) noticeTenant.placeholder = isEn ? 'Recipient Name (Tenant)' : 'ভাড়াটিয়ার নাম';
+  const noticeAddress = document.getElementById('notice-address');
+  if (noticeAddress) noticeAddress.placeholder = isEn ? 'Premises Address' : 'ঠিকানা';
+  const noticeReason = document.getElementById('notice-reason');
+  if (noticeReason) noticeReason.placeholder = isEn ? 'e.g. personal requirement or 3 months overdue rent...' : 'যেমন: ব্যক্তিগত প্রয়োজনে প্রাঙ্গণ প্রয়োজন অথবা বিগত ৩ মাসের ভাড়া বকেয়া...';
+  const btnGenNotice = document.getElementById('btn-generate-notice-submit');
+  if (btnGenNotice) btnGenNotice.innerHTML = isEn ? '<i class="fa-solid fa-file-pen"></i> Generate Professional Legal Notice' : '<i class="fa-solid fa-file-pen"></i> প্রফেশনাল আইনি নোটিশ তৈরি করুন';
+  const btnCloseNotice = document.getElementById('btn-close-notice-footer');
+  if (btnCloseNotice) btnCloseNotice.textContent = isEn ? 'Close' : 'বন্ধ করুন';
+
+  // 17. Modals: SHA-256 Tamper Verification
+  const verifyH3 = document.querySelector('#verify-modal h3');
+  if (verifyH3) verifyH3.innerHTML = isEn ? '<i class="fa-solid fa-fingerprint"></i> SHA-256 Cryptographic Hash & Verification' : '<i class="fa-solid fa-fingerprint"></i> SHA-256 ক্রিপ্টোগ্রাফিক হ্যাশ ও প্রমাণিকতা যাচাই';
+  const verifyDesc = document.querySelector('#verify-modal .modal-body p');
+  if (verifyDesc) verifyDesc.textContent = isEn 
+    ? 'Each document generates a unique cryptographic hash. If a single character is altered after signing, this hash immediately changes.' 
+    : 'প্রতিটি দলিলের জন্য একটি অনন্য গাণিতিক হ্যাশ তৈরি হয়। চুক্তি স্বাক্ষরের পর কোনো একটি অক্ষরও পরিবর্তন হলে এই হ্যাশ পরিবর্তিত হয়ে যায়।';
+  const verifyHashInput = document.getElementById('verify-hash-input');
+  if (verifyHashInput) verifyHashInput.placeholder = isEn ? 'e.g. e3b0c44298fc1c149afbf4c8996fb92427ae...' : 'যেমন: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+  const btnRunVerify = document.getElementById('btn-run-verify-submit');
+  if (btnRunVerify) btnRunVerify.innerHTML = isEn ? '<i class="fa-solid fa-shield-halved"></i> Verify Document Authenticity' : '<i class="fa-solid fa-shield-halved"></i> দলিলের প্রমাণিকতা যাচাই করুন';
+  const btnCloseVerify = document.getElementById('btn-close-verify-footer');
+  if (btnCloseVerify) btnCloseVerify.textContent = isEn ? 'Close' : 'বন্ধ করুন';
+
+  // 18. Refresh Active Step & Form Fields
   const activeTab = document.querySelector('.step-tab.active');
   const currentStep = activeTab ? activeTab.getAttribute('data-step') : 1;
   switchStep(currentStep);
 
-  // Re-render form fields with English/Bengali labels
   renderFormFields();
+  renderCustomClausesList();
+  triggerDocumentRender();
 }
 
 function setupTemplate(docType, loadedData = null) {
@@ -595,9 +804,12 @@ function setupTemplate(docType, loadedData = null) {
     state.formData = loadedData;
     state.customClauses = loadedData.custom_clauses || [];
   } else {
-    const currentMeta = state.templates.find(t => t.id === docType);
-    if (currentMeta && currentMeta.defaults) {
-      state.formData = JSON.parse(JSON.stringify(currentMeta.defaults));
+    const isEn = state.currentLang === 'en';
+    const sourceData = (isEn && sampleContractsData_en[docType])
+      ? sampleContractsData_en[docType]
+      : sampleContractsData[docType];
+    if (sourceData) {
+      state.formData = JSON.parse(JSON.stringify(sourceData));
       state.customClauses = state.formData.custom_clauses || [];
     } else {
       state.formData = {};

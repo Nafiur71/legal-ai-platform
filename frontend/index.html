@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&family=Tiro+Bangla:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/style.css?v=2.2.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* Floating Chatbot Widget */
@@ -103,7 +103,7 @@
       </div>
       <div class="brand-text">
         <h1>SmartLegal AI</h1>
-        <p>বুদ্ধিমান আইনি অটোমেশন ও ডকুমেন্ট জেনারেটর</p>
+        <p id="brand-subtitle">বুদ্ধিমান আইনি অটোমেশন ও ডকুমেন্ট জেনারেটর</p>
       </div>
     </div>
 
@@ -181,7 +181,7 @@
     <section class="wizard-panel">
       <!-- Template Selector Bar -->
       <div class="template-selector-bar">
-        <span style="font-size: 0.85rem; font-weight: 700; color: #475569;">চুক্তিপত্র:</span>
+        <span id="template-bar-label" style="font-size: 0.85rem; font-weight: 700; color: #475569;">চুক্তিপত্র:</span>
         <select class="custom-select" id="template-select">
           <option value="tenancy_agreement">🏠 বাড়ি / ফ্ল্যাট / দোকান ভাড়ার চুক্তি</option>
           <option value="nda_agreement">🔒 নন-ডিসক্লোজার চুক্তি (NDA)</option>
@@ -358,7 +358,7 @@
           <span id="crypto-fingerprint-badge" style="font-size: 0.74rem; background: #f8fafc; color: #334155; padding: 3px 8px; border-radius: 4px; font-family: monospace; border: 1px solid #cbd5e1; cursor: pointer;" title="ক্লিক করে সম্পূর্ণ SHA-256 কপি করুন">
             <i class="fa-solid fa-shield-halved" style="color:#059669"></i> SHA: <span id="sha-badge-text">গণনা হচ্ছে...</span>
           </span>
-          <span style="font-size: 0.8rem; color: #16a34a; font-weight: 600;">
+          <span id="tamper-status-badge" style="font-size: 0.8rem; color: #16a34a; font-weight: 600;">
             <i class="fa-solid fa-circle-check"></i> সিকিউরড
           </span>
         </div>
@@ -675,6 +675,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js"></script>
+  <script src="/static/js/app.js?v=2.2.0"></script>
 </body>
 </html>
