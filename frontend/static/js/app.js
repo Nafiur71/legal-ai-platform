@@ -552,6 +552,12 @@ function updateUILanguage(lang) {
   const step4Finish = document.getElementById('btn-finish-save');
   if (step4Finish) step4Finish.innerHTML = isEn ? '<i class="fa-solid fa-floppy-disk"></i> Save Contract' : '<i class="fa-solid fa-floppy-disk"></i> চুক্তি সংরক্ষণ করুন';
 
+  const btnStep4Remote = document.getElementById('btn-step4-remote-link');
+  if (btnStep4Remote) btnStep4Remote.innerHTML = isEn ? '<i class="fa-solid fa-link"></i> Generate Party 2 Signing Link' : '<i class="fa-solid fa-link"></i> ২য় পক্ষের সাইনিং লিংক তৈরি';
+
+  const btnStep4Cert = document.getElementById('btn-step4-view-cert');
+  if (btnStep4Cert) btnStep4Cert.innerHTML = isEn ? '<i class="fa-solid fa-award" style="color: #059669;"></i> Certificate' : '<i class="fa-solid fa-award" style="color: #059669;"></i> সনদ';
+
   // 6. Step 3 AI Clause Refiner Section
   const aiTitle = document.querySelector('.ai-card-title');
   if (aiTitle) aiTitle.innerHTML = `<i class="fa-solid fa-brain"></i> AI Legal Clause Refiner`;
@@ -732,13 +738,17 @@ function updateUILanguage(lang) {
   const btnCloseHist = document.getElementById('btn-close-history-footer');
   if (btnCloseHist) btnCloseHist.textContent = isEn ? 'Close' : 'বন্ধ করুন';
 
-  // 14. Modals: External Document Upload & AI Audit
+  // 14. Modals: External Document Upload & AI Audit (Phase 6)
   const uploadH3 = document.querySelector('#upload-modal h3');
   if (uploadH3) uploadH3.innerHTML = isEn ? '<i class="fa-solid fa-file-shield"></i> External Document Upload & AI Audit' : '<i class="fa-solid fa-file-shield"></i> বাইরের ডকুমেন্ট আপলোড ও AI অডিট';
+  const dropH4 = document.querySelector('#upload-dropzone h4');
+  if (dropH4) dropH4.textContent = isEn ? 'Drag & Drop File Here or Click to Browse' : 'এখানে ফাইল ড্রপ করুন অথবা ব্রাউজ করুন';
+  const dropP = document.querySelector('#upload-dropzone p');
+  if (dropP) dropP.textContent = isEn ? 'Supported Formats: PDF, Word (.docx), Plain Text (.txt)' : 'সমর্থিত ফরম্যাট: PDF, Word (.docx), Plain Text (.txt)';
   const uploadText = document.getElementById('upload-text-input');
-  if (uploadText) uploadText.placeholder = isEn ? 'Paste full contract text here...' : 'চুক্তিপত্রের সম্পূর্ণ টেক্সট এখানে পেস্ট করুন...';
+  if (uploadText) uploadText.placeholder = isEn ? 'Paste full contract text here directly...' : 'চুক্তিপত্রের সম্পূর্ণ টেক্সট এখানে পেস্ট করুন...';
   const btnRunAudit = document.getElementById('btn-run-upload-audit');
-  if (btnRunAudit) btnRunAudit.innerHTML = isEn ? '<i class="fa-solid fa-magnifying-glass-chart"></i> Audit Full Contract with AI' : '<i class="fa-solid fa-magnifying-glass-chart"></i> AI দিয়ে সম্পূর্ণ চুক্তি অডিট করুন';
+  if (btnRunAudit) btnRunAudit.innerHTML = isEn ? '<i class="fa-solid fa-magnifying-glass-chart"></i> Audit Document with AI' : '<i class="fa-solid fa-magnifying-glass-chart"></i> AI দিয়ে সম্পূর্ণ ফাইল অডিট করুন';
   const btnCloseUpload = document.getElementById('btn-close-upload-footer');
   if (btnCloseUpload) btnCloseUpload.textContent = isEn ? 'Close' : 'বন্ধ করুন';
 
@@ -822,6 +832,31 @@ function setupTemplate(docType, loadedData = null) {
   triggerDocumentRender();
 }
 
+function validateIdField(fieldId, val) {
+  if (!val || !val.trim()) return '';
+  const digits = val.replace(/[^0-9]/g, '');
+  const isEn = state.currentLang === 'en';
+  if (fieldId.includes('nid') || fieldId.includes('national_id')) {
+    if (digits.length === 10) {
+      return `<div class="nid-feedback-badge nid-badge-valid"><i class="fa-solid fa-circle-check"></i> ${isEn ? 'Valid 10-digit Smart NID' : 'বৈধ ১০ ডিজিট স্মার্ট এনআইডি'}</div>`;
+    } else if (digits.length === 13) {
+      return `<div class="nid-feedback-badge nid-badge-valid"><i class="fa-solid fa-circle-check"></i> ${isEn ? 'Valid 13-digit NID' : 'বৈধ ১৩ ডিজিট এনআইডি'}</div>`;
+    } else if (digits.length === 17) {
+      return `<div class="nid-feedback-badge nid-badge-valid"><i class="fa-solid fa-circle-check"></i> ${isEn ? 'Valid 17-digit NID' : 'বৈধ ১৭ ডিজিট এনআইডি'}</div>`;
+    } else {
+      return `<div class="nid-feedback-badge nid-badge-invalid"><i class="fa-solid fa-triangle-exclamation"></i> ${isEn ? 'NID format: 10, 13 or 17 digits required' : 'এনআইডি ফরম্যাট: ১০, ১৩ বা ১৭ ডিজিট হওয়া প্রয়োজন'}</div>`;
+    }
+  }
+  if (fieldId.includes('trade_license')) {
+    if (digits.length >= 8 && digits.length <= 10) {
+      return `<div class="nid-feedback-badge nid-badge-valid"><i class="fa-solid fa-circle-check"></i> ${isEn ? 'Valid Trade License format' : 'বৈধ ট্রেড লাইসেন্স ফরম্যাট'}</div>`;
+    } else {
+      return `<div class="nid-feedback-badge nid-badge-invalid"><i class="fa-solid fa-triangle-exclamation"></i> ${isEn ? 'Trade License usually 8-10 digits' : 'ট্রেড লাইসেন্স সাধারণত ৮-১০ ডিজিটের হয়'}</div>`;
+    }
+  }
+  return '';
+}
+
 function renderFormFields() {
   const def = formDefinitions[state.currentTemplate] || formDefinitions.tenancy_agreement;
 
@@ -829,11 +864,13 @@ function renderFormFields() {
     return fields.map(f => {
       const val = state.formData[f.id] || '';
       const label = (state.currentLang === 'en' && f.label_en) ? f.label_en : f.label;
+      const feedback = validateIdField(f.id, val);
       if (f.type === 'textarea') {
         return `
           <div class="form-group">
             <label class="form-label">${label}</label>
             <textarea id="${f.id}" class="form-textarea field-input" data-key="${f.id}" rows="2">${val}</textarea>
+            <div id="feedback-${f.id}">${feedback}</div>
           </div>
         `;
       }
@@ -841,6 +878,7 @@ function renderFormFields() {
         <div class="form-group">
           <label class="form-label">${label}</label>
           <input type="${f.type}" id="${f.id}" class="form-input field-input" data-key="${f.id}" value="${val}">
+          <div id="feedback-${f.id}">${feedback}</div>
         </div>
       `;
     }).join('');
@@ -863,6 +901,10 @@ function renderFormFields() {
       state.isViewingNotice = false;
       const key = e.target.getAttribute('data-key');
       state.formData[key] = e.target.value;
+      const fbContainer = document.getElementById(`feedback-${key}`);
+      if (fbContainer) {
+        fbContainer.innerHTML = validateIdField(key, e.target.value);
+      }
       debouncedRender();
     });
   });
@@ -1086,44 +1128,105 @@ function initSignatureCanvas() {
   });
 }
 
-// Database History Modal
+// Database History Modal (Phase 6 Upgrade)
 async function openHistoryModal() {
   const modal = document.getElementById('history-modal');
   const container = document.getElementById('history-list-container');
   modal.style.display = 'flex';
-  container.innerHTML = '<p style="text-align: center; color: #0284c7; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> লোড হচ্ছে...</p>';
+  const isEn = state.currentLang === 'en';
+  container.innerHTML = `<p style="text-align: center; color: #0284c7; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> ${isEn ? 'Loading history...' : 'লোড হচ্ছে...'}</p>`;
 
   try {
     const res = await fetch('/api/contracts');
     const list = await res.json();
 
     if (list.length === 0) {
-      container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 20px;">ডাটাবেসে কোনো সংরক্ষিত চুক্তি নেই।</p>';
+      container.innerHTML = `<p style="text-align: center; color: #64748b; padding: 20px;">${isEn ? 'No saved contracts found in database.' : 'ডাটাবেসে কোনো সংরক্ষিত চুক্তি নেই।'}</p>`;
       return;
     }
 
-    container.innerHTML = list.map(item => `
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <h4 style="color: #0f172a; font-size: 0.95rem; margin-bottom: 4px;">${item.title}</h4>
-          <span style="font-size: 0.8rem; color: #64748b;">
-            <i class="fa-regular fa-clock"></i> ${item.updated_at} | <strong>${item.document_type}</strong>
-          </span>
-        </div>
-        <div style="display: flex; gap: 8px;">
-          <button class="btn btn-primary" style="padding: 4px 10px; font-size: 0.8rem;" onclick="loadContractById('${item.id}', '${item.document_type}')">
-            <i class="fa-solid fa-folder-open"></i> লোড
+    container.innerHTML = list.map(item => {
+      // Determine status badge
+      let statusHtml = '';
+      if (item.status === 'completed') {
+        statusHtml = `<span class="status-pill status-completed"><i class="fa-solid fa-circle-check"></i> ${isEn ? 'Completed' : 'সম্পন্ন'}</span>`;
+      } else if (item.status === 'pending_party2') {
+        statusHtml = `<span class="status-pill status-pending"><i class="fa-solid fa-clock"></i> ${isEn ? 'Pending Party 2' : '২য় পক্ষ অপেক্ষমাণ'}</span>`;
+      } else {
+        statusHtml = `<span class="status-pill status-draft"><i class="fa-solid fa-pen"></i> ${isEn ? 'Draft' : 'খসড়া'}</span>`;
+      }
+
+      // Check duration & potential expiry
+      let expiryNoticeHtml = '';
+      const duration = parseInt(item.data && (item.data.duration_months || item.data.duration_years ? (item.data.duration_months || item.data.duration_years * 12) : 0), 10);
+      if (duration && duration > 0) {
+        expiryNoticeHtml = `
+          <button class="btn btn-secondary" style="padding: 3px 8px; font-size: 0.72rem; color: #dc2626; border-color: #fca5a5;" onclick="triggerNoticeFromContract('${item.id}')" title="${isEn ? 'Generate Notice for this contract' : 'এই চুক্তির নোটিশ তৈরি করুন'}">
+            <i class="fa-solid fa-bullhorn"></i> ${isEn ? 'Notice' : 'নোটিশ'}
           </button>
-          <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.8rem; color: #ef4444;" onclick="deleteContractById('${item.id}')">
-            <i class="fa-solid fa-trash"></i>
-          </button>
+        `;
+      }
+
+      return `
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div>
+              <h4 style="color: #0f172a; font-size: 0.96rem; margin-bottom: 4px; font-weight: 700;">${escapeHtml(item.title)}</h4>
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                ${statusHtml}
+                <span style="font-size: 0.76rem; color: #64748b; font-family: monospace;">ID: ${item.id}</span>
+                <span style="font-size: 0.76rem; color: #64748b;"><i class="fa-regular fa-calendar"></i> ${item.updated_at}</span>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 10px; margin-top: 8px; flex-wrap: wrap; gap: 6px;">
+            <div style="font-size: 0.8rem; color: #475569;">
+              <strong>${isEn ? 'Parties:' : 'পক্ষসমূহ:'}</strong> ${escapeHtml(item.party1_name || '১ম পক্ষ')} & ${escapeHtml(item.party2_name || '২য় পক্ষ')}
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              ${expiryNoticeHtml}
+              <a href="/verify/${item.id}" target="_blank" class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.76rem; color: #059669; text-decoration: none;" title="${isEn ? 'Verify Authenticity' : 'সত্যতা যাচাই'}">
+                <i class="fa-solid fa-shield-halved"></i> ${isEn ? 'Verify' : 'যাচাই'}
+              </a>
+              <a href="/api/contracts/${item.id}/certificate" target="_blank" class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.76rem; color: #4338ca; text-decoration: none;" title="${isEn ? 'Audit Certificate' : 'অডিট সনদ'}">
+                <i class="fa-solid fa-award"></i> ${isEn ? 'Certificate' : 'সনদ'}
+              </a>
+              <button class="btn btn-primary" style="padding: 4px 10px; font-size: 0.76rem;" onclick="loadContractById('${item.id}', '${item.document_type}')">
+                <i class="fa-solid fa-folder-open"></i> ${isEn ? 'Load' : 'লোড'}
+              </button>
+              <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.76rem; color: #ef4444;" onclick="deleteContractById('${item.id}')" title="${isEn ? 'Delete' : 'মুছুন'}">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   } catch (err) {
-    container.innerHTML = '<p style="color: #ef4444;">হিস্ট্রি লোড করতে ব্যর্থ হয়েছে।</p>';
+    container.innerHTML = `<p style="color: #ef4444;">${isEn ? 'Failed to load database history.' : 'হিস্ট্রি লোড করতে ব্যর্থ হয়েছে।'}</p>`;
   }
 }
+
+window.triggerNoticeFromContract = async function(id) {
+  try {
+    const res = await fetch(`/api/contracts/${id}`);
+    const item = await res.json();
+    document.getElementById('history-modal').style.display = 'none';
+    const noticeModal = document.getElementById('notice-modal');
+    if (noticeModal) {
+      const landlordInput = document.getElementById('notice-landlord');
+      const tenantInput = document.getElementById('notice-tenant');
+      const addressInput = document.getElementById('notice-address');
+      if (landlordInput) landlordInput.value = item.party1_name || (item.data && item.data.landlord_name) || '';
+      if (tenantInput) tenantInput.value = item.party2_name || (item.data && item.data.tenant_name) || '';
+      if (addressInput) addressInput.value = (item.data && item.data.property_address) || '';
+      noticeModal.style.display = 'flex';
+      showToast(state.currentLang === 'en' ? 'Contract details copied to Legal Notice Generator' : 'চুক্তির তথ্য আইনি নোটিশে যুক্ত হয়েছে', 'info');
+    }
+  } catch (e) {
+    showToast('নোটিশ প্রস্তুত করতে ব্যর্থ হয়েছে', 'error');
+  }
+};
 
 window.loadContractById = async function(id, docType) {
   try {
@@ -1540,64 +1643,203 @@ function attachEvents() {
   const step4SignBtn = document.getElementById('btn-step4-sign');
   if (step4SignBtn) step4SignBtn.addEventListener('click', openSign);
 
-  // Upload Audit
+  // Upload Audit (Phase 6 Upgrade: Drag & Drop + Native File Upload)
+  const uploadDropzone = document.getElementById('upload-dropzone');
+  const uploadFileInput = document.getElementById('upload-file-input');
+  const fileSelectedBox = document.getElementById('upload-file-selected-box');
+  const filenameText = document.getElementById('upload-filename-text');
+  const btnRemoveFile = document.getElementById('btn-remove-selected-file');
+  let selectedAuditFile = null;
+
   document.getElementById('btn-upload-audit').addEventListener('click', () => {
     document.getElementById('upload-modal').style.display = 'flex';
   });
 
-  document.getElementById('upload-file-input').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (evt) => { document.getElementById('upload-text-input').value = evt.target.result; };
-      reader.readAsText(file);
-    }
-  });
+  if (uploadDropzone && uploadFileInput) {
+    uploadDropzone.addEventListener('click', () => uploadFileInput.click());
+    
+    uploadDropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadDropzone.classList.add('drag-active');
+    });
+    uploadDropzone.addEventListener('dragleave', () => {
+      uploadDropzone.classList.remove('drag-active');
+    });
+    uploadDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadDropzone.classList.remove('drag-active');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        selectedAuditFile = e.dataTransfer.files[0];
+        displaySelectedFile(selectedAuditFile);
+      }
+    });
+
+    uploadFileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        selectedAuditFile = e.target.files[0];
+        displaySelectedFile(selectedAuditFile);
+      }
+    });
+  }
+
+  function displaySelectedFile(file) {
+    if (!file) return;
+    if (filenameText) filenameText.innerText = `${file.name} (${Math.round(file.size / 1024)} KB)`;
+    if (fileSelectedBox) fileSelectedBox.style.display = 'flex';
+  }
+
+  if (btnRemoveFile) {
+    btnRemoveFile.addEventListener('click', () => {
+      selectedAuditFile = null;
+      if (uploadFileInput) uploadFileInput.value = '';
+      if (fileSelectedBox) fileSelectedBox.style.display = 'none';
+    });
+  }
 
   document.getElementById('btn-run-upload-audit').addEventListener('click', async () => {
-    const text = document.getElementById('upload-text-input').value.trim();
-    if (!text) return showToast('অনুগ্রহ করে টেক্সট বা ফাইল প্রদান করুন।', 'warning');
+    const textInput = document.getElementById('upload-text-input');
+    const text = textInput ? textInput.value.trim() : '';
+
+    if (!selectedAuditFile && !text) {
+      return showToast(state.currentLang === 'en' ? 'Please upload a PDF/DOCX file or paste contract text.' : 'অনুগ্রহ করে ফাইল আপলোড করুন অথবা টেক্সট পেস্ট করুন।', 'warning');
+    }
 
     const btn = document.getElementById('btn-run-upload-audit');
     const oldText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> অডিট চলছে...';
+    const isEn = state.currentLang === 'en';
+    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${isEn ? 'AI Auditing Document...' : 'অডিট চলছে...'}`;
     btn.disabled = true;
 
     try {
-      const res = await fetch('/api/ai/audit-upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ raw_text: text, filename: 'Uploaded_Contract.txt' })
-      });
-      const data = await res.json();
+      let data = null;
+      if (selectedAuditFile) {
+        const formData = new FormData();
+        formData.append('file', selectedAuditFile);
+        const res = await fetch('/api/ai/upload-file-audit', {
+          method: 'POST',
+          body: formData
+        });
+        data = await res.json();
+      } else {
+        const res = await fetch('/api/ai/audit-upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ raw_text: text, filename: 'Pasted_Contract.txt' })
+        });
+        data = await res.json();
+      }
+
       const resContainer = document.getElementById('upload-audit-result');
       resContainer.style.display = 'block';
 
+      const scoreClass = data.score >= 80 ? 'badge-low' : (data.score >= 60 ? 'badge-medium' : 'badge-high');
+      const scoreColor = data.score >= 80 ? '#059669' : (data.score >= 60 ? '#d97706' : '#dc2626');
+
+      const missingClausesHtml = (data.missing_clauses && data.missing_clauses.length > 0)
+        ? `<div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px; margin-top: 10px;">
+             <strong style="color: #1e40af; font-size: 0.86rem;"><i class="fa-solid fa-circle-exclamation"></i> ${isEn ? 'Recommended Missing Clauses:' : 'অনুপস্থিত গুরুত্বপূর্ণ আইনি ধারা:'}</strong>
+             <ul style="margin: 6px 0 0 18px; font-size: 0.82rem; color: #1e3a8a;">
+               ${data.missing_clauses.map(m => `<li>${escapeHtml(m)}</li>`).join('')}
+             </ul>
+           </div>`
+        : '';
+
       resContainer.innerHTML = `
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 12px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <strong style="color: #1e3a8a;">${data.detected_type}</strong>
-            <span class="badge ${data.score >= 80 ? 'badge-low' : 'badge-medium'}">নিরাপত্তা স্কোর: ${data.score}/100</span>
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
+            <strong style="color: #1e3a8a; font-size: 1rem;"><i class="fa-solid fa-file-contract"></i> ${escapeHtml(data.detected_type)}</strong>
+            <span style="background: ${scoreColor}15; color: ${scoreColor}; border: 1px solid ${scoreColor}40; padding: 4px 12px; border-radius: 9999px; font-weight: 800; font-size: 0.9rem;">
+              ${isEn ? 'Safety Score:' : 'নিরাপত্তা স্কোর:'} ${data.score}/100
+            </span>
           </div>
-          <p style="font-size: 0.88rem; color: #334155;">${data.summary}</p>
+          <p style="font-size: 0.88rem; color: #334155; line-height: 1.6;">${escapeHtml(data.summary)}</p>
+          ${missingClausesHtml}
         </div>
-        <h4 style="font-size: 0.9rem; color: #0f172a; margin-bottom: 8px;">চিহ্নিত ঝুঁকিপূর্ণ শর্ত:</h4>
-        ${data.risks_found.map(r => `
-          <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 10px; border-radius: 0 6px 6px 0; margin-bottom: 8px;">
-            <strong style="font-size: 0.85rem; color: #991b1b;">${r.clause_topic}</strong>
-            <p style="font-size: 0.82rem; color: #7f1d1d; margin: 4px 0;">${r.issue}</p>
-            <span style="font-size: 0.8rem; color: #1e40af;"><strong>পরামর্শ:</strong> ${r.recommendation}</span>
+        <h4 style="font-size: 0.9rem; color: #0f172a; margin-bottom: 8px; font-weight: 700;">
+          <i class="fa-solid fa-shield-virus" style="color: #dc2626;"></i> ${isEn ? 'Identified Legal Risks & Biases:' : 'চিহ্নিত ঝুঁকিপূর্ণ শর্ত ও আইনি অসংগতি:'}
+        </h4>
+        ${(data.risks_found || []).map(r => `
+          <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 10px 12px; border-radius: 0 6px 6px 0; margin-bottom: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong style="font-size: 0.88rem; color: #991b1b;">${escapeHtml(r.clause_topic)}</strong>
+              <span style="font-size: 0.7rem; background: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">${escapeHtml(r.severity || 'risk')}</span>
+            </div>
+            <p style="font-size: 0.83rem; color: #7f1d1d; margin: 4px 0 6px 0; line-height: 1.5;">${escapeHtml(r.issue)}</p>
+            <div style="font-size: 0.8rem; color: #1e40af; background: #eff6ff; padding: 6px 8px; border-radius: 4px;">
+              <strong>${isEn ? 'Recommendation:' : 'সুপারিশ:'}</strong> ${escapeHtml(r.recommendation)}
+            </div>
           </div>
         `).join('')}
       `;
-      showToast('ডকুমেন্ট অডিট সম্পন্ন হয়েছে!', 'success');
+      showToast(isEn ? 'Document audit completed!' : 'ডকুমেন্ট অডিট সম্পন্ন হয়েছে!', 'success');
     } catch (err) {
-      showToast('অডিট করতে সমস্যা হয়েছে।', 'error');
+      showToast(isEn ? 'Failed to audit document.' : 'অডিট করতে সমস্যা হয়েছে: ' + err.message, 'error');
     } finally {
       btn.innerHTML = oldText;
       btn.disabled = false;
     }
   });
+
+  // Step 4: Multi-Party Remote Signing & Audit Trail Link Generator
+  const btnStep4RemoteLink = document.getElementById('btn-step4-remote-link');
+  const step4RemoteBox = document.getElementById('step4-remote-link-box');
+  const step4LinkInput = document.getElementById('step4-link-input');
+  const btnCopyStep4Link = document.getElementById('btn-copy-step4-link');
+  const btnOpenStep4Link = document.getElementById('btn-open-step4-link');
+  const btnStep4ViewCert = document.getElementById('btn-step4-view-cert');
+
+  if (btnStep4RemoteLink) {
+    btnStep4RemoteLink.addEventListener('click', async () => {
+      // Auto-save if ID not present
+      if (!state.currentContractId) {
+        state.formData.custom_clauses = state.customClauses;
+        const currentMeta = state.templates.find(t => t.id === state.currentTemplate);
+        const title = `${currentMeta ? (state.currentLang === 'en' ? currentMeta.title_en : currentMeta.title_bn) : 'Contract'} - ${new Date().toLocaleDateString()}`;
+        try {
+          const res = await fetch('/api/contracts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: null,
+              title: title,
+              document_type: state.currentTemplate,
+              language: state.currentLang,
+              data: state.formData
+            })
+          });
+          const resData = await res.json();
+          state.currentContractId = resData.id;
+        } catch (e) {
+          return showToast('লিংক তৈরি করতে ব্যর্থ হয়েছে।', 'error');
+        }
+      }
+
+      const signUrl = `${window.location.origin}/sign/${state.currentContractId}`;
+      if (step4LinkInput) step4LinkInput.value = signUrl;
+      if (btnOpenStep4Link) btnOpenStep4Link.href = signUrl;
+      if (step4RemoteBox) step4RemoteBox.style.display = 'block';
+
+      if (btnStep4ViewCert) {
+        btnStep4ViewCert.href = `/api/contracts/${state.currentContractId}/certificate`;
+        btnStep4ViewCert.style.display = 'inline-flex';
+      }
+
+      showToast(state.currentLang === 'en' ? 'Remote signing link generated!' : '২য় পক্ষের সাইনিং লিংক প্রস্তুত হয়েছে!', 'success');
+    });
+  }
+
+  if (btnCopyStep4Link && step4LinkInput) {
+    btnCopyStep4Link.addEventListener('click', () => {
+      step4LinkInput.select();
+      navigator.clipboard.writeText(step4LinkInput.value);
+      showToast(state.currentLang === 'en' ? 'Signing link copied to clipboard!' : 'সাইনিং লিংক ক্লিপবোর্ডে কপি হয়েছে!', 'success');
+      btnCopyStep4Link.innerHTML = '<i class="fa-solid fa-check"></i> কপিড!';
+      setTimeout(() => {
+        btnCopyStep4Link.innerHTML = `<i class="fa-solid fa-copy"></i> ${state.currentLang === 'en' ? 'Copy' : 'কপি করুন'}`;
+      }, 1500);
+    });
+  }
+
 
   // Save Contract to SQLite Database
   document.getElementById('btn-save-draft').addEventListener('click', async () => {

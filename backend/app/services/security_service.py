@@ -1,10 +1,33 @@
 import hashlib
 import json
 import re
+import io
+import base64
 from datetime import datetime
 from typing import Dict, Any, Optional
+import qrcode
 
 class SecurityService:
+    @staticmethod
+    def generate_qr_code_base64(data: str) -> str:
+        """Generates a base64 PNG data-uri for a QR code."""
+        try:
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_M,
+                box_size=4,
+                border=1,
+            )
+            qr.add_data(data)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="#0f172a", back_color="white")
+            buffer = io.BytesIO()
+            img.save(buffer, format="PNG")
+            b64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
+            return f"data:image/png;base64,{b64}"
+        except Exception:
+            return ""
+
     @staticmethod
     def normalize_content(content: str) -> str:
         """Removes volatile whitespace and HTML tags to extract raw canonical text for hashing."""

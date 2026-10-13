@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ডিজিটাল চুক্তি স্বাক্ষর পোর্টাল • E-Signature Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --accent: #2563eb;
+      --success: #059669;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans Bengali', 'Hind Siliguri', 'Inter', sans-serif;
+      background: var(--bg);
+      color: #1e293b;
+      line-height: 1.6;
+      padding: 20px 16px;
+      min-height: 100vh;
+    }
+    .signing-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .top-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: white;
+      padding: 20px 24px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .top-banner h1 { font-size: 19px; font-weight: 700; }
+    .top-banner p { font-size: 13px; opacity: 0.9; }
+    .badge-ref {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: monospace;
+    }
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+    }
+    @media (max-width: 860px) {
+      .content-grid { grid-template-columns: 1fr; }
+    }
+    .preview-pane {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 24px;
+      max-height: 720px;
+      overflow-y: auto;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    .sign-pane {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    .sign-pane h2 {
+      font-size: 17px;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    .sign-pane p {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+    .signer-info-box {
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-size: 13.5px;
+    }
+    .signer-info-box strong { color: #1e3a8a; }
+    .canvas-wrapper {
+      border: 2px dashed #cbd5e1;
+      border-radius: 8px;
+      background: #ffffff;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    canvas {
+      width: 100%;
+      height: 180px;
+      display: block;
+      touch-action: none;
+      cursor: crosshair;
+    }
+    .canvas-tools {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .btn-clear {
+      background: none;
+      border: none;
+      color: #dc2626;
+      font-size: 12.5px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .agree-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-size: 12.5px;
+      color: #475569;
+    }
+    .agree-checkbox input {
+      margin-top: 3px;
+      cursor: pointer;
+    }
+    .btn-submit {
+      width: 100%;
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-submit:hover { background: #047857; }
+    .btn-submit:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+    .success-overlay {
+      display: none;
+      text-align: center;
+      padding: 30px 20px;
+    }
+    .success-overlay svg { color: var(--success); margin-bottom: 14px; }
+    .success-overlay h3 { font-size: 18px; color: #0f172a; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="signing-container">
+    <div class="top-banner">
+      <div>
+        <h1>আইনি চুক্তিপত্র পর্যালোচনা ও স্বাক্ষর পোর্টাল</h1>
+        <p>Review the terms and provide your binding legal signature</p>
+      </div>
+      <div class="badge-ref">
+        ID: {{ contract.ref_id or contract.id }}
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <!-- Left: Contract Content Preview -->
+      <div class="preview-pane">
+        <div id="contract-render-root">
+          {{ rendered_html | safe }}
+        </div>
+      </div>
+
+      <!-- Right: Signature Pad -->
+      <div class="sign-pane">
+        <div id="sign-form-container">
+          <h2>দ্বিতীয় পক্ষের স্বাক্ষর (Party 2 Signature)</h2>
+          <p>দলিলের শর্তাবলী পড়ে একমত হলে নিচে আপনার স্বাক্ষর দিন।</p>
+
+          <div class="signer-info-box">
+            <div>স্বাক্ষরকারী: <strong>{{ contract.party2_name or 'দ্বিতীয় পক্ষ' }}</strong></div>
+            <div style="font-size: 12px; color: #64748b; margin-top: 2px;">চুক্তির ধরন: {{ contract.document_type }}</div>
+          </div>
+
+          <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 6px;">
+            ডিজিটাল স্বাক্ষর প্যাড (মাউস বা আঙুল দিয়ে সাইন করুন):
+          </label>
+          <div class="canvas-wrapper">
+            <canvas id="remote-sig-canvas"></canvas>
+          </div>
+          <div class="canvas-tools">
+            <button type="button" class="btn-clear" id="btn-clear-sig">✕ স্বাক্ষর মুছুন (Clear)</button>
+            <span style="font-size: 11px; color: #94a3b8;">Draw clear signature</span>
+          </div>
+
+          <div class="agree-checkbox">
+            <input type="checkbox" id="chk-agree">
+            <label for="chk-agree">
+              আমি এই চুক্তিপত্রের সকল শর্ত পাঠ করেছি এবং ICT আইন ২০০৬ অনুযায়ী ডিজিটাল স্বাক্ষর দিতে সম্মত হচ্ছি।
+            </label>
+          </div>
+
+          <button type="button" class="btn-submit" id="btn-submit-sig" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            স্বাক্ষর সম্পন্ন করুন (Sign & Accept)
+          </button>
+        </div>
+
+        <div id="sign-success-box" class="success-overlay">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="16 12 12 8 8 12"></polyline><line x1="12" y1="16" x2="12" y2="8"></line></svg>
+          <h3>স্বাক্ষর সফলভাবে গৃহীত হয়েছে!</h3>
+          <p style="font-size: 13.5px; color: #64748b; margin-bottom: 20px;">
+            উভয় পক্ষের স্বাক্ষর সম্পন্ন হয়েছে। চুক্তিটি এখন চূড়ান্তভাবে কার্যকর ও সার্টিফাইড।
+          </p>
+          <a href="/verify/{{ contract.id }}" style="display: block; background: #1e3a8a; color: white; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; margin-bottom: 10px;">
+            🛡️ সত্যতা সনদ দেখুন (Verify & Certificate)
+          </a>
+          <a href="/" style="display: block; color: #64748b; font-size: 13px; text-decoration: none;">
+            হোম পেজে ফিরুন
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('remote-sig-canvas');
+    const ctx = canvas.getContext('2d');
+    const btnClear = document.getElementById('btn-clear-sig');
+    const chkAgree = document.getElementById('chk-agree');
+    const btnSubmit = document.getElementById('btn-submit-sig');
+    const contractId = "{{ contract.id }}";
+
+    // Resize canvas
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * 2;
+      canvas.height = rect.height * 2;
+      ctx.scale(2, 2);
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#1e3a8a';
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let isDrawing = false;
+    let hasDrawn = false;
+
+    function getCoords(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    function startDraw(e) {
+      isDrawing = true;
+      hasDrawn = true;
+      const pos = getCoords(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+      checkReady();
+    }
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const pos = getCoords(e);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    }
+    function stopDraw() {
+      isDrawing = false;
+    }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    window.addEventListener('mouseup', stopDraw);
+
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    window.addEventListener('touchend', stopDraw);
+
+    btnClear.addEventListener('click', () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      hasDrawn = false;
+      checkReady();
+    });
+
+    chkAgree.addEventListener('change', checkReady);
+
+    function checkReady() {
+      btnSubmit.disabled = !(hasDrawn && chkAgree.checked);
+    }
+
+    btnSubmit.addEventListener('click', async () => {
+      if (!hasDrawn || !chkAgree.checked) return;
+      btnSubmit.disabled = true;
+      btnSubmit.innerText = 'সংরক্ষণ হচ্ছে...';
+
+      const sigData = canvas.toDataURL('image/png');
+      try {
+        const res = await fetch(`/api/contracts/share/${contractId}/sign`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            signature_data: sigData,
+            target: 'party2'
+          })
+        });
+        if (res.ok) {
+          document.getElementById('sign-form-container').style.display = 'none';
+          document.getElementById('sign-success-box').style.display = 'block';
+        } else {
+          alert('স্বাক্ষর সংরক্ষণ করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+          btnSubmit.disabled = false;
+          btnSubmit.innerText = 'স্বাক্ষর সম্পন্ন করুন (Sign & Accept)';
+        }
+      } catch (err) {
+        alert('সার্ভার যোগাযোগে সমস্যা হয়েছে: ' + err.message);
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = 'স্বাক্ষর সম্পন্ন করুন (Sign & Accept)';
+      }
+    });
+  </script>
+</body>
+</html>

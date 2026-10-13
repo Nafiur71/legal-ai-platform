@@ -193,6 +193,12 @@ class TemplateEngine:
             core_str = f"{doc_type}_{data.get('execution_date', '')}_{data.get('landlord_name', '')}_{data.get('client_name', '')}_{data.get('partner1_name', '')}"
             short = hashlib.md5(core_str.encode('utf-8')).hexdigest()[:6].upper()
             data["ref_id"] = f"SLA-BD-{short}"
+
+        if not data.get("qr_code_data"):
+            from app.services.security_service import security_service
+            verify_payload = f"/verify/{data['ref_id']}"
+            data["qr_code_data"] = security_service.generate_qr_code_base64(verify_payload)
+
         return template.render(
             title=title,
             data=data,

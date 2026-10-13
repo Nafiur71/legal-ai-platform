@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>দলিল সত্যতা যাচাইকরণ পোর্টাল • Document Verification Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #0f172a;
+      --success: #059669;
+      --success-bg: #ecfdf5;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans Bengali', 'Hind Siliguri', 'Inter', sans-serif;
+      background: #f8fafc;
+      color: var(--text);
+      line-height: 1.6;
+      padding: 24px 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .verify-card {
+      background: #ffffff;
+      max-width: 680px;
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .header-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: #ffffff;
+      padding: 24px;
+      text-align: center;
+      position: relative;
+    }
+    .header-banner h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .header-banner p {
+      font-size: 13px;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+    .status-badge-container {
+      display: flex;
+      justify-content: center;
+      margin-top: -24px;
+      position: relative;
+      z-index: 2;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--success-bg);
+      color: var(--success);
+      border: 2px solid #a7f3d0;
+      padding: 8px 20px;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .card-body {
+      padding: 28px 24px;
+    }
+    .doc-title-box {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 24px;
+      border-left: 4px solid var(--primary);
+    }
+    .doc-title-box h2 {
+      font-size: 17px;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 540px) {
+      .meta-grid { grid-template-columns: 1fr; }
+    }
+    .meta-item {
+      background: #f8fafc;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .meta-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+    .meta-value {
+      font-size: 14.5px;
+      color: #0f172a;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .hash-box {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      word-break: break-all;
+      color: #334155;
+      margin-bottom: 24px;
+    }
+    .actions-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+    }
+    .btn-primary:hover { background: #1e40af; }
+    .btn-outline {
+      background: #ffffff;
+      color: #334155;
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { background: #f1f5f9; }
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="verify-card">
+    <div class="header-banner">
+      <h1>স্মার্টলিগ্যাল ডিজিটাল সত্যতা যাচাই পোর্টাল</h1>
+      <p>SmartLegal AI Cryptographic Verification Authority</p>
+    </div>
+
+    <div class="status-badge-container">
+      {% if is_verified %}
+      <div class="status-pill">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>দলিলটি শতভাগ বৈধ ও অবিকৃত (VERIFIED & AUTHENTIC)</span>
+      </div>
+      {% else %}
+      <div class="status-pill" style="background: #fef2f2; color: #dc2626; border-color: #fca5a5;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <span>দলিলটি শনাক্ত হয়নি বা পরিবর্তিত (UNVERIFIED)</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="card-body">
+      <div class="doc-title-box">
+        <div class="meta-label">দলিলের শিরোনাম / Document Title</div>
+        <h2>{{ contract.title or 'আইনি চুক্তিপত্র' }}</h2>
+      </div>
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">রেফারেন্স আইডি (Ref ID)</div>
+          <div class="meta-value">{{ contract.ref_id or contract.id }}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">দলিলের ধরন (Type)</div>
+          <div class="meta-value">{{ contract.document_type }}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">প্রথম পক্ষ (Party 1)</div>
+          <div class="meta-value">{{ contract.party1_name or 'প্রথম পক্ষ' }} {% if contract.party1_signed_at %}✓{% endif %}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">দ্বিতীয় পক্ষ (Party 2)</div>
+          <div class="meta-value">{{ contract.party2_name or 'দ্বিতীয় পক্ষ' }} {% if contract.party2_signed_at %}✓{% endif %}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">স্বাক্ষরের স্ট্যাটাস (Status)</div>
+          <div class="meta-value" style="color: #059669; font-weight: 700;">
+            {% if contract.status == 'completed' %}
+              উভয় পক্ষের স্বাক্ষর সম্পন্ন (Completed)
+            {% elif contract.status == 'pending_party2' %}
+              দ্বিতীয় পক্ষের স্বাক্ষর অপেক্ষমাণ (Pending Party 2)
+            {% else %}
+              খসড়া সংরক্ষিত (Draft)
+            {% endif %}
+          </div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">তৈরির তারিখ (Created Date)</div>
+          <div class="meta-value">{{ contract.created_at }}</div>
+        </div>
+      </div>
+
+      <div class="meta-label" style="margin-bottom: 6px;">ক্রিপ্টোগ্রাফিক SHA-256 ডিজিটাল ফিঙ্গারপ্রিন্ট:</div>
+      <div class="hash-box">
+        {{ contract.sha256_hash or 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' }}
+      </div>
+
+      <div class="actions-bar">
+        <a href="/api/contracts/share/{{ contract.id }}" class="btn btn-primary" target="_blank">
+          📄 দলিলটি সরাসরি পড়ুন (View Document)
+        </a>
+        <a href="/api/contracts/{{ contract.id }}/certificate" class="btn btn-outline" target="_blank">
+          🏅 অডিট ট্রেইল সনদ (Audit Certificate)
+        </a>
+        <a href="/" class="btn btn-outline">
+          🏠 মূল প্ল্যাটফর্মে ফিরুন (Home)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    তথ্য ও যোগাযোগ প্রযুক্তি আইন, ২০০৬ (বাংলাদেশ)-এর ধারা ৭ মোতাবেক ইলেকট্রনিক রেকর্ড ও ডিজিটাল সইয়ের আইনি স্বীকৃতি সংরক্ষিত।<br>
+    Powered by SmartLegal AI Anti-Tamper Security Infrastructure.
+  </div>
+</body>
+</html>

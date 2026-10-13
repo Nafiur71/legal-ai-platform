@@ -3,10 +3,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import os
-from fastapi import FastAPI, HTTPException, Response
+import io
+from fastapi import FastAPI, HTTPException, Response, Request, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse, HTMLResponse
 from app.config import FRONTEND_DIR, STATIC_DIR, PORT, HOST
 from app.schemas.document_schemas import (
     RefineClauseRequest, RefineClauseResponse,
@@ -102,6 +103,38 @@ def audit_uploaded_document(req: AuditUploadRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/ai/upload-file-audit")
+async def upload_file_for_audit(file: UploadFile = File(...)):
+    try:
+        content_bytes = await file.read()
+        filename = file.filename or "uploaded_contract.pdf"
+        extracted_text = ""
+
+        if filename.lower().endswith(".pdf"):
+            try:
+                import pypdf
+                reader = pypdf.PdfReader(io.BytesIO(content_bytes))
+                extracted_text = "\n".join([page.extract_text() or "" for page in reader.pages])
+            except Exception as pe:
+                extracted_text = f"PDF text extraction note: {str(pe)}"
+        elif filename.lower().endswith(".docx"):
+            try:
+                import docx
+                doc = docx.Document(io.BytesIO(content_bytes))
+                extracted_text = "\n".join([p.text for p in doc.paragraphs if p.text])
+            except Exception as de:
+                extracted_text = f"DOCX text extraction note: {str(de)}"
+        else:
+            extracted_text = content_bytes.decode("utf-8", errors="ignore")
+
+        if not extracted_text or len(extracted_text.strip()) < 10:
+            extracted_text = f"Uploaded contract from file: {filename}. Standard commercial legal draft with default clauses."
+
+        res = ai_service.audit_uploaded_document(extracted_text, filename=filename)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"File audit failed: {str(e)}")
+
 # AI Legal Assistant Chatbot
 @app.post("/api/ai/legal-chat")
 def legal_assistant_chat(req: LegalChatRequest):
@@ -185,9 +218,10 @@ def get_all_contracts():
     return list_contracts()
 
 @app.post("/api/contracts")
-def save_new_contract(req: SaveContractRequest):
+def save_new_contract(req: SaveContractRequest, request: Request):
     try:
-        cid = save_contract(req.title, req.document_type, req.language, req.data, req.id)
+        client_ip = request.client.host if request.client else "127.0.0.1"
+        cid = save_contract(req.title, req.document_type, req.language, req.data, req.id, client_ip)
         return {"status": "saved", "id": cid}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -206,10 +240,33 @@ def remove_single_contract(contract_id: str):
         raise HTTPException(status_code=404, detail="Contract not found")
     return {"status": "deleted", "id": contract_id}
 
-# Remote Share & Signing
+# Dedicated Remote Sign Page (Party 2)
+@app.get("/sign/{contract_id}", response_class=HTMLResponse)
+def remote_signing_page(contract_id: str):
+    item = get_contract(contract_id)
+    if not item:
+        # Search by ref_id or SLA-BD-xxxx
+        for c in list_contracts():
+            if c.get("id", "").lower() == contract_id.lower() or c.get("data", {}).get("ref_id", "").lower() == contract_id.lower():
+                item = get_contract(c["id"])
+                break
+    if not item:
+        raise HTTPException(status_code=404, detail="Contract not found")
+    
+    html = template_engine.render_html(item["document_type"], item["data"], item.get("language", "bn"))
+    tmpl = template_engine.env.get_template("signing_portal.html")
+    rendered_portal = tmpl.render(contract=item, rendered_html=html)
+    return HTMLResponse(content=rendered_portal)
+
+# Remote Share & Signing API
 @app.get("/api/contracts/share/{contract_id}")
 def get_shared_contract(contract_id: str):
     item = get_contract(contract_id)
+    if not item:
+        for c in list_contracts():
+            if c.get("id", "").lower() == contract_id.lower() or c.get("data", {}).get("ref_id", "").lower() == contract_id.lower():
+                item = get_contract(c["id"])
+                break
     if not item:
         raise HTTPException(status_code=404, detail="Contract not found")
     html = template_engine.render_html(item["document_type"], item["data"], item.get("language", "bn"))
@@ -223,11 +280,87 @@ def get_shared_contract(contract_id: str):
     }
 
 @app.post("/api/contracts/share/{contract_id}/sign")
-def submit_remote_signature(contract_id: str, req: RemoteSignRequest):
-    success = update_remote_signature(contract_id, req.signature_data, req.target or "party2")
+def submit_remote_signature(contract_id: str, req: RemoteSignRequest, request: Request):
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    success = update_remote_signature(contract_id, req.signature_data, req.target or "party2", client_ip)
+    if not success:
+        # Check by ref_id
+        for c in list_contracts():
+            if c.get("id", "").lower() == contract_id.lower() or c.get("data", {}).get("ref_id", "").lower() == contract_id.lower():
+                success = update_remote_signature(c["id"], req.signature_data, req.target or "party2", client_ip)
+                contract_id = c["id"]
+                break
     if not success:
         raise HTTPException(status_code=404, detail="Contract not found")
     return {"status": "signature_saved", "id": contract_id}
+
+# Public Verification Landing Page (QR Code target)
+@app.get("/verify/{contract_id}", response_class=HTMLResponse)
+def verify_contract_page(contract_id: str):
+    item = get_contract(contract_id)
+    if not item:
+        for c in list_contracts():
+            if c.get("id", "").lower() == contract_id.lower() or c.get("data", {}).get("ref_id", "").lower() == contract_id.lower() or f"sla-bd-{c.get('id', '').lower()}" == contract_id.lower():
+                item = get_contract(c["id"])
+                break
+    is_verified = bool(item)
+    if not item:
+        item = {
+            "id": contract_id,
+            "ref_id": contract_id,
+            "title": "অনিশ্চিত বা অপ্রাপ্ত দলিল (Unverified Contract)",
+            "document_type": "Unknown",
+            "party1_name": "অজ্ঞাত",
+            "party2_name": "অজ্ঞাত",
+            "status": "unverified",
+            "created_at": "N/A",
+            "sha256_hash": "N/A"
+        }
+    tmpl = template_engine.env.get_template("verification_portal.html")
+    html_page = tmpl.render(contract=item, is_verified=is_verified)
+    return HTMLResponse(content=html_page)
+
+# Public Verification JSON API
+@app.get("/api/verify/{contract_id}")
+def verify_contract_api(contract_id: str):
+    item = get_contract(contract_id)
+    if not item:
+        for c in list_contracts():
+            if c.get("id", "").lower() == contract_id.lower() or c.get("data", {}).get("ref_id", "").lower() == contract_id.lower() or f"sla-bd-{c.get('id', '').lower()}" == contract_id.lower():
+                item = get_contract(c["id"])
+                break
+    if not item:
+        return {"is_valid": False, "status": "not_found", "message": "Contract record not found"}
+    return {
+        "is_valid": True,
+        "id": item["id"],
+        "ref_id": item.get("data", {}).get("ref_id", f"SLA-BD-{item['id'].upper()}"),
+        "title": item["title"],
+        "document_type": item["document_type"],
+        "status": item.get("status", "draft"),
+        "party1_name": item.get("party1_name", ""),
+        "party2_name": item.get("party2_name", ""),
+        "party1_signed_at": item.get("party1_signed_at", ""),
+        "party2_signed_at": item.get("party2_signed_at", ""),
+        "sha256_hash": item.get("sha256_hash", ""),
+        "created_at": item["created_at"],
+        "updated_at": item["updated_at"]
+    }
+
+# Certificate of Completion & Digital Audit Trail
+@app.get("/api/contracts/{contract_id}/certificate", response_class=HTMLResponse)
+def get_certificate_of_completion(contract_id: str):
+    item = get_contract(contract_id)
+    if not item:
+        for c in list_contracts():
+            if c.get("id", "").lower() == contract_id.lower() or c.get("data", {}).get("ref_id", "").lower() == contract_id.lower():
+                item = get_contract(c["id"])
+                break
+    if not item:
+        raise HTTPException(status_code=404, detail="Contract not found")
+    tmpl = template_engine.env.get_template("certificate_of_completion.html")
+    html_page = tmpl.render(contract=item)
+    return HTMLResponse(content=html_page)
 
 @app.post("/api/export/pdf")
 def export_pdf(req: GenerateDocumentRequest):

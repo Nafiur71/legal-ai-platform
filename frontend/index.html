@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&family=Tiro+Bangla:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=2.2.0">
+  <link rel="stylesheet" href="/static/css/style.css?v=2.3.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* Floating Chatbot Widget */
@@ -312,8 +312,38 @@
               স্ক্রিনে সরাসরি স্বাক্ষর করুন অথবা লিংক পাঠিয়ে অপর পক্ষের স্বাক্ষর সংগ্রহ করুন।
             </p>
             <button class="btn btn-success" id="btn-step4-sign" style="width: 100%;">
-              <i class="fa-solid fa-pen-nib"></i> স্বাক্ষর ক্যানভাস খুলুন
+              <i class="fa-solid fa-pen-nib"></i> ১ম পক্ষের স্বাক্ষর ক্যানভাস খুলুন
             </button>
+          </div>
+
+          <!-- Multi-Party Remote Signing Box -->
+          <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
+            <h4 style="color: #1e40af; font-size: 0.95rem; margin-bottom: 4px;">
+              <i class="fa-solid fa-users"></i> ২য় পক্ষের রিমোট সাইনিং ও অডিট ট্রেইল (Multi-Party)
+            </h4>
+            <p style="font-size: 0.85rem; color: #1d4ed8; margin-bottom: 10px;">
+              ১ম পক্ষ সাইন করার পর ২য় পক্ষকে (ভাড়াটিয়া বা ফ্রিল্যান্সার) সরাসরি অনলাইনে সাইন করার জন্য লিংক পাঠান।
+            </p>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-primary" id="btn-step4-remote-link" style="flex: 1; background: #2563eb;">
+                <i class="fa-solid fa-link"></i> ২য় পক্ষের সাইনিং লিংক তৈরি
+              </button>
+              <a id="btn-step4-view-cert" class="btn btn-secondary" target="_blank" style="display: none; align-items: center; gap: 4px;" title="অডিট ট্রেইল সনদ দেখুন">
+                <i class="fa-solid fa-award" style="color: #059669;"></i> সনদ
+              </a>
+            </div>
+            <div id="step4-remote-link-box" style="display: none; margin-top: 10px; background: white; padding: 10px; border-radius: 6px; border: 1px solid #93c5fd; font-size: 0.82rem;">
+              <div style="font-weight: 600; color: #1e3a8a; margin-bottom: 4px;">২য় পক্ষের সাইনিং লিংক প্রস্তুত:</div>
+              <input type="text" id="step4-link-input" class="form-input" readonly style="font-family: monospace; font-size: 0.8rem; margin-bottom: 6px;">
+              <div style="display: flex; gap: 6px;">
+                <button class="btn btn-secondary" id="btn-copy-step4-link" style="font-size: 0.76rem; padding: 4px 8px;">
+                  <i class="fa-solid fa-copy"></i> কপি করুন
+                </button>
+                <a id="btn-open-step4-link" class="btn btn-secondary" target="_blank" style="font-size: 0.76rem; padding: 4px 8px;">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> নতুন ট্যাবে খুলুন
+                </a>
+              </div>
+            </div>
           </div>
           <div id="witness-form-fields"></div>
 
@@ -534,9 +564,9 @@
     </div>
   </div>
 
-  <!-- Modal 5: External Contract Upload & AI Auditor -->
+  <!-- Modal 5: External Contract Upload & AI Auditor (Phase 6) -->
   <div class="modal-overlay" id="upload-modal" style="display: none;">
-    <div class="modal-card" style="max-width: 650px;">
+    <div class="modal-card" style="max-width: 680px;">
       <div class="modal-header">
         <h3 style="font-size: 1.1rem; color: #7c3aed; display: flex; align-items: center; gap: 8px;">
           <i class="fa-solid fa-file-shield"></i> বাইরের ডকুমেন্ট আপলোড ও AI অডিট
@@ -544,12 +574,35 @@
         <button id="close-upload" style="background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #64748b; padding: 4px;">✕</button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <input type="file" id="upload-file-input" accept=".txt,.pdf,.doc,.docx" style="margin-bottom: 8px; font-size: 0.85rem;">
-          <textarea id="upload-text-input" class="form-textarea" rows="6" placeholder="চুক্তিপত্রের সম্পূর্ণ টেক্সট এখানে পেস্ট করুন..."></textarea>
+        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 14px;">
+          আপনার যেকোনো পুরনো বা নতুন চুক্তিপত্র (PDF, Word DOCX বা Text ফাইল) আপলোড করুন। AI সরাসরি স্ক্যান করে ঝুঁকি ও আইনি ফাঁকফোকর ধরিয়ে দেবে।
+        </p>
+
+        <!-- Drag & Drop Zone -->
+        <div class="upload-dropzone" id="upload-dropzone">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <h4>এখানে ফাইল ড্রপ করুন অথবা ব্রাউজ করুন</h4>
+          <p>সমর্থিত ফরম্যাট: PDF, Word (.docx), Plain Text (.txt)</p>
+          <input type="file" id="upload-file-input" accept=".txt,.pdf,.doc,.docx" style="display: none;">
         </div>
+
+        <div id="upload-file-selected-box" style="display: none; background: #eef2ff; border: 1px solid #c7d2fe; padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #3730a3; font-weight: 600;">
+            <i class="fa-solid fa-file-pdf" style="color: #ef4444; font-size: 1.1rem;"></i>
+            <span id="upload-filename-text">document.pdf</span>
+          </div>
+          <button id="btn-remove-selected-file" style="background: none; border: none; color: #dc2626; font-size: 0.82rem; cursor: pointer; font-weight: 600;">
+            ✕ ফাইল মুছুন
+          </button>
+        </div>
+
+        <details style="margin-bottom: 14px; font-size: 0.83rem; color: #64748b;">
+          <summary style="cursor: pointer; font-weight: 600; color: #4338ca;">বা টেক্সট কপি-পেস্ট করতে চান? (Optional Text Paste)</summary>
+          <textarea id="upload-text-input" class="form-textarea" rows="4" style="margin-top: 8px;" placeholder="চুক্তিপত্রের টেক্সট সরাসরি এখানে পেস্ট করুন..."></textarea>
+        </details>
+
         <button class="btn btn-ai" id="btn-run-upload-audit" style="width: 100%;">
-          <i class="fa-solid fa-magnifying-glass-chart"></i> AI দিয়ে সম্পূর্ণ চুক্তি অডিট করুন
+          <i class="fa-solid fa-magnifying-glass-chart"></i> AI দিয়ে সম্পূর্ণ ফাইল অডিট করুন
         </button>
         <div id="upload-audit-result" style="display: none; margin-top: 16px;"></div>
       </div>
@@ -675,6 +728,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=2.2.0"></script>
+  <script src="/static/js/app.js?v=2.3.0"></script>
 </body>
 </html>

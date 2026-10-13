@@ -241,17 +241,27 @@
     {% endblock %}
 
     <div class="verification-footer">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; font-weight: bold; font-family: monospace; font-size: 9pt;">
-          [QR VERIFY]
-        </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <a href="/verify/{{ data.ref_id or 'SLA-BD-CERTIFIED' }}" target="_blank" title="Verify Document Authenticity" style="display: inline-block; text-decoration: none;">
+          {% if data.qr_code_data %}
+            <img src="{{ data.qr_code_data }}" alt="QR Code" style="width: 50px; height: 50px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; background: #ffffff; vertical-align: middle; display: block;" />
+          {% else %}
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; font-weight: bold; font-family: monospace; font-size: 8pt; color: #475569;">
+              [QR VERIFY]
+            </div>
+          {% endif %}
+        </a>
         <div>
           <strong style="color: #0f172a;">SmartLegal AI • {{ 'ভেরিফাইড আইনি দলিল' if language == 'bn' else 'Verified Legal Document' }}</strong><br>
-          {{ 'রেফারেন্স আইডি:' if language == 'bn' else 'Reference ID:' }} {{ data.ref_id or 'SLA-BD-CERTIFIED' }} | {{ 'প্ল্যাটফর্ম ভেরিফিকেশন কোড সক্রিয়' if language == 'bn' else 'Cryptographic Verification Active' }}
+          {{ 'রেফারেন্স আইডি:' if language == 'bn' else 'Reference ID:' }} 
+          <a href="/verify/{{ data.ref_id or 'SLA-BD-CERTIFIED' }}" target="_blank" style="color: #2563eb; font-weight: 700; text-decoration: underline;">
+            {{ data.ref_id or 'SLA-BD-CERTIFIED' }}
+          </a> 
+          | {{ 'ডিজিটাল কিউআর ভেরিফিকেশন সক্রিয়' if language == 'bn' else 'Digital QR Verification Active' }}
         </div>
       </div>
       <div>
-        <span style="border: 1px solid #10b981; color: #047857; background: #ecfdf5; padding: 3px 8px; border-radius: 4px; font-weight: bold;">
+        <span style="border: 1px solid #10b981; color: #047857; background: #ecfdf5; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 8.5pt;">
           {{ '✓ ডিজিটালি সার্টিফাইড' if language == 'bn' else '✓ DIGITALLY CERTIFIED' }}
         </span>
       </div>
