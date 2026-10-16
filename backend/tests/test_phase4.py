@@ -14,15 +14,32 @@ from app.main import app
 client = TestClient(app)
 
 def test_legal_chat():
-    resp = client.post("/api/ai/legal-chat", json={
-        "question": "৩০০ টাকার স্ট্যাম্পে প্রিন্ট করার নিয়ম কী?",
-        "contract_context": "tenancy_agreement"
-    })
-    assert resp.status_code == 200
-    data = resp.json()
-    assert "answer" in data
-    assert len(data["answer"]) > 20
-    print("[PASS] AI Legal Chatbot Response Received")
+    test_queries = [
+        ("৩০০ টাকার স্ট্যাম্পে প্রিন্ট করার নিয়ম কী?", ["স্ট্যাম্প"]),
+        ("চেক ডিজঅনার হলে এনআই অ্যাক্ট ১৩৮ ধারায় মামলার নিয়ম ও আইনি নোটিশের শর্ত কী?", ["১৩৮", "নোটিশ", "ম্যাজিস্ট্রেট"]),
+        ("থানায় জিডি ও এজাহারের মধ্যে পার্থক্য কী এবং ওসি মামলা না নিলে করণীয় কী?", ["১৫৪", "১৫৫", "জিডি"]),
+        ("জমি ও ফ্ল্যাট সাফ-কবলা দলিলের সরকারি রেজিস্ট্রি ও স্ট্যাম্প খরচ কত?", ["রেজিস্ট্রেশন", "স্ট্যাম্প"]),
+        ("দেনমোহর ও তালাকের ক্ষেত্রে পারিবারিক আদালতের নিয়ম কী?", ["পারিবারিক", "দেনমোহর"]),
+        ("শ্রম আইন অনুযায়ী নোটিশ পে, গ্র্যাচুইটি ও মাতৃত্বকালীন ছুটির নিয়ম কী?", ["শ্রম", "নোটিশ"]),
+        ("সোশ্যাল মিডিয়ায় ব্ল্যাকমেইল বা ফেক আইডির বিরুদ্ধে সাইবার নিরাপত্তা আইনে প্রতিকার কী?", ["সাইবার"]),
+        ("প্রতারণা ও ৪২০ ধারায় মামলা করার নিয়ম কী?", ["৪২০", "দণ্ডবিধি"]),
+        ("হাইকোর্ট থেকে আগাম জামিন পাওয়ার নিয়ম কী?", ["জামিন", "৪৯৮"]),
+        ("দোকানদার বেশি দাম নিলে বা মেয়াদোত্তীর্ণ পণ্য দিলে ভোক্তা অধিকার আইনে অভিযোগের নিয়ম কী?", ["ভোক্তা", "২৫%"]),
+    ]
+
+    for q, keywords in test_queries:
+        resp = client.post("/api/ai/legal-chat", json={
+            "question": q,
+            "contract_context": "general_law"
+        })
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "answer" in data
+        ans = data["answer"]
+        assert len(ans) > 50
+        # If fallback engine or AI answered, at least one relevant legal keyword should be present
+        assert any(k in ans for k in keywords), f"Keyword missing for query '{q}': got '{ans[:100]}...'"
+        print(f"[PASS] AI Legal Chatbot answered query: '{q[:35]}...'")
 
 def test_stamp_duty_calculator():
     # Test Tenancy (<= 12 months)

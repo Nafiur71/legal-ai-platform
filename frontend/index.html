@@ -15,8 +15,8 @@
       position: fixed;
       bottom: 24px;
       right: 24px;
-      width: 56px;
-      height: 56px;
+      width: 58px;
+      height: 58px;
       background: linear-gradient(135deg, #4f46e5, #7c3aed);
       color: white;
       border-radius: 50%;
@@ -24,31 +24,49 @@
       align-items: center;
       justify-content: center;
       font-size: 24px;
-      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+      box-shadow: 0 4px 18px rgba(124, 58, 237, 0.45);
       cursor: pointer;
-      z-index: 90;
-      transition: all 0.25s ease;
+      z-index: 999;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .chatbot-fab:hover {
       transform: scale(1.08);
+      box-shadow: 0 6px 22px rgba(124, 58, 237, 0.55);
     }
     .chatbot-window {
       position: fixed;
-      bottom: 90px;
+      bottom: 24px;
       right: 24px;
-      width: 360px;
-      height: 480px;
+      width: 380px;
+      max-width: calc(100vw - 32px);
+      height: 530px;
+      max-height: calc(100vh - 48px);
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      box-shadow: 0 12px 36px rgba(15, 23, 42, 0.2), 0 4px 12px rgba(15, 23, 42, 0.1);
+      border: 1px solid #cbd5e1;
       display: flex;
       flex-direction: column;
-      z-index: 95;
+      z-index: 1000;
       overflow: hidden;
+      animation: chatbotSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes chatbotSlideUp {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @media (max-width: 480px) {
+      .chatbot-window {
+        bottom: 12px;
+        right: 12px;
+        left: 12px;
+        width: auto;
+        height: calc(100vh - 70px);
+        max-height: calc(100vh - 70px);
+      }
     }
     .chat-header {
-      background: linear-gradient(135deg, #1e3a8a, #4f46e5);
+      background: linear-gradient(135deg, #1e3a8a, #4338ca);
       color: white;
       padding: 12px 16px;
       display: flex;
@@ -57,36 +75,61 @@
     }
     .chat-body {
       flex: 1;
-      padding: 12px;
+      padding: 14px 12px;
       overflow-y: auto;
       background: #f8fafc;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       font-size: 0.88rem;
     }
     .chat-bubble-ai {
+      position: relative;
       background: white;
       border: 1px solid #e2e8f0;
-      padding: 10px 12px;
-      border-radius: 10px 10px 10px 2px;
+      padding: 12px 38px 12px 14px;
+      border-radius: 12px 12px 12px 2px;
       color: #1e293b;
-      line-height: 1.5;
+      line-height: 1.6;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .btn-copy-chat-reply {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      color: #64748b;
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-copy-chat-reply:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+    .chat-bubble-ai strong {
+      color: #1e3a8a;
     }
     .chat-bubble-user {
-      background: #4f46e5;
+      background: #4338ca;
       color: white;
-      padding: 10px 12px;
-      border-radius: 10px 10px 2px 10px;
+      padding: 10px 14px;
+      border-radius: 12px 12px 2px 12px;
       align-self: flex-end;
       line-height: 1.5;
+      max-width: 85%;
+      box-shadow: 0 2px 6px rgba(67, 56, 202, 0.25);
     }
     .chat-footer {
-      padding: 10px;
+      padding: 12px;
       background: white;
       border-top: 1px solid #e2e8f0;
       display: flex;
       gap: 8px;
+      align-items: center;
     }
   </style>
 </head>
@@ -406,32 +449,43 @@
   </main>
 
   <!-- Floating Legal Chatbot FAB & Window -->
-  <div class="chatbot-fab" id="fab-chatbot" title="আইনAI সহকারী সাথে চ্যাট করুন">
-    <i class="fa-solid fa-comment-dots"></i>
+  <div class="chatbot-fab" id="fab-chatbot" title="বাংলাদেশ আইনAI সহকারীর সাথে চ্যাট করুন">
+    <i class="fa-solid fa-scale-balanced"></i>
   </div>
 
   <div class="chatbot-window" id="chatbot-window" style="display: none;">
     <div class="chat-header">
       <div style="display: flex; align-items: center; gap: 8px;">
-        <i class="fa-solid fa-scale-balanced"></i>
-        <strong>আইনAI সহকারী (Advisor)</strong>
+        <i class="fa-solid fa-scale-balanced" style="font-size: 1.1rem; color: #a5b4fc;"></i>
+        <div>
+          <strong style="font-size: 0.95rem; display: block; line-height: 1.2;">বাংলাদেশ আইনAI সহকারী</strong>
+          <span style="font-size: 0.7rem; opacity: 0.9;">সুপ্রিম কোর্ট ও বাংলাদেশ সকল আইন বিশেষজ্ঞ</span>
+        </div>
       </div>
-      <button id="close-chatbot" style="background:none; border:none; color:white; font-size:1.1rem; cursor:pointer;">✕</button>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <button id="btn-clear-chat" style="background:none; border:none; color:white; opacity:0.85; font-size:0.85rem; cursor:pointer; padding:4px;" title="চ্যাট ক্লিয়ার করুন">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        <button id="close-chatbot" style="background:none; border:none; color:white; font-size:1.25rem; cursor:pointer; padding:2px 4px; line-height:1;" title="বন্ধ করুন">✕</button>
+      </div>
     </div>
     <div class="chat-body" id="chat-body">
       <div class="chat-bubble-ai">
-        👋 নমস্কার! আমি আপনার <strong>আইনAI সহকারী</strong>।<br>
-        চুক্তিপত্র, স্ট্যাম্পের নিয়ম, ভাড়া নিয়ন্ত্রণ আইন বা নোটিশ বিষয়ে যেকোনো আইনি প্রশ্ন আমাকে বাংলায় জিজ্ঞেস করতে পারেন।
+        👋 আসসালামু আলাইকুম! আমি আপনার <strong>বাংলাদেশ আইনAI সহকারী</strong>।<br>
+        বাংলাদেশের যেকোনো আইন (চুক্তি, চেক ডিজঅনার, জমিজমা, শ্রম আইন, সাইবার ক্রাইম, পারিবারিক বা ফৌজদারি আইন) সংক্রান্ত প্রশ্ন আমাকে বাংলায় জিজ্ঞেস করতে পারেন।
         <div class="prompt-chips-container" style="margin-top: 10px; margin-bottom: 2px;">
-          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="বাড়ি ভাড়া চুক্তির জন্য কত টাকার স্ট্যাম্প প্রয়োজন?">💰 স্ট্যাম্প ফি কত?</button>
-          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="ভাড়াটিয়াকে উচ্ছেদের জন্য নোটিশের নিয়ম কি?">📜 উচ্ছেদ নোটিশের নিয়ম</button>
-          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="চুক্তির জামানত বা সিকিউরিটি ডিপোজিট ফেরতের আইন কি?">⚖️ জামানত ফেরত আইন</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="চেক ডিজঅনার হলে এনআই অ্যাক্ট ১৩৮ ধারায় মামলার নিয়ম কী?">💳 চেক ডিজঅনার মামলা</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="থানায় জিডি ও এজাহারের মধ্যে পার্থক্য কী এবং কীভাবে করতে হয়?">📜 থানায় জিডি ও এজাহার</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="জমি ও ফ্ল্যাট সাফ-কবলা দলিলের সরকারি রেজিস্ট্রি খরচ কত?">🏢 জমি/ফ্ল্যাট রেজিস্ট্রি খরচ</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="দেনমোহর ও তালাকের ক্ষেত্রে পারিবারিক আদালতের নিয়ম কী?">⚖️ দেনমোহর ও তালাক আইন</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="শ্রম আইন অনুযায়ী নোটিশ পে, গ্র্যাচুইটি ও ছুটির নিয়ম কী?">💼 শ্রম আইন ও চাকরি সুবিধা</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="সোশ্যাল মিডিয়ায় ব্ল্যাকমেইল বা ফেক আইডির বিরুদ্ধে সাইবার নিরাপত্তা আইনে প্রতিকার কী?">🛡️ সাইবার ক্রাইম প্রতিকার</button>
         </div>
       </div>
     </div>
     <div class="chat-footer">
-      <input type="text" id="chat-input" class="form-input" placeholder="আইনি প্রশ্নটি লিখুন..." style="font-size: 0.85rem; padding: 6px 10px;">
-      <button class="btn btn-primary" id="btn-chat-send" style="padding: 6px 12px;">
+      <input type="text" id="chat-input" class="form-input" placeholder="যেকোনো আইনি প্রশ্ন লিখুন..." style="font-size: 0.85rem; padding: 7px 10px; flex: 1;">
+      <button class="btn btn-primary" id="btn-chat-send" style="padding: 7px 14px; background: #4338ca;">
         <i class="fa-solid fa-paper-plane"></i>
       </button>
     </div>

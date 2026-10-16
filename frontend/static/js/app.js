@@ -639,34 +639,50 @@ function updateUILanguage(lang) {
 
   // 9. Floating Chatbot
   const fabChatbot = document.getElementById('fab-chatbot');
-  if (fabChatbot) fabChatbot.title = isEn ? 'Chat with SmartLegal AI Assistant' : 'আইনAI সহকারী সাথে চ্যাট করুন';
+  if (fabChatbot) fabChatbot.title = isEn ? 'Chat with Bangladesh Law AI Advisor' : 'বাংলাদেশ আইনAI সহকারীর সাথে চ্যাট করুন';
   const chatHeaderStrong = document.querySelector('#chatbot-window .chat-header strong');
-  if (chatHeaderStrong) chatHeaderStrong.textContent = isEn ? 'SmartLegal AI Advisor' : 'আইনAI সহকারী (Advisor)';
+  if (chatHeaderStrong) chatHeaderStrong.textContent = isEn ? 'Bangladesh Law AI Advisor' : 'বাংলাদেশ আইনAI সহকারী';
+  const chatHeaderSubtitle = document.querySelector('#chatbot-window .chat-header span');
+  if (chatHeaderSubtitle) chatHeaderSubtitle.textContent = isEn ? 'Supreme Court & Bangladesh Law Advisor' : 'সুপ্রিম কোর্ট ও বাংলাদেশ সকল আইন বিশেষজ্ঞ';
+  const clearChatBtn = document.getElementById('btn-clear-chat');
+  if (clearChatBtn) clearChatBtn.title = isEn ? 'Clear Chat' : 'চ্যাট ক্লিয়ার করুন';
+  const closeChatBtn = document.getElementById('close-chatbot');
+  if (closeChatBtn) closeChatBtn.title = isEn ? 'Close' : 'বন্ধ করুন';
+
   const chatFirstBubble = document.querySelector('#chat-body .chat-bubble-ai');
-  if (chatFirstBubble) {
+  // Only auto-update if the user hasn't started a chat session yet
+  const chatUserBubble = document.querySelector('#chat-body .chat-bubble-user');
+  if (chatFirstBubble && !chatUserBubble) {
     if (isEn) {
       chatFirstBubble.innerHTML = `
-        👋 Hello! I am your <strong>SmartLegal AI Advisor</strong>.<br>
-        Ask any legal question regarding Bangladesh contract laws, 300 Tk stamp duty, tenancy acts, or notices.
+        👋 Hello! I am your <strong>Bangladesh Law AI Advisor</strong>.<br>
+        Ask any legal question regarding Bangladesh laws (contracts, cheque dishonour, land registration, labor rights, cyber crime, family law, bail, criminal code, etc.).
         <div class="prompt-chips-container" style="margin-top: 10px; margin-bottom: 2px;">
-          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="How much stamp duty is required for house rent in Bangladesh?">💰 Stamp Duty Rates</button>
-          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What are the legal rules for tenant eviction notice?">📜 Eviction Notice Law</button>
-          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What is the law regarding refund of security deposit?">⚖️ Security Deposit Law</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What is the legal procedure and 30-day notice for cheque dishonour under Section 138 of the NI Act in Bangladesh?">💳 Cheque Dishonour Case</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What is the legal difference between GD and FIR/Ejahar in Bangladesh and how to file them?">📜 Police GD & FIR</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What are the government registration fees, stamp duty and local tax for Saf-Kabala deed in Bangladesh?">🏢 Land/Flat Registration Fees</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What are the legal procedures for dower (denmohor), maintenance and divorce under Bangladesh Family Laws?">⚖️ Dower & Divorce Laws</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What are the statutory rules for termination notice pay, gratuity and maternity leave under Bangladesh Labor Act 2006?">💼 Labor Act & Benefits</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What legal remedies and police reporting mechanisms exist against online harassment, blackmail, or fake ID under Cyber Security Act 2023?">🛡️ Cyber Crime Remedies</button>
         </div>
       `;
     } else {
       chatFirstBubble.innerHTML = `
-        👋 নমস্কার! আমি আপনার <strong>আইনAI সহকারী</strong>।<br>
-        চুক্তিপত্র, স্ট্যাম্পের নিয়ম, ভাড়া নিয়ন্ত্রণ আইন বা নোটিশ বিষয়ে যেকোনো আইনি প্রশ্ন আমাকে বাংলায় জিজ্ঞেস করতে পারেন।
+        👋 আসসালামু আলাইকুম! আমি আপনার <strong>বাংলাদেশ আইনAI সহকারী</strong>।<br>
+        বাংলাদেশের যেকোনো আইন (চুক্তি, চেক ডিজঅনার, জমিজমা, শ্রম আইন, সাইবার ক্রাইম, পারিবারিক বা ফৌজদারি আইন) সংক্রান্ত প্রশ্ন আমাকে বাংলায় জিজ্ঞেস করতে পারেন।
         <div class="prompt-chips-container" style="margin-top: 10px; margin-bottom: 2px;">
-          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="বাড়ি ভাড়া চুক্তির জন্য কত টাকার স্ট্যাম্প প্রয়োজন?">💰 স্ট্যাম্প ফি কত?</button>
-          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="ভাড়াটিয়াকে উচ্ছেদের জন্য নোটিশের নিয়ম কি?">📜 উচ্ছেদ নোটিশের নিয়ম</button>
-          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="চুক্তির জামানত বা সিকিউরিটি ডিপোজিট ফেরতের আইন কি?">⚖️ জামানত ফেরত আইন</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="চেক ডিজঅনার হলে এনআই অ্যাক্ট ১৩৮ ধারায় মামলার নিয়ম কী?">💳 চেক ডিজঅনার মামলা</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="থানায় জিডি ও এজাহারের মধ্যে পার্থক্য কী এবং কীভাবে করতে হয়?">📜 থানায় জিডি ও এজাহার</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="জমি ও ফ্ল্যাট সাফ-কবলা দলিলের সরকারি রেজিস্ট্রি খরচ কত?">🏢 জমি/ফ্ল্যাট রেজিস্ট্রি খরচ</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="দেনমোহর ও তালাকের ক্ষেত্রে পারিবারিক আদালতের নিয়ম কী?">⚖️ দেনমোহর ও তালাক আইন</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="শ্রম আইন অনুযায়ী নোটিশ পে, গ্র্যাচুইটি ও ছুটির নিয়ম কী?">💼 শ্রম আইন ও চাকরি সুবিধা</button>
+          <button type="button" class="prompt-chip chat-suggestion-chip" data-query="সোশ্যাল মিডিয়ায় ব্ল্যাকমেইল বা ফেক আইডির বিরুদ্ধে সাইবার নিরাপত্তা আইনে প্রতিকার কী?">🛡️ সাইবার ক্রাইম প্রতিকার</button>
         </div>
       `;
     }
     chatFirstBubble.querySelectorAll('.chat-suggestion-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
+      chip.onclick = () => {
+        if (isChatSending) return;
         const q = chip.getAttribute('data-query');
         const input = document.getElementById('chat-input');
         if (input && q) {
@@ -674,11 +690,11 @@ function updateUILanguage(lang) {
           const sendBtn = document.getElementById('btn-chat-send');
           if (sendBtn) sendBtn.click();
         }
-      });
+      };
     });
   }
   const chatInput = document.getElementById('chat-input');
-  if (chatInput) chatInput.placeholder = isEn ? 'Ask your legal question...' : 'আইনি প্রশ্নটি লিখুন...';
+  if (chatInput) chatInput.placeholder = isEn ? 'Ask any legal question regarding Bangladesh laws...' : 'যেকোনো আইনি প্রশ্ন লিখুন...';
 
   // 10. Modals: Stamp Duty Calculator Modal
   const stampModalH3 = document.querySelector('#stamp-calc-modal h3');
@@ -1589,45 +1605,198 @@ function attachEvents() {
   const fab = document.getElementById('fab-chatbot');
   const chatWindow = document.getElementById('chatbot-window');
   const closeChat = document.getElementById('close-chatbot');
+  const clearChat = document.getElementById('btn-clear-chat');
   const chatInput = document.getElementById('chat-input');
   const chatSend = document.getElementById('btn-chat-send');
   const chatBody = document.getElementById('chat-body');
 
-  fab.addEventListener('click', () => {
-    chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
-  });
-  closeChat.addEventListener('click', () => {
+  const openChatbot = () => {
+    chatWindow.style.display = 'flex';
+    if (fab) fab.style.display = 'none';
+    if (chatInput) chatInput.focus();
+  };
+
+  const closeChatbot = () => {
     chatWindow.style.display = 'none';
-  });
+    if (fab) fab.style.display = 'flex';
+  };
+
+  if (fab) fab.addEventListener('click', openChatbot);
+  if (closeChat) closeChat.addEventListener('click', closeChatbot);
+
+  const bindChatChips = () => {
+    document.querySelectorAll('#chat-body .chat-suggestion-chip').forEach(chip => {
+      chip.onclick = () => {
+        if (isChatSending) return;
+        const q = chip.getAttribute('data-query');
+        if (chatInput && q) {
+          chatInput.value = q;
+          sendChatMessage();
+        }
+      };
+    });
+  };
+
+  const resetChatbot = () => {
+    const isEn = state.language === 'en';
+    if (isEn) {
+      chatBody.innerHTML = `
+        <div class="chat-bubble-ai">
+          👋 Hello! I am your <strong>Bangladesh Law AI Advisor</strong>.<br>
+          Ask any legal question regarding Bangladesh laws (contracts, cheque dishonour, land registration, labor rights, cyber crime, family law, bail, criminal code, etc.).
+          <div class="prompt-chips-container" style="margin-top: 10px; margin-bottom: 2px;">
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What is the legal procedure and 30-day notice for cheque dishonour under Section 138 of the NI Act in Bangladesh?">💳 Cheque Dishonour Case</button>
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What is the legal difference between GD and FIR/Ejahar in Bangladesh and how to file them?">📜 Police GD & FIR</button>
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What are the government registration fees, stamp duty and local tax for Saf-Kabala deed in Bangladesh?">🏢 Land/Flat Registration Fees</button>
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What are the legal procedures for dower (denmohor), maintenance and divorce under Bangladesh Family Laws?">⚖️ Dower & Divorce Laws</button>
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What are the statutory rules for termination notice pay, gratuity and maternity leave under Bangladesh Labor Act 2006?">💼 Labor Act & Benefits</button>
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="What legal remedies and police reporting mechanisms exist against online harassment, blackmail, or fake ID under Cyber Security Act 2023?">🛡️ Cyber Crime Remedies</button>
+          </div>
+        </div>
+      `;
+    } else {
+      chatBody.innerHTML = `
+        <div class="chat-bubble-ai">
+          👋 আসসালামু আলাইকুম! আমি আপনার <strong>বাংলাদেশ আইনAI সহকারী</strong>।<br>
+          বাংলাদেশের যেকোনো আইন (চুক্তি, চেক ডিজঅনার, জমিজমা, শ্রম আইন, সাইবার ক্রাইম, পারিবারিক বা ফৌজদারি আইন) সংক্রান্ত প্রশ্ন আমাকে বাংলায় জিজ্ঞেস করতে পারেন।
+          <div class="prompt-chips-container" style="margin-top: 10px; margin-bottom: 2px;">
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="চেক ডিজঅনার হলে এনআই অ্যাক্ট ১৩৮ ধারায় মামলার নিয়ম কী?">💳 চেক ডিজঅনার মামলা</button>
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="থানায় জিডি ও এজাহারের মধ্যে পার্থক্য কী এবং কীভাবে করতে হয়?">📜 থানায় জিডি ও এজাহার</button>
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="জমি ও ফ্ল্যাট সাফ-কবলা দলিলের সরকারি রেজিস্ট্রি খরচ কত?">🏢 জমি/ফ্ল্যাট রেজিস্ট্রি খরচ</button>
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="দেনমোহর ও তালাকের ক্ষেত্রে পারিবারিক আদালতের নিয়ম কী?">⚖️ দেনমোহর ও তালাক আইন</button>
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="শ্রম আইন অনুযায়ী নোটিশ পে, গ্র্যাচুইটি ও ছুটির নিয়ম কী?">💼 শ্রম আইন ও চাকরি সুবিধা</button>
+            <button type="button" class="prompt-chip chat-suggestion-chip" data-query="সোশ্যাল মিডিয়ায় ব্ল্যাকমেইল বা ফেক আইডির বিরুদ্ধে সাইবার নিরাপত্তা আইনে প্রতিকার কী?">🛡️ সাইবার ক্রাইম প্রতিকার</button>
+          </div>
+        </div>
+      `;
+    }
+    bindChatChips();
+  };
+
+  if (clearChat) {
+    clearChat.addEventListener('click', resetChatbot);
+  }
+
+  // Initial binding for suggestion chips
+  bindChatChips();
+
+  let isChatSending = false;
+
+  const formatLegalMarkdown = (raw) => {
+    if (!raw) return '';
+    let text = escapeHtml(raw);
+    // Headers: ### and ##
+    text = text.replace(/(?:^|\n)###[ \t]+(.*?)(?=\n|$)/g, '<div style="font-weight:700; color:#1e3a8a; margin-top:8px; font-size:0.92rem;">$1</div>');
+    text = text.replace(/(?:^|\n)##[ \t]+(.*?)(?=\n|$)/g, '<div style="font-weight:700; color:#1e3a8a; margin-top:10px; font-size:0.96rem;">$1</div>');
+    // Bold: **text**
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    // Numbered sections: "1. ", "১. "
+    text = text.replace(/(?:^|\n)[ \t]*([0-9১-৯]+)\.[ \t]+(.*?)(?=\n|$)/g, '<br><span style="color:#4338ca; font-weight:700;">$1.</span> $2');
+    // Bullet items: "- " or "* "
+    text = text.replace(/(?:^|\n)[ \t]*[-*][ \t]+(.*?)(?=\n|$)/g, '<br>&nbsp;&nbsp;• $1');
+    // Double newlines and line breaks
+    text = text.replace(/\n\n+/g, '<br><br>').replace(/\n/g, '<br>');
+    return text.replace(/^(\s*<br\s*\/?>)+/, '');
+  };
+
+  const copyReplyText = (btn) => {
+    const bubble = btn.closest('.chat-bubble-ai');
+    if (!bubble) return;
+    const clone = bubble.cloneNode(true);
+    const copyBtnInClone = clone.querySelector('.btn-copy-chat-reply');
+    if (copyBtnInClone) copyBtnInClone.remove();
+    const textToCopy = clone.innerText.trim();
+
+    const onCopiedSuccess = () => {
+      const origHtml = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check" style="color:#16a34a;"></i>';
+      setTimeout(() => { btn.innerHTML = origHtml; }, 1800);
+      showToast(state.language === 'en' ? 'Legal advice copied!' : 'আইনি পরামর্শ ক্লিপবোর্ডে কপি করা হয়েছে!', 'success', 2000);
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(textToCopy)
+        .then(onCopiedSuccess)
+        .catch(() => {
+          fallbackCopyText(textToCopy, onCopiedSuccess);
+        });
+    } else {
+      fallbackCopyText(textToCopy, onCopiedSuccess);
+    }
+  };
+
+  const fallbackCopyText = (text, callback) => {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (callback) callback();
+    } catch (e) {
+      showToast(state.language === 'en' ? 'Failed to copy text' : 'কপি করা সম্ভব হয়নি', 'warning', 2000);
+    }
+  };
+  window.copyReplyText = copyReplyText;
 
   const sendChatMessage = async () => {
     const q = chatInput.value.trim();
-    if (!q) return;
+    if (!q || isChatSending) return;
+
+    isChatSending = true;
+    chatSend.disabled = true;
+    chatInput.disabled = true;
 
     const cleanQ = escapeHtml(q);
     chatBody.innerHTML += `<div class="chat-bubble-user">${cleanQ}</div>`;
     chatInput.value = '';
-    chatBody.scrollTop = chatBody.scrollHeight;
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
 
     const loaderId = 'loader_' + Date.now();
-    chatBody.innerHTML += `<div class="chat-bubble-ai" id="${loaderId}"><i class="fa-solid fa-spinner fa-spin"></i> আইনAI লিখছে...</div>`;
-    chatBody.scrollTop = chatBody.scrollHeight;
+    const loadingText = state.language === 'en' ? 'Law AI is thinking...' : 'আইনAI লিখছে...';
+    chatBody.innerHTML += `<div class="chat-bubble-ai" id="${loaderId}"><i class="fa-solid fa-spinner fa-spin"></i> ${loadingText}</div>`;
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
 
     try {
       const res = await fetch('/api/ai/legal-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q, contract_context: state.currentTemplate })
+        body: JSON.stringify({
+          question: q,
+          contract_context: state.currentTemplate,
+          language: state.language || 'bn'
+        })
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
+      if (!data || !data.answer) throw new Error('Empty response');
+
       const loader = document.getElementById(loaderId);
       if (loader) {
-        loader.innerHTML = escapeHtml(data.answer).replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        const formatted = formatLegalMarkdown(data.answer);
+        const copyTitle = state.language === 'en' ? 'Copy Advice' : 'কপি করুন';
+        loader.innerHTML = `
+          <button type="button" class="btn-copy-chat-reply" onclick="copyReplyText(this)" title="${copyTitle}">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+          ${formatted}
+        `;
       }
-      chatBody.scrollTop = chatBody.scrollHeight;
+      chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
     } catch (e) {
       const loader = document.getElementById(loaderId);
-      if (loader) loader.innerHTML = 'উত্তর পেতে সমস্যা হয়েছে।';
+      if (loader) {
+        loader.innerHTML = state.language === 'en' ? 'Unable to retrieve answer. Please try again.' : 'উত্তর পেতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
+      }
+    } finally {
+      isChatSending = false;
+      chatSend.disabled = false;
+      chatInput.disabled = false;
+      chatInput.focus();
     }
   };
 
@@ -2273,7 +2442,11 @@ function attachEvents() {
       }
       document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('active'));
       const chatbotWin = document.getElementById('chatbot-window');
-      if (chatbotWin) chatbotWin.style.display = 'none';
+      if (chatbotWin && chatbotWin.style.display !== 'none') {
+        chatbotWin.style.display = 'none';
+        const fabEl = document.getElementById('fab-chatbot');
+        if (fabEl) fabEl.style.display = 'flex';
+      }
       closeAllModals();
     }
   });

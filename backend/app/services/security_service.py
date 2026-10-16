@@ -5,12 +5,17 @@ import io
 import base64
 from datetime import datetime
 from typing import Dict, Any, Optional
-import qrcode
+try:
+    import qrcode
+except ImportError:
+    qrcode = None
 
 class SecurityService:
     @staticmethod
     def generate_qr_code_base64(data: str) -> str:
         """Generates a base64 PNG data-uri for a QR code."""
+        if not qrcode:
+            return ""
         try:
             qr = qrcode.QRCode(
                 version=1,

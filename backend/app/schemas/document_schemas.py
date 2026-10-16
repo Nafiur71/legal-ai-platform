@@ -60,8 +60,10 @@ class AuditUploadRequest(BaseModel):
     filename: Optional[str] = "document.pdf"
 
 class LegalChatRequest(BaseModel):
-    question: str
+    question: Optional[str] = None
+    user_question: Optional[str] = None
     contract_context: Optional[str] = ""
+    language: Optional[str] = "bn"
 
 class StampCalculateRequest(BaseModel):
     doc_type: str

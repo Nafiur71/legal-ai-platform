@@ -139,7 +139,8 @@ async def upload_file_for_audit(file: UploadFile = File(...)):
 @app.post("/api/ai/legal-chat")
 def legal_assistant_chat(req: LegalChatRequest):
     try:
-        answer = ai_service.ask_legal_assistant(req.question, req.contract_context)
+        q_text = req.question or req.user_question or ""
+        answer = ai_service.ask_legal_assistant(q_text, req.contract_context, req.language or "bn")
         return {"answer": answer}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
